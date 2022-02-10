@@ -15,8 +15,8 @@ function App(): JSX.Element {
       <ThemeProvider theme={theme}>
         <Globalstyle />
         <GlobalFont />
-        <Header />
         <Router>
+          <Header />
           <RoutesComponent />
         </Router>
       </ThemeProvider>

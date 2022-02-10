@@ -18,6 +18,16 @@ export default createGlobalStyle`
         color: inherit;
         text-decoration: none;
     }
+    input{
+        color: ${({ theme }) => theme.variable.colors.A_FFF}
+    }
+    input:focus, textarea:focus, select:focus{
+        outline: none;
+    }
+    button{
+        color: ${({ theme }) => theme.variable.colors.A_FFF};
+        border: none;
+    }
     ul{
         list-style: none;
     }

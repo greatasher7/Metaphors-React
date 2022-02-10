@@ -91,7 +91,6 @@ const Intro_Container = styled.section`
 
 const List_Container = styled.section`
   margin-top: 33px;
-  ${({ theme }) => theme.mixin.paddingSide_depth2}
   .subtitle {
     ${({ theme }) => theme.mixin.textStyle.R_13}
     padding-left: 11px;

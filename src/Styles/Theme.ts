@@ -12,15 +12,31 @@ const variable = {
     A_EEE: '#EEEEEE',
     A_FFF: '#FFFFFF',
     background_color: '#12152E',
+    highlight_color: '#38cd9e',
   },
 };
 
 // mixins
 const mixin = {
   textStyle: {
+    B_17: css`
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: -0.02em;
+    `,
     M_18: css`
       font-weight: 500;
       font-size: 18px;
+      letter-spacing: -0.02em;
+    `,
+    M_17: css`
+      font-weight: 500;
+      font-size: 17px;
+      letter-spacing: -0.02em;
+    `,
+    M_15: css`
+      font-weight: 500;
+      font-size: 15px;
       letter-spacing: -0.02em;
     `,
     M_13: css`
@@ -29,6 +45,11 @@ const mixin = {
       letter-spacing: -0.02em;
     `,
 
+    R_16: css`
+      font-weight: 400;
+      font-size: 16px;
+      letter-spacing: -0.02em;
+    `,
     R_15: css`
       font-weight: 400;
       font-size: 15px;
@@ -59,9 +80,38 @@ const mixin = {
     padding-left: 11px;
     padding-right: 11px;
   `,
-  flexAlignCenter: css`
+  paddingSide_login: css`
+    padding: 0 45px;
+  `,
+  flexCenter: css`
     display: flex;
     justify-content: center;
+    align-items: center;
+  `,
+
+  modalContainer: css`
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 44px;
+  `,
+
+  modalBox: css`
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(5px);
+    border-radius: 10px;
+    color: #000;
+    display: flex;
+    flex-direction: column;
     align-items: center;
   `,
 };

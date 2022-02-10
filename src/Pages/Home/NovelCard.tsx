@@ -63,7 +63,7 @@ const Container = styled.article`
         display: flex;
         li {
           height: 19px;
-          ${({ theme }) => theme.mixin.flexAlignCenter}
+          ${({ theme }) => theme.mixin.flexCenter}
           background-color: #429f7a;
           border-radius: 9px;
           padding: 0 7px;
