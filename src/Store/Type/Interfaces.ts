@@ -1,6 +1,8 @@
 // interface
-export interface ISample {
-  string: string;
-  number: number;
-  boolean: boolean;
+export interface INovel {
+  title: string;
+  author: string;
+  genre: string;
+  items: string[];
+  image: string;
 }

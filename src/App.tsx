@@ -5,6 +5,7 @@ import { ThemeProvider } from 'styled-components';
 import { theme } from './Styles/Theme';
 import Globalstyle from './Styles/Globalstyle';
 import GlobalFont from './Styles/GlobalFont';
+import Header from './Components/Header';
 
 function App(): JSX.Element {
   console.log(process.env.TEST_NAME);
@@ -14,6 +15,7 @@ function App(): JSX.Element {
       <ThemeProvider theme={theme}>
         <Globalstyle />
         <GlobalFont />
+        <Header />
         <Router>
           <RoutesComponent />
         </Router>

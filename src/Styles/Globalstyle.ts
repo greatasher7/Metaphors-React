@@ -10,7 +10,9 @@ export default createGlobalStyle`
         font-size: 1vw;
     }
     body{
-        font-family: "Font_test";
+        font-family: "NotoSansKR";
+        background-color: ${({ theme }) => theme.variable.colors.background_color};
+        color: ${({ theme }) => theme.variable.colors.A_FFF}
     }
     a{
         color: inherit;
