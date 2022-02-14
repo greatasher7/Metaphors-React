@@ -19,7 +19,9 @@ export default createGlobalStyle`
         text-decoration: none;
     }
     input{
-        color: ${({ theme }) => theme.variable.colors.A_FFF}
+        color: ${({ theme }) => theme.variable.colors.A_FFF};
+        background-color: transparent;
+        border: none;
     }
     input:focus, textarea:focus, select:focus{
         outline: none;

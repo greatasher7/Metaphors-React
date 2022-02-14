@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
+import { Btn_Modal_Black } from '../../../Components/ButtonModal';
 
 const ModalWrong = ({ closeModal }: { closeModal: () => void }) => {
   return (
@@ -12,7 +13,7 @@ const ModalWrong = ({ closeModal }: { closeModal: () => void }) => {
           <br />
           계정 정보가 잘못 입력되었습니다.
         </p>
-        <ModalBtn onClick={closeModal}>확인</ModalBtn>
+        <Btn_Modal_Black label="확인" onClick={closeModal} />
       </ModalBox>
     </ModalContainer>
   );
@@ -35,22 +36,9 @@ const ModalBox = styled.div`
   }
   .desc {
     ${({ theme }) => theme.mixin.textStyle.M_13}
-    margin-top: 10px;
+    margin-top: 15px;
     text-align: center;
     line-height: 1.3;
-  }
-`;
-
-const ModalBtn = styled.button`
-  ${({ theme }) => theme.mixin.flexCenter}
-  ${({ theme }) => theme.mixin.textStyle.R_15}
-  width: 100%;
-  height: 38px;
-  margin-top: 25px;
-  background-color: ${({ theme }) => theme.variable.colors.A_000};
-  border-radius: 15px;
-  padding: 7px 0;
-  &:first-child {
-    margin-bottom: 8px;
+    margin-bottom: 25px;
   }
 `;

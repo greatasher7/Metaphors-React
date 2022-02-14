@@ -47,12 +47,12 @@ const Container = styled.article`
     .author {
       display: block;
       margin-top: 7px;
-      color: #9193aa;
+      color: ${({ theme }) => theme.variable.colors.gray_color};
     }
     .inlineBox {
       display: flex;
       align-items: center;
-      margin-top: 10px;
+      margin-top: 5px;
       .genre {
         display: flex;
         padding-top: 3px;
@@ -64,7 +64,7 @@ const Container = styled.article`
         li {
           height: 19px;
           ${({ theme }) => theme.mixin.flexCenter}
-          background-color: #429f7a;
+          background-color: ${({ theme }) => theme.variable.colors.item_color};
           border-radius: 9px;
           padding: 0 7px;
           padding-top: 3px;

@@ -11,8 +11,14 @@ const variable = {
     A_DDD: '#DDDDDD',
     A_EEE: '#EEEEEE',
     A_FFF: '#FFFFFF',
+    black_color: '#12152e',
     background_color: '#12152E',
     highlight_color: '#38cd9e',
+    gray_color: '#9193aa',
+    btngray_color: '#595c7a',
+    inactive_color: '#1a4346',
+    btn_inactive_color: '#a2a4b7',
+    item_color: '#429f7a',
   },
 };
 
@@ -34,6 +40,11 @@ const mixin = {
       font-size: 17px;
       letter-spacing: -0.02em;
     `,
+    M_16: css`
+      font-weight: 500;
+      font-size: 16px;
+      letter-spacing: -0.02em;
+    `,
     M_15: css`
       font-weight: 500;
       font-size: 15px;
@@ -44,7 +55,6 @@ const mixin = {
       font-size: 13px;
       letter-spacing: -0.02em;
     `,
-
     R_16: css`
       font-weight: 400;
       font-size: 16px;
@@ -53,6 +63,11 @@ const mixin = {
     R_15: css`
       font-weight: 400;
       font-size: 15px;
+      letter-spacing: -0.02em;
+    `,
+    R_14: css`
+      font-weight: 400;
+      font-size: 14px;
       letter-spacing: -0.02em;
     `,
     R_13: css`
@@ -70,8 +85,17 @@ const mixin = {
       font-size: 11px;
       letter-spacing: -0.02em;
     `,
+    R_10: css`
+      font-weight: 400;
+      font-size: 10px;
+      letter-spacing: -0.02em;
+    `,
   },
 
+  paddingTopBottom: css`
+    padding-top: 33px;
+    padding-bottom: 66px;
+  `,
   paddingSide_depth1: css`
     padding-left: 22px;
     padding-right: 22px;
@@ -101,7 +125,7 @@ const mixin = {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 44px;
+    padding: 0 33px;
   `,
 
   modalBox: css`

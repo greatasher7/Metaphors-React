@@ -1,9 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
+import { Btn_Modal_Black } from '../../../Components/ButtonModal';
 
 const ModalComplete = () => {
   const navigate = useNavigate();
+
+  const goSignin = () => {
+    navigate('/account');
+  };
 
   return (
     <ModalContainer>
@@ -14,14 +19,7 @@ const ModalComplete = () => {
           계정이 생성되었습니다.
         </h4>
         <span className="email">abcd123@gmail.com</span>
-        <ModalBtn
-          background="black"
-          onClick={() => {
-            navigate('/account');
-          }}
-        >
-          로그인하기
-        </ModalBtn>
+        <Btn_Modal_Black label="로그인 하러 가기" onClick={goSignin} />
       </ModalBox>
     </ModalContainer>
   );
@@ -46,19 +44,6 @@ const ModalBox = styled.div`
   .email {
     ${({ theme }) => theme.mixin.textStyle.M_13}
     margin-top: 13px;
-  }
-`;
-
-const ModalBtn = styled.button<{ background: string }>`
-  ${({ theme }) => theme.mixin.flexCenter}
-  ${({ theme }) => theme.mixin.textStyle.R_12}
-  width: 100%;
-  height: 38px;
-  margin-top: 25px;
-  background-color: ${({ theme }) => theme.variable.colors.A_000};
-  border-radius: 15px;
-  padding: 7px 0;
-  &:first-child {
-    margin-bottom: 8px;
+    margin-bottom: 25px;
   }
 `;

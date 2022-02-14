@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import ModalComplete from './ModalComplete';
-import ModalQuitSignup from './ModalQuitSignup';
+import ModalComplete from './Modal/ModalComplete';
+import ModalQuitSignup from './Modal/ModalQuitSignup';
 
 const InputEmail = () => {
   return (

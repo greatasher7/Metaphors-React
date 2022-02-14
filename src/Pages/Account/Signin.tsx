@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
-import ModalWrong from './ModalWrong';
+import { Btn_Primary } from '../../Components/Button';
+import ModalWrong from './Modal/ModalWrong';
 
 const InputEmail = () => {
   return (
@@ -20,12 +21,16 @@ const InputPassword = () => {
 };
 
 const Signin = () => {
-  const [isWrongModalRender, setIsWrongModalRender] = useState(true);
+  const [isWrongModalRender, setIsWrongModalRender] = useState(false);
 
   const navigate = useNavigate();
 
   const closeModal = () => {
     setIsWrongModalRender(false);
+  };
+
+  const doSignin = () => {
+    navigate('/account/firstsignin');
   };
 
   return (
@@ -36,22 +41,18 @@ const Signin = () => {
           <InputEmail />
           <InputPassword />
         </InputContainer>
-        <BtnContainer>
-          <BtnStyle
-            onClick={() => {
-              navigate('/');
-            }}
-          >
-            로그인
-          </BtnStyle>
-          <BtnStyle
+        <Btn_Primary label="로그인" onClick={doSignin} />
+        <p className="signin">
+          Metaphors의 계정이 없다면, 지금{' '}
+          <span
             onClick={() => {
               navigate('/account/signup');
             }}
           >
             회원가입
-          </BtnStyle>
-        </BtnContainer>
+          </span>{' '}
+          하기
+        </p>
       </Container>
       {isWrongModalRender && <ModalWrong closeModal={closeModal} />}
     </>
@@ -69,6 +70,14 @@ const Container = styled.div`
   h2 {
     ${({ theme }) => theme.mixin.textStyle.M_18}
   }
+  .signin {
+    margin-top: 15px;
+    ${({ theme }) => theme.mixin.textStyle.R_13}
+    span {
+      color: ${({ theme }) => theme.variable.colors.highlight_color};
+      text-decoration: underline;
+    }
+  }
 `;
 
 const InputContainer = styled.div`
@@ -76,7 +85,7 @@ const InputContainer = styled.div`
   width: 100%;
   height: 200px;
   display: grid;
-  grid-template-rows: 90px auto;
+  grid-template-rows: 60px auto;
   align-items: start;
   .container_input {
     position: relative;
@@ -84,17 +93,6 @@ const InputContainer = styled.div`
       ${({ theme }) => theme.mixin.textStyle.R_11}
       margin-top: 10px;
       padding-left: 5px;
-    }
-  }
-`;
-
-const BtnContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  button {
-    &:not(:first-child) {
-      margin-top: 5px;
     }
   }
 `;
@@ -109,13 +107,4 @@ const InputStyle = styled.input`
   border-radius: none;
   padding: 7px 5px;
   ${({ theme }) => theme.mixin.textStyle.R_16}
-`;
-
-const BtnStyle = styled.button`
-  background-color: ${({ theme }) => theme.variable.colors.highlight_color};
-  border: none;
-  border-radius: 9px;
-  ${({ theme }) => theme.mixin.textStyle.R_15}
-  width: 100%;
-  height: 38px;
 `;
