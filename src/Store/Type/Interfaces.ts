@@ -7,6 +7,14 @@ export interface INovel {
   image: string;
 }
 
+export interface IPage {
+  page: number;
+  title?: string;
+  author?: string;
+  contents: string[];
+  isVisibleOption: boolean;
+}
+
 export interface IItem {
   name: string;
   image: string;
@@ -23,6 +31,11 @@ export interface IBtn {
 export interface IModalSelling {}
 
 export interface ISelectOption {
-  name?: string;
+  item?: string;
   act: string;
+}
+
+export interface IFooterProps {
+  moveNext: () => void;
+  movePrev: () => void;
 }

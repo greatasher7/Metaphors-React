@@ -25,9 +25,19 @@ const variable = {
 // mixins
 const mixin = {
   textStyle: {
+    EB_20: css`
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+    `,
     B_17: css`
       font-weight: 700;
       font-size: 17px;
+      letter-spacing: -0.02em;
+    `,
+    B_14: css`
+      font-weight: 700;
+      font-size: 14px;
       letter-spacing: -0.02em;
     `,
     M_18: css`
@@ -53,6 +63,21 @@ const mixin = {
     M_13: css`
       font-weight: 500;
       font-size: 13px;
+      letter-spacing: -0.02em;
+    `,
+    M_12: css`
+      font-weight: 500;
+      font-size: 12px;
+      letter-spacing: -0.02em;
+    `,
+    M_11: css`
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: -0.02em;
+    `,
+    R_17: css`
+      font-weight: 400;
+      font-size: 17px;
       letter-spacing: -0.02em;
     `,
     R_16: css`
@@ -116,7 +141,7 @@ const mixin = {
   modalContainer: css`
     width: 100vw;
     height: 100vh;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     background-color: rgba(0, 0, 0, 0.6);

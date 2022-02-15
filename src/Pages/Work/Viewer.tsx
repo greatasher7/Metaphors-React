@@ -1,70 +1,89 @@
 import React, { useState } from 'react';
+import { Route, Routes, useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { ISelectOption } from '../../Store/Type/Interfaces';
+import { work } from '../../Store/Data/Works';
+import { IPage } from '../../Store/Type/Interfaces';
+import Footer from './Footer';
+import ModalDraw from './Modal/ModalDraw';
+import ModalNoItem from './Modal/ModalNoItem';
+import SelectOption from './SelectOption';
 
-const select_option: ISelectOption[] = [
-  {
-    name: '절권도 8/10',
-    act: '도망간다.',
-  },
-  {
-    name: '청산가리',
-    act: '어떻게 알았지',
-  },
-  {
-    act: '도망간다.',
-  },
-];
-
-const SelectOption = () => {
+const PageContainer = ({ page, title, author, contents, isVisibleOption }: IPage) => {
   return (
-    <SelectContainer>
-      {select_option.map((option, idx) => (
-        <li key={idx}>
-          {option.name} / {option.act}
-        </li>
-      ))}
-    </SelectContainer>
+    <PageContainer_styled isVisibleOption={isVisibleOption}>
+      {title && <h4 className="title">{title}</h4>}
+      {author && <span className="author">{author}</span>}
+      <div className="contentsBox">
+        {contents.map((paragraph, idx) => (
+          <p key={idx}>
+            {paragraph}
+            <br />
+            <br />
+          </p>
+        ))}
+      </div>
+    </PageContainer_styled>
   );
 };
 
-const SelectContainer = styled.ul`
-  width: 100vw;
-  height: 400px;
-  position: fixed;
-  z-index: 10000;
-  bottom: 0;
-  left: 0;
-  background-color: rgba(21, 25, 39, 0.8);
-  backdrop-filter: blur(5px);
-  border-radius: 30px 30px 0 0;
-`;
-
-const Footer = () => {
-  return <FooterContainer></FooterContainer>;
-};
-
-const FooterContainer = styled.footer`
-  width: 100vw;
-  height: 45px;
-  position: fixed;
-  z-index: 10000;
-  bottom: 0;
-  left: 0;
-  background-color: ${({ theme }) => theme.variable.colors.background_color};
+const PageContainer_styled = styled.section<{ isVisibleOption: boolean }>`
+  font-family: 'NanumMyeongjo';
+  ${({ theme }) => theme.mixin.textStyle.B_14}
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 30px;
+  padding-bottom: ${(props) => (props.isVisibleOption ? '450px' : '0')};
+  .title {
+    ${({ theme }) => theme.mixin.textStyle.EB_20}
+  }
+  .author {
+    margin-top: 16px;
+    margin-bottom: 130px;
+  }
+  .contentsBox {
+    p {
+      line-height: 1.4;
+      word-break: keep-all;
+    }
+  }
 `;
 
 const Viewer = () => {
-  const [isVisibleOption, setIsVisibleOption] = useState(true);
+  const [nowPage, setNowPage] = useState(1);
 
+  const { page, title, author, contents, isVisibleOption } = work[nowPage - 1];
+
+  const navigate = useNavigate();
+  const closeModal = () => {
+    navigate('/work/viewer');
+  };
   return (
     <>
       <Container>
-        <h2 className="title">조선시대 대령숙수가 된 나</h2>
-        <span className="author">안소</span>
+        <PageContainer
+          page={page}
+          title={title}
+          author={author}
+          contents={contents}
+          isVisibleOption={isVisibleOption}
+        />
       </Container>
       {isVisibleOption && <SelectOption />}
-      <Footer />
+      <Footer
+        movePrev={() => {
+          if (nowPage < 2) return;
+          setNowPage((current) => current - 1);
+        }}
+        moveNext={() => {
+          if (nowPage > work.length - 1) return;
+          setNowPage((current) => current + 1);
+        }}
+      />
+      <Routes>
+        <Route path="/noitem" element={<ModalNoItem closeModal={closeModal} />} />
+        <Route path="/draw" element={<ModalDraw closeModal={closeModal} />} />
+      </Routes>
     </>
   );
 };
@@ -75,8 +94,8 @@ const Container = styled.div`
   padding: 0 33px;
   ${({ theme }) => theme.mixin.paddingTopBottom}
   background-color: ${({ theme }) => theme.variable.colors.A_FFF};
-  height: 200vh;
   color: ${({ theme }) => theme.variable.colors.black_color};
+  min-height: 100vh;
   .title {
   }
 `;
