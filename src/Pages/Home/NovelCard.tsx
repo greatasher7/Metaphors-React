@@ -1,10 +1,16 @@
 import React from 'react';
+import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { INovel } from '../../Store/Type/Interfaces';
 
 const NovelCard = ({ title, author, genre, items, image }: INovel) => {
+  const navigate = useNavigate();
   return (
-    <Container>
+    <Container
+      onClick={() => {
+        navigate('/work');
+      }}
+    >
       <div className="image"></div>
       <div className="contents">
         <h4 className="title">{title}</h4>
