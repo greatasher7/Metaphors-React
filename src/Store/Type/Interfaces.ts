@@ -13,6 +13,7 @@ export interface IPage {
   author?: string;
   contents: string[];
   isVisibleOption: boolean;
+  isLastPage: boolean;
 }
 
 export interface IItem {
@@ -38,4 +39,17 @@ export interface ISelectOption {
 export interface IFooterProps {
   moveNext: () => void;
   movePrev: () => void;
+  isLastPage: boolean;
+}
+
+export interface ISideNavProps {
+  toggleNav: () => void;
+  clickLogout: () => void;
+}
+
+export interface ICookieOptionProps {
+  isActive: boolean;
+  count: number;
+  price: number;
+  setFocus: (value: number) => void;
 }

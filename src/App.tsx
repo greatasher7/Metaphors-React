@@ -5,7 +5,7 @@ import { ThemeProvider } from 'styled-components';
 import { theme } from './Styles/Theme';
 import Globalstyle from './Styles/GlobalStyle';
 import GlobalFont from './Styles/GlobalFont';
-import Header from './Components/Header';
+import Header from './Components/Header/Header';
 
 function App(): JSX.Element {
   console.log(process.env.TEST_NAME);

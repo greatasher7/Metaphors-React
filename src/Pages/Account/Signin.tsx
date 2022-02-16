@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { Btn_Primary } from '../../Components/Button';
+import { isSigninAtom } from '../../Store/Atoms';
 import ModalWrong from './Modal/ModalWrong';
 
 const InputEmail = () => {
@@ -22,6 +24,7 @@ const InputPassword = () => {
 
 const Signin = () => {
   const [isWrongModalRender, setIsWrongModalRender] = useState(false);
+  const setIsSignin = useSetRecoilState(isSigninAtom);
 
   const navigate = useNavigate();
 
@@ -31,6 +34,7 @@ const Signin = () => {
 
   const doSignin = () => {
     navigate('/account/firstsignin');
+    setIsSignin(true);
   };
 
   return (

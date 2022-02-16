@@ -5,7 +5,9 @@ import { work } from '../../Store/Data/Works';
 import { IPage } from '../../Store/Type/Interfaces';
 import Footer from './Footer';
 import ModalDraw from './Modal/ModalDraw';
+import ModalFailGetting from './Modal/ModalFailGetting';
 import ModalNoItem from './Modal/ModalNoItem';
+import ModalUseItem from './Modal/ModalUseItem';
 import SelectOption from './SelectOption';
 
 const PageContainer = ({ page, title, author, contents, isVisibleOption }: IPage) => {
@@ -52,7 +54,7 @@ const PageContainer_styled = styled.section<{ isVisibleOption: boolean }>`
 const Viewer = () => {
   const [nowPage, setNowPage] = useState(1);
 
-  const { page, title, author, contents, isVisibleOption } = work[nowPage - 1];
+  const { page, title, author, contents, isVisibleOption, isLastPage } = work[nowPage - 1];
 
   const navigate = useNavigate();
   const closeModal = () => {
@@ -67,6 +69,7 @@ const Viewer = () => {
           author={author}
           contents={contents}
           isVisibleOption={isVisibleOption}
+          isLastPage={isLastPage}
         />
       </Container>
       {isVisibleOption && <SelectOption />}
@@ -79,10 +82,13 @@ const Viewer = () => {
           if (nowPage > work.length - 1) return;
           setNowPage((current) => current + 1);
         }}
+        isLastPage={isLastPage}
       />
       <Routes>
         <Route path="/noitem" element={<ModalNoItem closeModal={closeModal} />} />
         <Route path="/draw" element={<ModalDraw closeModal={closeModal} />} />
+        <Route path="/fail" element={<ModalFailGetting closeModal={closeModal} />} />
+        <Route path="/using" element={<ModalUseItem closeModal={closeModal} />} />
       </Routes>
     </>
   );

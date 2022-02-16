@@ -1,64 +1,70 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
-import banner_home from '../../Assets/Images/banner_home.png';
-import icon_arrowRight from '../../Assets/Images/icon_arrowRight.png';
+import Icon_arrowRight from '../../Assets/Images/Icon_arrowRight.png';
+import { isSigninAtom } from '../../Store/Atoms';
 import { novels_all, novels_recommend } from '../../Store/Data/Novels';
 import NovelCard from './NovelCard';
+import Banner from './Banner';
 
 const Home = () => {
   const navigate = useNavigate();
+  const isSignin = useRecoilValue(isSigninAtom);
 
   return (
-    <Container>
-      <Banner_Container>
-        <img src={banner_home} alt="banner" className="banner" />
-      </Banner_Container>
-      <Intro_Container>
-        <div
-          className="contentBox"
-          onClick={() => {
-            navigate('/account');
-          }}
-        >
-          <div>
-            <span className="title">나를 닮은 캐릭터로 시작해보세요</span>
-            <span className="contents">내 성격 NFT 생성하기</span>
+    <>
+      <Banner />
+      <Container>
+        {isSignin ? (
+          <List_Container>
+            <h4 className="subtitle">노블사랑님이 좋아할 만한 추천 월드</h4>
+            <div className="list">
+              {novels_recommend.map((novel, idx) => (
+                <NovelCard
+                  key={idx}
+                  title={novel.title}
+                  author={novel.author}
+                  genre={novel.genre}
+                  items={novel.items}
+                  image={novel.image}
+                />
+              ))}
+            </div>
+          </List_Container>
+        ) : (
+          <Intro_Container>
+            <div
+              className="contentBox"
+              onClick={() => {
+                navigate('/account');
+              }}
+            >
+              <div>
+                <span className="title">나를 닮은 캐릭터로 시작해보세요</span>
+                <span className="contents">내 성격 NFT 생성하기</span>
+              </div>
+              <img src={Icon_arrowRight} alt="arrow right icon" className="iconArrow" />
+            </div>
+          </Intro_Container>
+        )}
+        <List_Container>
+          <h4 className="subtitle">월드 전체 보기</h4>
+          <div className="list">
+            {novels_all.map((novel, idx) => (
+              <NovelCard
+                key={idx}
+                title={novel.title}
+                author={novel.author}
+                genre={novel.genre}
+                items={novel.items}
+                image={novel.image}
+              />
+            ))}
           </div>
-          <img src={icon_arrowRight} alt="arrow right icon" className="iconArrow" />
-        </div>
-      </Intro_Container>
-      <List_Container>
-        <h4 className="subtitle">노블사랑님이 좋아할 만한 추천 월드</h4>
-        <div className="list">
-          {novels_recommend.map((novel, idx) => (
-            <NovelCard
-              key={idx}
-              title={novel.title}
-              author={novel.author}
-              genre={novel.genre}
-              items={novel.items}
-              image={novel.image}
-            />
-          ))}
-        </div>
-      </List_Container>
-      <List_Container>
-        <h4 className="subtitle">월드 전체 보기</h4>
-        <div className="list">
-          {novels_all.map((novel, idx) => (
-            <NovelCard
-              key={idx}
-              title={novel.title}
-              author={novel.author}
-              genre={novel.genre}
-              items={novel.items}
-              image={novel.image}
-            />
-          ))}
-        </div>
-      </List_Container>
-    </Container>
+        </List_Container>
+      </Container>
+    </>
   );
 };
 
@@ -69,14 +75,9 @@ const Container = styled.div`
   ${({ theme }) => theme.mixin.paddingTopBottom}
 `;
 
-const Banner_Container = styled.section`
-  .banner {
-    width: 100%;
-  }
-`;
-
 const Intro_Container = styled.section`
   ${({ theme }) => theme.mixin.paddingSide_depth2}
+  margin-top: 30px;
   .contentBox {
     height: 77px;
     padding-left: 30px;
@@ -98,7 +99,7 @@ const Intro_Container = styled.section`
     align-items: center;
     justify-content: space-between;
     .iconArrow {
-      width: 12px;
+      width: 8px;
     }
     .title {
       display: block;
@@ -113,7 +114,7 @@ const Intro_Container = styled.section`
 `;
 
 const List_Container = styled.section`
-  margin-top: 44px;
+  margin-top: 40px;
   .subtitle {
     ${({ theme }) => theme.mixin.textStyle.R_13}
     padding-left: 11px;

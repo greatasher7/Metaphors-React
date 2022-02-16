@@ -4,6 +4,7 @@ export const work: IPage[] = [
   {
     page: 1,
     isVisibleOption: false,
+    isLastPage: false,
     title: '조선시대 대령숙수가 된 나',
     author: '안소',
     contents: [
@@ -23,12 +24,22 @@ export const work: IPage[] = [
   {
     page: 2,
     isVisibleOption: true,
+    isLastPage: false,
     contents: [
       '요즘 왕을 독살하려는 작자들이 있다는 소문이 들려온다.',
       '왕이 나를 부르신다.',
       '나를.. 의심하시는 걸까?',
       '잘못하면 목이 날아갈 수도 있다.',
       '어떡하지?',
+    ],
+  },
+  {
+    page: 3,
+    isVisibleOption: false,
+    isLastPage: true,
+    contents: [
+      '용기를 내어 뒤도 돌아보지 않고 뛰었다. 산속으로 한참을 내달리던 중, 등 뒤에서 말발굽 소리가 들려온다.',
+      '설마..?',
     ],
   },
 ];

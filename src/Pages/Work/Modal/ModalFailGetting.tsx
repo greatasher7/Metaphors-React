@@ -4,7 +4,7 @@ import Icon_x from '../../../Assets/Images/Icon_x.png';
 import { useNavigate } from 'react-router';
 import { IBtn } from '../../../Store/Type/Interfaces';
 
-const ModalNoItem = ({ closeModal }: { closeModal: () => void }) => {
+const ModalFailGetting = ({ closeModal }: { closeModal: () => void }) => {
   const navigate = useNavigate();
 
   return (
@@ -12,15 +12,11 @@ const ModalNoItem = ({ closeModal }: { closeModal: () => void }) => {
       <ModalBox>
         <img src={Icon_x} alt="close button" className="close_btn" onClick={closeModal} />
         <h3>
-          원하는 행동을 하기 위해서는
+          획득에 <span>실패</span>했어요.
           <br />
-          [청산가리]가 필요해요
+          다음 기회를 노려보세요!
         </h3>
         <Btn_Container>
-          <Btn_Modal_Primary
-            label="[청산가리] 확률로 획득하기"
-            onClick={() => navigate('/work/viewer/fail')}
-          />
           <Btn_Modal_White
             label="[청산가리] 구입하기"
             onClick={() => navigate('/work/viewer/draw')}
@@ -43,7 +39,7 @@ const ModalNoItem = ({ closeModal }: { closeModal: () => void }) => {
   );
 };
 
-export default ModalNoItem;
+export default ModalFailGetting;
 
 const ModalContainer = styled.div`
   ${({ theme }) => theme.mixin.modalContainer}
@@ -65,6 +61,9 @@ const ModalBox = styled.div`
     ${({ theme }) => theme.mixin.textStyle.M_15}
     text-align: center;
     line-height: 1.5;
+    span {
+      color: #ff5e5e;
+    }
   }
   .cookie {
     margin-top: 10px;
@@ -75,18 +74,9 @@ const ModalBox = styled.div`
 const Btn_Container = styled.div`
   display: grid;
   width: 100%;
-  margin-top: 20px;
+  margin-top: 70px;
   grid-row-gap: 10px;
 `;
-
-const Btn_Modal_Primary = ({ onClick, label }: IBtn) => {
-  return (
-    <Primary onClick={onClick}>
-      <span>{label}</span>
-      <span className="black">-1KALY</span>
-    </Primary>
-  );
-};
 
 const Btn_Modal_White = ({ onClick, label }: IBtn) => {
   return (
@@ -111,14 +101,6 @@ const Common = styled.button`
   }
 `;
 
-const Primary = styled(Common)`
-  background-color: ${({ theme }) => theme.variable.colors.highlight_color};
-  color: ${({ theme }) => theme.variable.colors.A_FFF};
-  .black {
-    color: ${({ theme }) => theme.variable.colors.black_color};
-    margin-left: 6px;
-  }
-`;
 const White = styled(Common)`
   background-color: ${({ theme }) => theme.variable.colors.A_FFF};
   color: ${({ theme }) => theme.variable.colors.black_color};

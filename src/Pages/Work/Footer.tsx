@@ -3,12 +3,23 @@ import styled from 'styled-components';
 import { IFooterProps } from '../../Store/Type/Interfaces';
 import Icon_goPrev from '../../Assets/Images/Icon_goPrev.png';
 import Icon_goNext from '../../Assets/Images/Icon_goNext.png';
+import Border_nextEpisode from '../../Assets/Images/Border_nextEpisode.png';
 
-const Footer = ({ moveNext, movePrev }: IFooterProps) => {
+const Footer = ({ moveNext, movePrev, isLastPage }: IFooterProps) => {
   return (
     <FooterContainer>
-      <img src={Icon_goPrev} onClick={movePrev} alt="go previous" />
-      <img src={Icon_goNext} onClick={moveNext} alt="go next" />
+      {isLastPage && (
+        <NextEpisode>
+          <span>다음화 보기</span>
+          <img src={Border_nextEpisode} alt="next episode" />
+        </NextEpisode>
+      )}
+      <img className="arrow_icon" src={Icon_goPrev} onClick={movePrev} alt="go previous" />
+      {isLastPage ? (
+        ''
+      ) : (
+        <img className="arrow_icon" src={Icon_goNext} onClick={moveNext} alt="go next" />
+      )}
     </FooterContainer>
   );
 };
@@ -25,8 +36,26 @@ const FooterContainer = styled.footer`
   align-items: center;
   justify-content: space-between;
   padding: 0 35px;
-  img {
+  .arrow_icon {
     width: 9px;
+  }
+`;
+
+const NextEpisode = styled.div`
+  position: absolute;
+  z-index: 100000;
+  top: -66px;
+  width: 80%;
+  span {
+    ${({ theme }) => theme.mixin.textStyle.M_16}
+    color: ${({ theme }) => theme.variable.colors.black_color};
+    padding-left: 11px;
+  }
+  img {
+    width: 100%;
+    position: absolute;
+    top: 10px;
+    left: 0;
   }
 `;
 
