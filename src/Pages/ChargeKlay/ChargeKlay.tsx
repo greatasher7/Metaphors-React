@@ -3,37 +3,31 @@ import { Route, Routes, useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { Btn_Primary_FontBlack } from '../../Components/Button';
 import ModalCompleteCharge from './Modal/ModalCompleteCharge';
-import CookieOption from './CookieOption';
+import KlayOption from './KlayOption';
 
-const Charge = () => {
-  const [cookieFocus, setCookieFocus] = useState(0);
+const ChargeKlay = () => {
+  const [klayFocus, setKlayFocus] = useState(0);
   const navigate = useNavigate();
   const closeModal = () => {
-    navigate('/charge');
+    navigate('/chargeklay');
   };
 
   const setFocus = (value: number) => {
-    setCookieFocus(value);
+    setKlayFocus(value);
   };
 
   return (
     <>
       <Container>
-        <Btn_Primary_FontBlack label="쿠키 충전하기" />
-        <p className="my_klay">150,032KLAY</p>
-        <p className="cookie">
-          사용 가능한 쿠키 <span className="my_cookie">0</span>
+        <Btn_Primary_FontBlack label="KLAY 충전하기" />
+        <p className="my_klay">
+          <span>150,032</span>KLAY
         </p>
-        <Cookie_Container>
-          <CookieOption setFocus={setFocus} isActive={cookieFocus === 10} count={10} price={1000} />
-          <CookieOption setFocus={setFocus} isActive={cookieFocus === 50} count={50} price={4900} />
-          <CookieOption
-            setFocus={setFocus}
-            isActive={cookieFocus === 100}
-            count={100}
-            price={9800}
-          />
-        </Cookie_Container>
+        <Klay_Container>
+          <KlayOption setFocus={setFocus} isActive={klayFocus === 1} count={1} />
+          <KlayOption setFocus={setFocus} isActive={klayFocus === 2} count={2} />
+          <KlayOption setFocus={setFocus} isActive={klayFocus === 3} count={3} />
+        </Klay_Container>
       </Container>
       <Routes>
         <Route path="/complete" element={<ModalCompleteCharge closeModal={closeModal} />} />
@@ -42,7 +36,7 @@ const Charge = () => {
   );
 };
 
-export default Charge;
+export default ChargeKlay;
 
 const Container = styled.div`
   ${({ theme }) => theme.mixin.paddingSide_depth1}
@@ -54,11 +48,7 @@ const Container = styled.div`
     color: #a2a4b7;
     ${({ theme }) => theme.mixin.textStyle.R_12}
     margin-top: 15px;
-  }
-  .cookie {
-    ${({ theme }) => theme.mixin.textStyle.R_12}
-    margin-top: 5px;
-    .my_cookie {
+    span {
       color: ${({ theme }) => theme.variable.colors.highlight_color};
     }
   }
@@ -68,6 +58,6 @@ const Container = styled.div`
   }
 `;
 
-const Cookie_Container = styled.ul`
+const Klay_Container = styled.ul`
   margin-top: 40px;
 `;

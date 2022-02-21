@@ -1,37 +1,21 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import ModalComplete from './Modal/ModalComplete';
 import ModalQuitSignup from './Modal/ModalQuitSignup';
-
-const InputEmail = () => {
-  return (
-    <div className="container_input">
-      <InputStyle type="text" placeholder="이메일을 입력해주세요" />
-    </div>
-  );
-};
-
-const InputPassword = () => {
-  return (
-    <div className="container_input">
-      <InputStyle type="password" placeholder="비밀번호를 입력해주세요" />
-      <p className="password_guide">*8~16자의 영문, 숫자를 사용한 비밀번호를 입력해주세요.</p>
-    </div>
-  );
-};
-
-const InputPasswordAgain = () => {
-  return (
-    <div className="container_input">
-      <InputStyle type="password" placeholder="비밀번호를 재입력해주세요" />
-    </div>
-  );
-};
+import { InputEmail, InputPassword, InputPasswordAgain } from './Inputs';
 
 const Signup = () => {
   const [isEmail, setIsEmail] = useState(true);
   const [isQuitModalRender, setIsQuitModalRender] = useState(false);
   const [isCompleteModalRender, setIsCompleteModalRender] = useState(false);
+  const [isWrongEmail, setIsWrongEmail] = useState(false);
+  const [isWrongPassword, setIsWrongPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [againPassword, setAgainPassword] = useState('');
+
+  const navigate = useNavigate();
 
   const BtnGoBack = ({ label }: { label: string }) => {
     const btnOnClick = () => {
@@ -41,13 +25,21 @@ const Signup = () => {
         setIsEmail(true);
       }
     };
+
     return <BtnStyle onClick={btnOnClick}>{label}</BtnStyle>;
   };
 
   const BtnGoForward = ({ label }: { label: string }) => {
+    const regEmail =
+      /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+
     const btnOnClick = () => {
       if (isEmail) {
-        setIsEmail(false);
+        if (regEmail.test(email)) {
+          setIsEmail(false);
+        } else {
+          setIsWrongEmail(true);
+        }
       } else {
         setIsCompleteModalRender(true);
       }
@@ -59,17 +51,45 @@ const Signup = () => {
     setIsQuitModalRender(false);
   };
 
+  console.log(email, password, againPassword);
+
   return (
     <>
       <Container>
         <h2>회원가입</h2>
         <InputContainer>
           {isEmail ? (
-            <InputEmail />
+            <>
+              <InputEmail
+                setState={(value) => {
+                  setEmail(value);
+                }}
+              />
+              <p className="login">
+                이미 계정이 있으신가요?{' '}
+                <span
+                  className="login_btn"
+                  onClick={() => {
+                    navigate('/account');
+                  }}
+                >
+                  로그인
+                </span>{' '}
+                하기
+              </p>
+            </>
           ) : (
             <>
-              <InputPassword />
-              <InputPasswordAgain />
+              <InputPassword
+                setState={(value) => {
+                  setPassword(value);
+                }}
+              />
+              <InputPasswordAgain
+                setState={(value) => {
+                  setAgainPassword(value);
+                }}
+              />
             </>
           )}
         </InputContainer>
@@ -104,6 +124,7 @@ const InputContainer = styled.div`
   display: grid;
   grid-template-rows: 100px auto;
   align-items: start;
+  position: relative;
   .container_input {
     position: relative;
     .password_guide {
@@ -112,24 +133,24 @@ const InputContainer = styled.div`
       padding-left: 5px;
     }
   }
+  .login {
+    ${({ theme }) => theme.mixin.textStyle.R_13}
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 70px;
+    color: ${({ theme }) => theme.variable.colors.btn_inactive_color};
+    .login_btn {
+      color: ${({ theme }) => theme.variable.colors.highlight_color};
+      text-decoration: underline;
+    }
+  }
 `;
 
 const BtnContainer = styled.div<{ isEmail: boolean }>`
   display: flex;
   justify-content: space-between;
   width: 100%;
-`;
-
-const InputStyle = styled.input`
-  display: block;
-  width: 100%;
-  background-color: transparent;
-  border: none;
-  border-bottom: 1px solid #fff;
-  box-shadow: none;
-  border-radius: none;
-  padding: 7px 5px;
-  ${({ theme }) => theme.mixin.textStyle.R_16}
 `;
 
 const BtnStyle = styled.button`

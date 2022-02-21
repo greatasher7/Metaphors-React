@@ -27,7 +27,7 @@ const Detail = () => {
       </Info>
       <Btn_Container>
         <Btn_Primary_FontBlack
-          label="지금 시작하기 [1화]"
+          label="이어보기 [n화]"
           onClick={() => {
             navigate('/work/viewer');
           }}

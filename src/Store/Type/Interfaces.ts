@@ -53,3 +53,13 @@ export interface ICookieOptionProps {
   price: number;
   setFocus: (value: number) => void;
 }
+
+export interface IKlayOptionProps {
+  isActive: boolean;
+  count: number;
+  setFocus: (value: number) => void;
+}
+
+export interface IInput {
+  setState: (value: string) => void;
+}

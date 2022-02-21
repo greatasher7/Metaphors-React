@@ -5,26 +5,13 @@ import styled from 'styled-components';
 import { Btn_Primary } from '../../Components/Button';
 import { isSigninAtom } from '../../Store/Atoms';
 import ModalWrong from './Modal/ModalWrong';
-
-const InputEmail = () => {
-  return (
-    <div className="container_input">
-      <InputStyle type="text" placeholder="이메일을 입력해주세요" />
-    </div>
-  );
-};
-
-const InputPassword = () => {
-  return (
-    <div className="container_input">
-      <InputStyle type="password" placeholder="비밀번호를 입력해주세요" />
-    </div>
-  );
-};
+import { InputEmail, InputPassword } from './Inputs';
 
 const Signin = () => {
   const [isWrongModalRender, setIsWrongModalRender] = useState(false);
   const setIsSignin = useSetRecoilState(isSigninAtom);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
 
@@ -42,8 +29,16 @@ const Signin = () => {
       <Container>
         <h2>로그인</h2>
         <InputContainer>
-          <InputEmail />
-          <InputPassword />
+          <InputEmail
+            setState={(value) => {
+              setEmail(value);
+            }}
+          />
+          <InputPassword
+            setState={(value) => {
+              setPassword(value);
+            }}
+          />
         </InputContainer>
         <Btn_Primary label="로그인" onClick={doSignin} />
         <p className="signin">
@@ -99,16 +94,4 @@ const InputContainer = styled.div`
       padding-left: 5px;
     }
   }
-`;
-
-const InputStyle = styled.input`
-  display: block;
-  width: 100%;
-  background-color: transparent;
-  border: none;
-  border-bottom: 1px solid #fff;
-  box-shadow: none;
-  border-radius: none;
-  padding: 7px 5px;
-  ${({ theme }) => theme.mixin.textStyle.R_16}
 `;

@@ -16,14 +16,26 @@ const SideNav = ({ toggleNav, clickLogout }: ISideNavProps) => {
       <div className="contentarea">
         <img src={Icon_menu_gray} alt="menuicon" className="menu_icon" />
         <img src={Icon_x} alt="close icon" className="close" onClick={toggleNav} />
-        {isSignin && (
-          <div className="user_box">
-            <span className="logout" onClick={clickLogout}>
-              로그아웃
+        <div className="user_box">
+          {isSignin ? (
+            <>
+              <span className="loginout" onClick={clickLogout}>
+                로그아웃
+              </span>
+              <span className="user">노블사랑 님</span>
+            </>
+          ) : (
+            <span
+              className="loginout"
+              onClick={() => {
+                navigate('account');
+                toggleNav();
+              }}
+            >
+              로그인
             </span>
-            <span className="user">노블사랑 님</span>
-          </div>
-        )}
+          )}
+        </div>
         <ul className="menu_list">
           <li
             onClick={() => {
@@ -78,7 +90,8 @@ const NavContainer = styled.nav`
       width: 20px;
     }
     .user_box {
-      .logout {
+      height: 100px;
+      .loginout {
         ${({ theme }) => theme.mixin.textStyle.R_13}
         color: #a2a4b7;
       }
@@ -89,7 +102,6 @@ const NavContainer = styled.nav`
       }
     }
     .menu_list {
-      margin-top: 40px;
       li {
         ${({ theme }) => theme.mixin.textStyle.R_16}
         margin-bottom: 20px;

@@ -37,7 +37,7 @@ const Home = () => {
             <div
               className="contentBox"
               onClick={() => {
-                navigate('/account');
+                navigate('/account/signup');
               }}
             >
               <div>

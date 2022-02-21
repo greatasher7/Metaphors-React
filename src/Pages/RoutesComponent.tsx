@@ -6,6 +6,7 @@ import Work from './Work/Work';
 import Inventory from './Inventory/Inventory';
 import Market from './Market/Market';
 import Charge from './Charge/Charge';
+import ChargeKlay from './ChargeKlay/ChargeKlay';
 
 const RoutesComponent = () => {
   return (
@@ -16,6 +17,7 @@ const RoutesComponent = () => {
       <Route path="/inventory/*" element={<Inventory />} />
       <Route path="/market/*" element={<Market />} />
       <Route path="/charge/*" element={<Charge />} />
+      <Route path="/chargeklay/*" element={<ChargeKlay />} />
     </Routes>
   );
 };
