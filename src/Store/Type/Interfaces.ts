@@ -1,11 +1,11 @@
-// interface
-export interface INovel {
-  title: string;
-  author: string;
-  genre: string;
-  items: string[];
-  image: string;
-}
+// temp
+// export interface INovel {
+//   title: string;
+//   author: string;
+//   genre: string;
+//   items: string[];
+//   image: string;
+// }
 
 export interface IPage {
   page: number;
@@ -24,6 +24,7 @@ export interface IItem {
   price?: number;
 }
 
+// interface /////////////////////////////
 export interface IBtn {
   onClick?: () => void;
   label: string;
@@ -62,4 +63,37 @@ export interface IKlayOptionProps {
 
 export interface IInput {
   setState: (value: string) => void;
+  isExternalWrong?: boolean;
+}
+
+export interface IAccountBtn {
+  label: string;
+  onClick: () => void;
+}
+
+// Novel
+export interface INovel {
+  id: number;
+  name: string;
+  author: string;
+  imagePath: string;
+  nftItems: string;
+  genre: string;
+}
+
+// Atoms
+export interface ISignup {
+  email: string;
+  password: string;
+}
+
+export interface IUser {
+  id: string;
+  email: string;
+  nickname: string;
+  roles: string;
+  accessToken: string;
+  refreshToken: string;
+  accessExpiredTime: string;
+  refreshExpiredTime: string;
 }

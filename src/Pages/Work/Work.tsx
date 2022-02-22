@@ -6,7 +6,7 @@ import Viewer from './Viewer';
 const Work = () => {
   return (
     <Routes>
-      <Route path="/" element={<Detail />} />
+      <Route path="/:id" element={<Detail />} />
       <Route path="/viewer/*" element={<Viewer />} />
     </Routes>
   );

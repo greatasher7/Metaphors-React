@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { Btn_Primary } from '../../Components/Button';
-import { isSigninAtom } from '../../Store/Atoms';
 import ModalWrong from './Modal/ModalWrong';
 import { InputEmail, InputPassword } from './Inputs';
+import { postSignin } from '../../Api';
+import { useRecoilState } from 'recoil';
+import { isSigninAtom, userInfoAtom } from '../../Store/Atoms';
 
 const Signin = () => {
   const [isWrongModalRender, setIsWrongModalRender] = useState(false);
-  const setIsSignin = useSetRecoilState(isSigninAtom);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isSignin, setIsSignin] = useRecoilState(isSigninAtom);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
 
   const navigate = useNavigate();
 
@@ -20,9 +22,32 @@ const Signin = () => {
   };
 
   const doSignin = () => {
-    navigate('/account/firstsignin');
-    setIsSignin(true);
+    // 로그인 클릭 시,
+    try {
+      // 1. 로그인 post 요청
+      postSignin(email, password).then((res) => {
+        console.log(res);
+        // 2. 로그인 성공 시, isSign -> true, userInfo 업데이트
+        if (res.result === 'ok') {
+          setIsSignin(true);
+          setUserInfo({ ...res.content });
+          // 3. 닉네임 비어있을 시, 성격 만들기. 아니면 홈으로 이동
+          if (res.content.nickname === '') {
+            navigate('/account/firstsignin');
+          } else {
+            navigate('/');
+          }
+        } else {
+          // 2.1 로그인 실패 시, 실패 모달 랜더링
+          setIsWrongModalRender(true);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
   };
+
+  console.log(email, password);
 
   return (
     <>

@@ -1,17 +1,38 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import Icon_arrowRight from '../../Assets/Images/Icon_arrowRight.png';
-import { isSigninAtom } from '../../Store/Atoms';
-import { novels_all, novels_recommend } from '../../Store/Data/Novels';
+import { isSigninAtom, userInfoAtom } from '../../Store/Atoms';
 import NovelCard from './NovelCard';
 import Banner from './Banner';
+import { getNovelList, getNovelListUser } from '../../Api';
+import { INovel } from '../../Store/Type/Interfaces';
 
 const Home = () => {
   const navigate = useNavigate();
   const isSignin = useRecoilValue(isSigninAtom);
+  const userInfo = useRecoilValue(userInfoAtom);
+  const [novelList, setNovelList] = useState<INovel[]>();
+  const [novelListUser, setNovelListUser] = useState<INovel[]>();
 
+  useEffect(() => {
+    try {
+      getNovelList().then((res) => {
+        console.log(res);
+        setNovelList(res.content.total);
+      });
+      getNovelListUser(userInfo.accessToken).then((res) => {
+        console.log(res);
+        setNovelListUser(res.result.total);
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
+
+  console.log(isSignin);
+  console.log(userInfo);
   return (
     <>
       <Banner />
@@ -20,16 +41,18 @@ const Home = () => {
           <List_Container>
             <h4 className="subtitle">노블사랑님이 좋아할 만한 추천 월드</h4>
             <div className="list">
-              {novels_recommend.map((novel, idx) => (
-                <NovelCard
-                  key={idx}
-                  title={novel.title}
-                  author={novel.author}
-                  genre={novel.genre}
-                  items={novel.items}
-                  image={novel.image}
-                />
-              ))}
+              {novelListUser &&
+                novelListUser.map((novel, idx) => (
+                  <NovelCard
+                    key={idx}
+                    id={novel.id}
+                    name={novel.name}
+                    author={novel.author}
+                    imagePath={novel.imagePath}
+                    nftItems={novel.nftItems}
+                    genre={novel.genre}
+                  />
+                ))}
             </div>
           </List_Container>
         ) : (
@@ -51,16 +74,18 @@ const Home = () => {
         <List_Container>
           <h4 className="subtitle">월드 전체 보기</h4>
           <div className="list">
-            {novels_all.map((novel, idx) => (
-              <NovelCard
-                key={idx}
-                title={novel.title}
-                author={novel.author}
-                genre={novel.genre}
-                items={novel.items}
-                image={novel.image}
-              />
-            ))}
+            {novelList &&
+              novelList.map((novel, idx) => (
+                <NovelCard
+                  key={idx}
+                  id={novel.id}
+                  name={novel.name}
+                  author={novel.author}
+                  imagePath={novel.imagePath}
+                  nftItems={novel.nftItems}
+                  genre={novel.genre}
+                />
+              ))}
           </div>
         </List_Container>
       </Container>

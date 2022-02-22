@@ -3,24 +3,30 @@ import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { INovel } from '../../Store/Type/Interfaces';
 
-const NovelCard = ({ title, author, genre, items, image }: INovel) => {
+const NovelCard = ({ id, name, author, imagePath, nftItems, genre }: INovel) => {
   const navigate = useNavigate();
+
+  // 반환받은 imagePath 로 추가 요청 필요!!
   return (
     <Container
       onClick={() => {
-        navigate('/work');
+        navigate(`/work/${id}`);
       }}
     >
-      <div className="image"></div>
+      <div className="image">
+        <img src={imagePath} alt="novel image" />
+      </div>
       <div className="contents">
-        <h4 className="title">{title}</h4>
+        <h4 className="title">{name}</h4>
         <span className="author">{author}</span>
         <div className="inlineBox">
           <span className="genre">#{genre}</span>
           <ul className="items">
-            {items.map((item, idx) => (
-              <li key={idx}>{item}</li>
-            ))}
+            {nftItems.split('/').map((item, idx) => {
+              if (idx < 2) {
+                return <li key={idx}>{item}</li>;
+              }
+            })}
           </ul>
         </div>
       </div>
@@ -41,6 +47,10 @@ const Container = styled.article`
     height: 65px;
     background-color: #ffffff;
     border-radius: 4px;
+    img {
+      display: block;
+      width: 100%;
+    }
   }
   .contents {
     border-bottom: 1px solid #888;

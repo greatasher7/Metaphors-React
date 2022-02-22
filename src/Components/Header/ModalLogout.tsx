@@ -1,19 +1,50 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { isSigninAtom } from '../../Store/Atoms';
+import { postLogout } from '../../Api';
+import { isSigninAtom, userInfoAtom } from '../../Store/Atoms';
 import { Btn_Modal_Black, Btn_Modal_White } from '../ButtonModal';
 
 const ModalLogout = ({ closeModal }: { closeModal: () => void }) => {
   const setIsSignin = useSetRecoilState(isSigninAtom);
   const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
 
   const doLogout = () => {
-    closeModal();
+    setUserInfo({
+      id: '',
+      email: '',
+      nickname: '',
+      roles: '',
+      accessToken: '',
+      refreshToken: '',
+      accessExpiredTime: '',
+      refreshExpiredTime: '',
+    });
     setIsSignin(false);
+    closeModal();
     navigate('/');
+    postLogout(userInfo.accessToken).then((res) => {
+      console.log(res);
+      // if (res.result === 'ok') {
+      //   setUserInfo({
+      //     id: '',
+      //     email: '',
+      //     nickname: '',
+      //     roles: '',
+      //     accessToken: '',
+      //     refreshToken: '',
+      //     accessExpiredTime: '',
+      //     refreshExpiredTime: '',
+      //   });
+      //   setIsSignin(false);
+      //   closeModal();
+      //   navigate('/');
+      // }
+    });
   };
+
   return (
     <ModalContainer>
       <ModalBox>

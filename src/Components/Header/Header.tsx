@@ -18,7 +18,6 @@ const Header = () => {
   const [isLogoutModalRender, setIsLogoutModalRender] = useState(false);
   const isSignin = useRecoilValue(isSigninAtom);
 
-  console.log(isSignin);
   const toggleNav = () => {
     setIsSideNavVisible((prev) => !prev);
   };

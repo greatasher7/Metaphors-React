@@ -1,7 +1,32 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
+import { ISignup, IUser } from './Type/Interfaces';
 
 const { persistAtom } = recoilPersist();
+
+export const signupAtom = atom<ISignup>({
+  key: 'signup',
+  default: {
+    email: '',
+    password: '',
+  },
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const userInfoAtom = atom<IUser>({
+  key: 'userInfo',
+  default: {
+    id: '',
+    email: '',
+    nickname: '',
+    roles: '',
+    accessToken: '',
+    refreshToken: '',
+    accessExpiredTime: '',
+    refreshExpiredTime: '',
+  },
+  effects_UNSTABLE: [persistAtom],
+});
 
 export const isSigninAtom = atom({
   key: 'isSignin',

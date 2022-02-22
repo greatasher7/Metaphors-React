@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { Btn_Modal_Black } from '../../../Components/ButtonModal';
 
-const ModalComplete = () => {
+const ModalComplete = ({ email }: { email: string }) => {
   const navigate = useNavigate();
 
   const goSignin = () => {
@@ -18,7 +18,7 @@ const ModalComplete = () => {
           <br />
           계정이 생성되었습니다.
         </h4>
-        <span className="email">abcd123@gmail.com</span>
+        <span className="email">{email}</span>
         <Btn_Modal_Black label="로그인 하러 가기" onClick={goSignin} />
       </ModalBox>
     </ModalContainer>
