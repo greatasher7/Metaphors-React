@@ -14,12 +14,15 @@ const Detail = () => {
   const [nobelDetail, setNobelDetail] = useState<INovelDetail>();
 
   useEffect(() => {
-    console.log('params', params);
+    params.id && console.log('params', userInfo.accessToken, parseInt(params.id));
     try {
       params.id &&
-        getNovelDetail(userInfo.accessToken, parseInt(params.id)).then((res) =>
-          setNobelDetail(res.content)
-        );
+        userInfo.accessToken &&
+        getNovelDetail(userInfo.accessToken, parseInt(params.id)).then((res) => {
+          console.log('aa', res);
+          console.log('ss', res.content);
+          setNobelDetail(res.content);
+        });
     } catch (e) {
       console.log(e);
     }

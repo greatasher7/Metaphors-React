@@ -47,8 +47,6 @@ const Signin = () => {
     }
   };
 
-  console.log(email, password);
-
   return (
     <>
       <Container>

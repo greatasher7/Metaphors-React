@@ -30,6 +30,8 @@ const Home = () => {
     }
   }, []);
 
+  console.log('userinfo', userInfo);
+
   return (
     <>
       <Banner />

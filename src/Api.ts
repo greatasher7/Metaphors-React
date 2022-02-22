@@ -16,12 +16,8 @@ export const getImage = async (path: string) => {
 };
 
 // Account ///////////////////////////////////////////////////////////
-var data = JSON.stringify({
-  email: 'a@gmail.com',
-});
 
 export const getEmailOverlap = async (email: string) => {
-  console.log(email);
   const result = await axios({
     method: 'get',
     url: 'http://169.56.87.186:3000/api/auth/emailcheck',
@@ -89,7 +85,6 @@ export const getNovelList = async () => {
 };
 
 export const getNovelListUser = async (accessToken: string) => {
-  console.log('Token', accessToken);
   const result = await axios({
     method: 'get',
     url: 'http://169.56.87.186:3000/api/novel/list',
@@ -102,16 +97,16 @@ export const getNovelListUser = async (accessToken: string) => {
 };
 
 export const getNovelDetail = async (accessToken: string, id: number) => {
-  console.log('Token', accessToken);
+  console.log(accessToken);
+  console.log(id);
+
   const result = await axios({
     method: 'get',
-    url: 'http://169.56.87.186:3000/api/novel/list',
+    url: 'http://169.56.87.186:3000/api/novel/detail',
     headers: {
       'x-access-token': accessToken,
     },
-    data: {
-      novelID: id,
-    },
+    data: { novelId: id },
   });
   return result.data;
 };
