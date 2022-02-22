@@ -25,6 +25,7 @@ export interface IItem {
 }
 
 // interface /////////////////////////////
+
 export interface IBtn {
   onClick?: () => void;
   label: string;
@@ -79,6 +80,18 @@ export interface INovel {
   imagePath: string;
   nftItems: string;
   genre: string;
+}
+
+export interface INovelDetail {
+  novelId: number;
+  name: string;
+  author: string;
+  imagePath: string;
+  issueDate: string;
+  description: string;
+  nftItems: string;
+  genre: string;
+  current: number;
 }
 
 // Atoms

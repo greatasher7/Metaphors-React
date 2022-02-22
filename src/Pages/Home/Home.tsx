@@ -19,20 +19,17 @@ const Home = () => {
   useEffect(() => {
     try {
       getNovelList().then((res) => {
-        console.log(res);
         setNovelList(res.content.total);
       });
       getNovelListUser(userInfo.accessToken).then((res) => {
         console.log(res);
-        setNovelListUser(res.result.total);
+        setNovelListUser(res.content.total);
       });
     } catch (e) {
       console.log(e);
     }
   }, []);
 
-  console.log(isSignin);
-  console.log(userInfo);
   return (
     <>
       <Banner />

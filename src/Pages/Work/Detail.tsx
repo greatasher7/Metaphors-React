@@ -1,33 +1,53 @@
-import React from 'react';
-import { useNavigate } from 'react-router';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
+import { getNovelDetail } from '../../Api';
 import { Btn_Primary_FontBlack, Btn_Gray } from '../../Components/Button';
+import { userInfoAtom } from '../../Store/Atoms';
+import { INovelDetail } from '../../Store/Type/Interfaces';
 
 const Detail = () => {
   const navigate = useNavigate();
+  const params = useParams();
+  const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
+  const [nobelDetail, setNobelDetail] = useState<INovelDetail>();
+
+  useEffect(() => {
+    console.log('params', params);
+    try {
+      params.id &&
+        getNovelDetail(userInfo.accessToken, parseInt(params.id)).then((res) =>
+          setNobelDetail(res.content)
+        );
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
+
   return (
     <Container>
       <Info>
         <div className="image"></div>
         <div className="info">
-          <h4 className="title">조선시대 대령숙수가 된 나</h4>
-          <span className="author">안소</span>
+          <h4 className="title">{nobelDetail?.name}</h4>
+          <span className="author">{nobelDetail?.author}</span>
           <div className="inlineBox">
-            <span className="date">2021.12.25</span>
+            <span className="date">{nobelDetail?.issueDate}</span>
             <ul className="items">
-              <li>차가움</li>
-              <li>절권도</li>
+              {nobelDetail?.nftItems.split('/').map((item, idx) => {
+                if (idx < 2) {
+                  return <li>{item}</li>;
+                }
+              })}
             </ul>
           </div>
         </div>
-        <div className="desc">
-          상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명
-          상세설명
-        </div>
+        <div className="desc">{nobelDetail?.description}</div>
       </Info>
       <Btn_Container>
         <Btn_Primary_FontBlack
-          label="이어보기 [n화]"
+          label={`이어보기 [${nobelDetail?.current}화]`}
           onClick={() => {
             navigate('/work/viewer');
           }}

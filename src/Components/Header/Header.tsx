@@ -8,8 +8,8 @@ import Icon_login from '../../Assets/Images/Icon_login.png';
 import Logo from '../../Assets/Images/Logo.png';
 import Icon_cookie from '../../Assets/Images/Icon_cookie.png';
 import Icon_cookieCharge from '../../Assets/Images/Icon_cookieCharge.png';
-import { useRecoilValue } from 'recoil';
-import { isSigninAtom } from '../../Store/Atoms';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { isSigninAtom, userInfoAtom } from '../../Store/Atoms';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -17,6 +17,7 @@ const Header = () => {
   const [isSideNavVisible, setIsSideNavVisible] = useState(false);
   const [isLogoutModalRender, setIsLogoutModalRender] = useState(false);
   const isSignin = useRecoilValue(isSigninAtom);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
 
   const toggleNav = () => {
     setIsSideNavVisible((prev) => !prev);

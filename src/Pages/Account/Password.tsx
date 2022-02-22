@@ -25,8 +25,7 @@ const Password = () => {
     // 비밀번호 조건이 갖춰지면
     // 1. recoil state에 비밀번호 업데이트
     if (password === againPassword && password.length > 7 && password.length < 17) {
-      // setSignup({ ...signup, password: password });
-      setSignup({ email: 'great1@gmail.com', password: password });
+      setSignup({ ...signup, password: password });
     }
   };
 

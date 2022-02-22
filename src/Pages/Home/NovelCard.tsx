@@ -1,12 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
+import { getImage } from '../../Api';
 import { INovel } from '../../Store/Type/Interfaces';
 
 const NovelCard = ({ id, name, author, imagePath, nftItems, genre }: INovel) => {
   const navigate = useNavigate();
+  const [image, setImage] = useState('');
 
   // 반환받은 imagePath 로 추가 요청 필요!!
+  //
+  // useEffect(() => {
+  //   getImage(imagePath).then((res) => {
+  //     console.log(res);
+  //     setImage(res.image);
+  //   });
+  // }, []);
+
   return (
     <Container
       onClick={() => {
@@ -14,7 +24,7 @@ const NovelCard = ({ id, name, author, imagePath, nftItems, genre }: INovel) => 
       }}
     >
       <div className="image">
-        <img src={imagePath} alt="novel image" />
+        <img src={image} alt="novel image" />
       </div>
       <div className="contents">
         <h4 className="title">{name}</h4>

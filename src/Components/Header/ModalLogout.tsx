@@ -25,24 +25,24 @@ const ModalLogout = ({ closeModal }: { closeModal: () => void }) => {
     setIsSignin(false);
     closeModal();
     navigate('/');
-    postLogout(userInfo.accessToken).then((res) => {
-      console.log(res);
-      // if (res.result === 'ok') {
-      //   setUserInfo({
-      //     id: '',
-      //     email: '',
-      //     nickname: '',
-      //     roles: '',
-      //     accessToken: '',
-      //     refreshToken: '',
-      //     accessExpiredTime: '',
-      //     refreshExpiredTime: '',
-      //   });
-      //   setIsSignin(false);
-      //   closeModal();
-      //   navigate('/');
-      // }
-    });
+    // postLogout(userInfo.accessToken).then((res) => {
+    //   console.log(res);
+    // if (res.result === 'ok') {
+    //   setUserInfo({
+    //     id: '',
+    //     email: '',
+    //     nickname: '',
+    //     roles: '',
+    //     accessToken: '',
+    //     refreshToken: '',
+    //     accessExpiredTime: '',
+    //     refreshExpiredTime: '',
+    //   });
+    //   setIsSignin(false);
+    //   closeModal();
+    //   navigate('/');
+    // }
+    // });
   };
 
   return (
