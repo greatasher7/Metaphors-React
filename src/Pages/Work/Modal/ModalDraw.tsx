@@ -1,35 +1,61 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Icon_x from '../../../Assets/Images/Icon_x.png';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { Btn_Modal_Primary } from '../../../Components/ButtonModal';
 import SignatureCanvas from 'react-signature-canvas';
+import { postItemImage } from '../../../Api';
+import { useRecoilState } from 'recoil';
+import { userInfoAtom } from '../../../Store/Atoms';
+
+// base64 to blob
+const dataURItoBlob = (dataURI: string) => {
+  var byteString = window.atob(dataURI.split(',')[1]);
+  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+  var ab = new ArrayBuffer(byteString.length);
+  var ia = new Uint8Array(ab);
+
+  for (var i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+  var blob = new Blob([ab], { type: mimeString });
+
+  return blob;
+};
 
 const ModalDraw = ({ closeModal }: { closeModal: () => void }) => {
   const navigate = useNavigate();
   const signCanvas = useRef() as React.MutableRefObject<any>;
+  const params = useParams();
+  const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
+  const [image, setImage] = useState(new Blob());
 
   const clear = () => {
     signCanvas.current.clear();
   };
 
-  // 이미지 저장
-  const save = () => {
-    const image = signCanvas.current.getTrimmedCanvas().toDataURL('image/png');
-    const link = document.createElement('a');
-    link.href = image;
-    link.download = 'sign_image.png';
-    link.click();
+  const handleClick = () => {
+    const newImage = dataURItoBlob(signCanvas.current.getTrimmedCanvas().toDataURL('image/png'));
+    console.log(typeof newImage, newImage);
+    setImage(newImage);
   };
+
+  useEffect(() => {
+    params.id &&
+      image.size > 1 &&
+      postItemImage(userInfo.accessToken, params.id, image).then((res) => {
+        console.log(res);
+      });
+  }, [image]);
 
   return (
     <ModalContainer>
       <ModalBox>
-        <img src={Icon_x} alt="close button" className="close_btn" onClick={closeModal} />
-        <h3>[청산가리] 획득 성공!</h3>
-        <p className="desc">나만의 [청산가리]를 그려보세요.</p>
+        <h3>[{params.id}] 획득 성공!</h3>
+        <p className="desc">나만의 [{params.id}]를 그려보세요.</p>
         <Canvas_Container>
-          <SignatureCanvas // canvas element
+          <SignatureCanvas
             ref={signCanvas}
             canvasProps={{ className: 'sigCanvas canvasStyle' }}
             backgroundColor="#fff"
@@ -40,7 +66,7 @@ const ModalDraw = ({ closeModal }: { closeModal: () => void }) => {
           </span>
         </Canvas_Container>
         <p className="warning">*부적절한 그림은 운영사 임의로 거래가 금지될 수 있습니다.</p>
-        <Btn_Modal_Primary label="완료" />
+        <Btn_Modal_Primary label="완료" onClick={handleClick} />
       </ModalBox>
     </ModalContainer>
   );

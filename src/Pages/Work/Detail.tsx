@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { getNovelDetail } from '../../Api';
+import { postNovelDetail, postRestartNovel } from '../../Api';
 import { Btn_Primary_FontBlack, Btn_Gray } from '../../Components/Button';
 import { userInfoAtom } from '../../Store/Atoms';
 import { INovelDetail } from '../../Store/Type/Interfaces';
@@ -18,15 +18,22 @@ const Detail = () => {
     try {
       params.id &&
         userInfo.accessToken &&
-        getNovelDetail(userInfo.accessToken, parseInt(params.id)).then((res) => {
+        postNovelDetail(userInfo.accessToken, parseInt(params.id)).then((res) => {
           console.log('aa', res);
-          console.log('ss', res.content);
           setNobelDetail(res.content);
         });
     } catch (e) {
       console.log(e);
     }
   }, []);
+
+  const restartNovel = () => {
+    params.id &&
+      userInfo.accessToken &&
+      postRestartNovel(userInfo.accessToken, parseInt(params.id)).then((res) => {
+        console.log('restart', res);
+      });
+  };
 
   return (
     <Container>
@@ -36,11 +43,11 @@ const Detail = () => {
           <h4 className="title">{nobelDetail?.name}</h4>
           <span className="author">{nobelDetail?.author}</span>
           <div className="inlineBox">
-            <span className="date">{nobelDetail?.issueDate}</span>
+            <span className="date">{nobelDetail?.issueDate.slice(0, 10)}</span>
             <ul className="items">
               {nobelDetail?.nftItems.split('/').map((item, idx) => {
                 if (idx < 2) {
-                  return <li>{item}</li>;
+                  return <li key={idx}>{item}</li>;
                 }
               })}
             </ul>
@@ -58,7 +65,8 @@ const Detail = () => {
         <Btn_Gray
           label="다시 시작하기"
           onClick={() => {
-            navigate('/work/viewer');
+            restartNovel();
+            navigate(`/work/viewer/${nobelDetail?.novelId}`);
           }}
         />
       </Btn_Container>

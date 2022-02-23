@@ -22,15 +22,12 @@ const Home = () => {
         setNovelList(res.content.total);
       });
       getNovelListUser(userInfo.accessToken).then((res) => {
-        console.log(res);
         setNovelListUser(res.content.total);
       });
     } catch (e) {
       console.log(e);
     }
   }, []);
-
-  console.log('userinfo', userInfo);
 
   return (
     <>

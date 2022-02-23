@@ -7,7 +7,7 @@ const Work = () => {
   return (
     <Routes>
       <Route path="/:id" element={<Detail />} />
-      <Route path="/viewer/*" element={<Viewer />} />
+      <Route path="/viewer/:id/*" element={<Viewer />} />
     </Routes>
   );
 };

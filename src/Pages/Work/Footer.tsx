@@ -5,7 +5,7 @@ import Icon_goPrev from '../../Assets/Images/Icon_goPrev.png';
 import Icon_goNext from '../../Assets/Images/Icon_goNext.png';
 import Border_nextEpisode from '../../Assets/Images/Border_nextEpisode.png';
 
-const Footer = ({ moveNext, movePrev, isLastPage }: IFooterProps) => {
+const Footer = ({ moveNext, movePrev, isLastPage, isFirstPage, haschoice }: IFooterProps) => {
   return (
     <FooterContainer>
       {isLastPage && (
@@ -14,8 +14,12 @@ const Footer = ({ moveNext, movePrev, isLastPage }: IFooterProps) => {
           <img src={Border_nextEpisode} alt="next episode" />
         </NextEpisode>
       )}
-      <img className="arrow_icon" src={Icon_goPrev} onClick={movePrev} alt="go previous" />
-      {isLastPage ? (
+      {isFirstPage || isLastPage ? (
+        <span></span>
+      ) : (
+        <img className="arrow_icon" src={Icon_goPrev} onClick={movePrev} alt="go previous" />
+      )}
+      {isLastPage || haschoice ? (
         ''
       ) : (
         <img className="arrow_icon" src={Icon_goNext} onClick={moveNext} alt="go next" />

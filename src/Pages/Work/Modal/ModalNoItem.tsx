@@ -1,33 +1,41 @@
 import React from 'react';
 import styled from 'styled-components';
 import Icon_x from '../../../Assets/Images/Icon_x.png';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { IBtn } from '../../../Store/Type/Interfaces';
+import { postCreateItem } from '../../../Api';
+import { useRecoilState } from 'recoil';
+import { userInfoAtom } from '../../../Store/Atoms';
 
 const ModalNoItem = ({ closeModal }: { closeModal: () => void }) => {
   const navigate = useNavigate();
+  const params = useParams();
+  const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
+
+  const handleCreateClick = () => {
+    postCreateItem(userInfo.accessToken, params.id).then((res) => {
+      console.log(res);
+      if (res.result === 'ok') {
+        navigate(`/work/viewer/${params.id}/fail`);
+      } else {
+        navigate(`/work/viewer/${params.id}/draw`);
+      }
+    });
+  };
 
   return (
     <ModalContainer>
       <ModalBox>
-        <img src={Icon_x} alt="close button" className="close_btn" onClick={closeModal} />
         <h3>
           원하는 행동을 하기 위해서는
-          <br />
-          [청산가리]가 필요해요
+          <br />[{params.id}]가 필요해요
         </h3>
         <Btn_Container>
-          <Btn_Modal_Primary
-            label="[청산가리] 확률로 획득하기"
-            onClick={() => navigate('/work/viewer/fail')}
-          />
-          <Btn_Modal_White
-            label="[청산가리] 구입하기"
-            onClick={() => navigate('/work/viewer/draw')}
-          />
+          <Btn_Modal_Primary label={`[${params.id}] 확률로 획득하기`} onClick={handleCreateClick} />
+          <Btn_Modal_White label={`[${params.id}] 구입하기`} onClick={() => navigate(`/market`)} />
           <Btn_Modal_Black
-            label="쿠키 1개로 [청산가리] 1회 이용하기"
-            onClick={() => navigate('/work/viewer/using')}
+            label={`쿠키 1개로 [${params.id}] 1회 이용하기`}
+            onClick={() => navigate(`/work/viewer//${params.id}using`)}
           />
         </Btn_Container>
         <span

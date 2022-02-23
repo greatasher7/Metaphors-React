@@ -7,7 +7,7 @@ const ModalQuitSignup = ({ closeModal }: { closeModal: () => void }) => {
   const navigate = useNavigate();
 
   const btnBackOnClick = () => {
-    navigate(-1);
+    navigate('/account');
   };
 
   return (

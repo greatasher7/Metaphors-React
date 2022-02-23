@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SideNav from './SideNav';
@@ -10,6 +10,8 @@ import Icon_cookie from '../../Assets/Images/Icon_cookie.png';
 import Icon_cookieCharge from '../../Assets/Images/Icon_cookieCharge.png';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { isSigninAtom, userInfoAtom } from '../../Store/Atoms';
+import { getUserAssetInfo } from '../../Api';
+import { IUserAssetInfo } from '../../Store/Type/Interfaces';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -18,6 +20,12 @@ const Header = () => {
   const [isLogoutModalRender, setIsLogoutModalRender] = useState(false);
   const isSignin = useRecoilValue(isSigninAtom);
   const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
+  const [userAssetInfo, setUserAssteInfo] = useState<IUserAssetInfo>({
+    email: '',
+    nickname: '',
+    cookie: 0,
+    token: 0,
+  });
 
   const toggleNav = () => {
     setIsSideNavVisible((prev) => !prev);
@@ -34,6 +42,13 @@ const Header = () => {
   const openModal = () => {
     setIsLogoutModalRender(true);
   };
+
+  useEffect(() => {
+    getUserAssetInfo(userInfo.accessToken).then((res) => {
+      console.log('user', res);
+      setUserAssteInfo(res.content);
+    });
+  }, []);
 
   return (
     <>
@@ -57,7 +72,7 @@ const Header = () => {
                 className="cookie_icon"
                 onClick={onLoginClick}
               />
-              <span className="my_cookie">10</span>
+              <span className="my_cookie">{userAssetInfo.cookie}</span>
             </div>
             <img
               src={Icon_cookieCharge}
@@ -78,7 +93,9 @@ const Header = () => {
           }}
         />
       </Container>
-      {isSideNavVisible && <SideNav toggleNav={toggleNav} clickLogout={openModal} />}
+      {isSideNavVisible && (
+        <SideNav toggleNav={toggleNav} clickLogout={openModal} nickname={userAssetInfo.nickname} />
+      )}
       {isLogoutModalRender && <ModalLogout closeModal={closeModal} />}
     </>
   );

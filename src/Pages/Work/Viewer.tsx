@@ -1,95 +1,69 @@
-import React, { useState } from 'react';
-import { Route, Routes, useNavigate } from 'react-router';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { work } from '../../Store/Data/Works';
-import { IPage } from '../../Store/Type/Interfaces';
+import { postNovelEpisode } from '../../Api';
+import { userInfoAtom } from '../../Store/Atoms';
+import { INovelEpisode } from '../../Store/Type/Interfaces';
 import Footer from './Footer';
-import ModalDraw from './Modal/ModalDraw';
-import ModalFailGetting from './Modal/ModalFailGetting';
-import ModalNoItem from './Modal/ModalNoItem';
-import ModalUseItem from './Modal/ModalUseItem';
 import SelectOption from './SelectOption';
-
-const PageContainer = ({ page, title, author, contents, isVisibleOption }: IPage) => {
-  return (
-    <PageContainer_styled isVisibleOption={isVisibleOption}>
-      {title && <h4 className="title">{title}</h4>}
-      {author && <span className="author">{author}</span>}
-      <div className="contentsBox">
-        {contents.map((paragraph, idx) => (
-          <p key={idx}>
-            {paragraph}
-            <br />
-            <br />
-          </p>
-        ))}
-      </div>
-    </PageContainer_styled>
-  );
-};
-
-const PageContainer_styled = styled.section<{ isVisibleOption: boolean }>`
-  font-family: 'NanumMyeongjo';
-  ${({ theme }) => theme.mixin.textStyle.B_14}
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 30px;
-  padding-bottom: ${(props) => (props.isVisibleOption ? '450px' : '0')};
-  .title {
-    ${({ theme }) => theme.mixin.textStyle.EB_20}
-  }
-  .author {
-    margin-top: 16px;
-    margin-bottom: 130px;
-  }
-  .contentsBox {
-    p {
-      line-height: 1.4;
-      word-break: keep-all;
-    }
-  }
-`;
+import PageContainer from './PageContainer';
 
 const Viewer = () => {
   const [nowPage, setNowPage] = useState(1);
+  const [userinfo, setUserInfo] = useRecoilState(userInfoAtom);
+  const [episodeData, setEpisodeData] = useState<INovelEpisode>();
 
-  const { page, title, author, contents, isVisibleOption, isLastPage } = work[nowPage - 1];
+  const params = useParams();
 
-  const navigate = useNavigate();
-  const closeModal = () => {
-    navigate('/work/viewer');
+  const goNext = (num: number) => {
+    setNowPage((prev) => prev + num);
   };
+
+  useEffect(() => {
+    try {
+      params.id &&
+        postNovelEpisode(userinfo.accessToken, parseInt(params.id)).then((res) => {
+          console.log(res);
+          setEpisodeData(res.content);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log('epidata', episodeData);
+  }, [episodeData]);
+
   return (
     <>
       <Container>
         <PageContainer
-          page={page}
-          title={title}
-          author={author}
-          contents={contents}
-          isVisibleOption={isVisibleOption}
-          isLastPage={isLastPage}
+          title={episodeData?.name}
+          author={episodeData?.author}
+          contents={episodeData?.pages[nowPage - 1].content}
+          isVisibleOption={episodeData?.pages[nowPage - 1].hasChoice}
+          isLastPage={episodeData?.pages[nowPage - 1].context !== ''}
+          isFirstPage={nowPage === 1}
         />
       </Container>
-      {isVisibleOption && <SelectOption />}
+      {episodeData?.pages[nowPage - 1].hasChoice && (
+        <SelectOption novelId={episodeData.novelId} goNext={goNext} />
+      )}
       <Footer
         movePrev={() => {
-          if (nowPage < 2) return;
+          if (nowPage === 1) return;
           setNowPage((current) => current - 1);
         }}
         moveNext={() => {
-          if (nowPage > work.length - 1) return;
+          if (episodeData?.pages[nowPage - 1].context !== '') return;
           setNowPage((current) => current + 1);
         }}
-        isLastPage={isLastPage}
+        isLastPage={episodeData?.pages[nowPage - 1].context !== ''}
+        isFirstPage={nowPage === 1}
+        haschoice={episodeData?.pages[nowPage - 1].hasChoice}
       />
-      <Routes>
-        <Route path="/noitem" element={<ModalNoItem closeModal={closeModal} />} />
-        <Route path="/draw" element={<ModalDraw closeModal={closeModal} />} />
-        <Route path="/fail" element={<ModalFailGetting closeModal={closeModal} />} />
-        <Route path="/using" element={<ModalUseItem closeModal={closeModal} />} />
-      </Routes>
     </>
   );
 };

@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { isSigninAtom } from '../../Store/Atoms';
 
-const SideNav = ({ toggleNav, clickLogout }: ISideNavProps) => {
+const SideNav = ({ toggleNav, clickLogout, nickname }: ISideNavProps) => {
   const navigate = useNavigate();
   const isSignin = useRecoilValue(isSigninAtom);
 
@@ -22,7 +22,7 @@ const SideNav = ({ toggleNav, clickLogout }: ISideNavProps) => {
               <span className="loginout" onClick={clickLogout}>
                 로그아웃
               </span>
-              <span className="user">노블사랑 님</span>
+              <span className="user">{nickname} 님</span>
             </>
           ) : (
             <span

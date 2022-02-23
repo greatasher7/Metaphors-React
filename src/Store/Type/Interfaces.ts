@@ -1,21 +1,3 @@
-// temp
-// export interface INovel {
-//   title: string;
-//   author: string;
-//   genre: string;
-//   items: string[];
-//   image: string;
-// }
-
-export interface IPage {
-  page: number;
-  title?: string;
-  author?: string;
-  contents: string[];
-  isVisibleOption: boolean;
-  isLastPage: boolean;
-}
-
 export interface IItem {
   name: string;
   image: string;
@@ -33,20 +15,18 @@ export interface IBtn {
 
 export interface IModalSelling {}
 
-export interface ISelectOption {
-  item?: string;
-  act: string;
-}
-
 export interface IFooterProps {
   moveNext: () => void;
   movePrev: () => void;
-  isLastPage: boolean;
+  isLastPage: boolean | undefined;
+  isFirstPage: boolean | undefined;
+  haschoice: boolean | undefined;
 }
 
 export interface ISideNavProps {
   toggleNav: () => void;
   clickLogout: () => void;
+  nickname: string;
 }
 
 export interface ICookieOptionProps {
@@ -67,9 +47,30 @@ export interface IInput {
   isExternalWrong?: boolean;
 }
 
+// Account
+
 export interface IAccountBtn {
   label: string;
   onClick: () => void;
+}
+
+export interface IUserNft {
+  isDone: boolean;
+  name: string;
+  personality: string[];
+  genre: string[];
+}
+
+export interface IBtnNft {
+  onClick: (value: string, isSelected: boolean) => void;
+  label: string;
+}
+
+export interface IUserAssetInfo {
+  email: string;
+  nickname: string;
+  cookie: number;
+  token: number;
 }
 
 // Novel
@@ -92,6 +93,49 @@ export interface INovelDetail {
   nftItems: string;
   genre: string;
   current: number;
+}
+
+export interface INovelPage {
+  number: number;
+  content: string;
+  hasChoice: boolean;
+  context: string;
+}
+
+export interface INovelChoice {
+  episodeId: string;
+  item: string;
+  context: string;
+}
+
+export interface INovelItem {
+  id: string;
+  name: string;
+  imagePath: string;
+  durability: string;
+  maxDurability: string;
+  isFreeToken: boolean;
+  price: string;
+}
+
+export interface INovelEpisode {
+  novelId: number;
+  name: string;
+  author: string;
+  episodeId: string;
+  current: number;
+  pages: INovelPage[];
+  choice: INovelChoice[];
+  items: INovelItem[];
+}
+
+export interface IPage {
+  title: string | undefined;
+  author: string | undefined;
+  contents: string | undefined;
+  isVisibleOption: boolean | undefined;
+  isLastPage: boolean | undefined;
+  isFirstPage: boolean | undefined;
 }
 
 // Atoms

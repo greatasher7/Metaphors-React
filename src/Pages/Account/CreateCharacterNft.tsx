@@ -1,56 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Btn_Gradient } from '../../Components/Button';
-import { IBtn } from '../../Store/Type/Interfaces';
+import { IBtnNft, IUserNft } from '../../Store/Type/Interfaces';
 import Arrow_R from '../../Assets/Images/Icon_arrowR.png';
 import Arrow_L from '../../Assets/Images/Icon_arrowL.png';
 import { useNavigate } from 'react-router';
-
-const tempdata = {
-  charactor: [
-    '차가움',
-    '따뜻함',
-    '즉흥적임',
-    '계획적임',
-    '활기참',
-    '긍정적임',
-    '부정적임',
-    '소심함',
-  ],
-  genre: [
-    '로맨스',
-    '판타지',
-    'SF',
-    '스릴러',
-    '액션/무협',
-    'BL',
-    '드라마',
-    '학원물',
-    '로맨스판타지',
-    '추리',
-  ],
-};
+import { getUserGenre, getUserPersonality, postSigninDetail } from '../../Api';
+import { useRecoilState } from 'recoil';
+import { userInfoAtom } from '../../Store/Atoms';
 
 const CreateCharacterNft = () => {
   const [nowStep, setNowStep] = useState('name');
   const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
+  const [personalityList, setPersonalityList] = useState<{ personality: string }[]>();
+  const [genresList, setGenresList] = useState<{ genre: string }[]>();
+  const [userNft, setUserNft] = useState<IUserNft>({
+    isDone: false,
+    name: '',
+    personality: [],
+    genre: [],
+  });
 
-  const ContentBox = ({ label }: IBtn) => {
-    const [isSelected, setIsSelected] = useState(false);
+  console.log(userNft);
 
-    return (
-      <TextBox
-        onClick={() => {
-          isSelected ? setIsSelected(false) : setIsSelected(true);
-        }}
-        isSelected={isSelected}
-      >
-        {label}
-      </TextBox>
-    );
-  };
+  useEffect(() => {
+    try {
+      getUserGenre().then((res) => {
+        setGenresList(res.content);
+      });
+      getUserPersonality().then((res) => {
+        setPersonalityList(res.content);
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (userNft.isDone) {
+      postSigninDetail(
+        userInfo.accessToken,
+        userInfo.email,
+        userNft.name,
+        userNft.personality[1],
+        userNft.personality[2],
+        userNft.personality[3],
+        userNft.genre[1],
+        userNft.genre[2],
+        userNft.genre[3]
+      ).then((res) => {
+        console.log(res);
+      });
+
+      console.log('done');
+      navigate('/account/complete');
+    }
+  }, [userNft]);
 
   const NameBox = () => {
+    const [value, setValue] = useState('');
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setValue(e.target.value);
+    };
+
     return (
       <>
         <h3 className="title">
@@ -59,17 +73,48 @@ const CreateCharacterNft = () => {
             src={Arrow_R}
             alt="다음"
             onClick={() => {
-              setNowStep('character');
+              if (value.length > 0) {
+                setNowStep('personality');
+                setUserNft({ ...userNft, name: value });
+              }
             }}
             className="right"
           />
         </h3>
-        <input type="text" placeholder="ex) 역삼동불고기" />
+        <input type="text" placeholder="ex) 역삼동불고기" value={value} onChange={handleChange} />
       </>
     );
   };
 
-  const CharacterBox = () => {
+  const ContentBox = ({ label, onClick }: IBtnNft) => {
+    const [isSelected, setIsSelected] = useState(false);
+
+    return (
+      <TextBox
+        onClick={() => {
+          isSelected ? setIsSelected(false) : setIsSelected(true);
+          onClick(label, isSelected);
+        }}
+        isSelected={isSelected}
+      >
+        {label}
+      </TextBox>
+    );
+  };
+
+  const PersonalityBox = () => {
+    const [valueList, setValueList] = useState<string[]>([]);
+
+    const handleClick = (label: string, isSelected: boolean) => {
+      if (isSelected) {
+        setValueList((prev) => prev.filter((data) => data !== label));
+      } else {
+        setValueList([...valueList, label]);
+      }
+    };
+
+    console.log(valueList);
+
     return (
       <>
         <h3 className="title">
@@ -86,22 +131,38 @@ const CreateCharacterNft = () => {
             src={Arrow_R}
             alt="다음"
             onClick={() => {
-              setNowStep('genre');
+              if (valueList.length === 3) {
+                setNowStep('genre');
+                setUserNft({ ...userNft, personality: valueList });
+              }
             }}
             className="right"
           />
         </h3>
         <p className="desc">3개의 성격을 선택해주세요.</p>
         <ul className="contList">
-          {tempdata.charactor.map((cont, idx) => (
-            <ContentBox key={idx} label={cont} />
-          ))}
+          {personalityList &&
+            personalityList.map((cont, idx) => (
+              <ContentBox key={idx} label={cont.personality} onClick={handleClick} />
+            ))}
         </ul>
       </>
     );
   };
 
   const GenreBox = () => {
+    const [valueList, setValueList] = useState<string[]>([]);
+
+    const handleClick = (label: string, isSelected: boolean) => {
+      if (isSelected) {
+        setValueList((prev) => prev.filter((data) => data !== label));
+      } else {
+        setValueList([...valueList, label]);
+      }
+    };
+
+    console.log(valueList);
+
     return (
       <>
         <h3 className="title">
@@ -109,7 +170,7 @@ const CreateCharacterNft = () => {
             src={Arrow_L}
             alt="이전"
             onClick={() => {
-              setNowStep('character');
+              setNowStep('personality');
             }}
             className="left"
           />
@@ -118,16 +179,19 @@ const CreateCharacterNft = () => {
             src={Arrow_R}
             alt="다음"
             onClick={() => {
-              navigate('/account/complete');
+              if (valueList.length === 3) {
+                setUserNft({ ...userNft, genre: valueList, isDone: true });
+              }
             }}
             className="right"
           />
         </h3>
         <p className="desc">3개의 장르를 선택해주세요.</p>
         <ul className="contList">
-          {tempdata.genre.map((cont, idx) => (
-            <ContentBox key={idx} label={cont} />
-          ))}
+          {genresList &&
+            genresList.map((cont, idx) => (
+              <ContentBox key={idx} label={cont.genre} onClick={handleClick} />
+            ))}
         </ul>
       </>
     );
@@ -136,7 +200,13 @@ const CreateCharacterNft = () => {
   return (
     <Container>
       <Btn_Gradient label="NET 생성 중" />
-      {nowStep === 'name' ? <NameBox /> : nowStep === 'character' ? <CharacterBox /> : <GenreBox />}
+      {nowStep === 'name' ? (
+        <NameBox />
+      ) : nowStep === 'personality' ? (
+        <PersonalityBox />
+      ) : (
+        <GenreBox />
+      )}
     </Container>
   );
 };

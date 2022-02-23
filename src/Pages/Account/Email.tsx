@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import ModalQuitSignup from './Modal/ModalQuitSignup';
 import { InputEmail } from './Inputs';
 import { BtnGoBack, BtnGoForward } from './Buttons';
-import { getEmailOverlap } from '../../Api';
+import { postEmailOverlap } from '../../Api';
 import { useRecoilState } from 'recoil';
 import { signupAtom } from '../../Store/Atoms';
 
@@ -27,18 +27,16 @@ const Email = () => {
   const onGoForwardClick = () => {
     try {
       if (email.length > 1) {
-        setSignup({ ...signup, email: email });
-        navigate('/account/signup/password');
-        // getEmailOverlap(email).then((res) => {
-        // 중복 검사 결과 중복이면 isOverlap -> true, 아니면 recoil email 업데이트 하고 비밀번호 임력으로 이동
-        // console.log('result', res);
-        // if (res.data === true) {
-        //   setIsOverlap(true);
-        // } else {
-        //   setSignup({ ...signup, email: email });
-        //   navigate('/account/signup/password');
-        // }
-        // });
+        postEmailOverlap(email).then((res) => {
+          // 중복 검사 결과 중복이면 isOverlap -> true, 아니면 recoil email 업데이트 하고 비밀번호 임력으로 이동
+          console.log('result', res);
+          if (res.result !== 'ok') {
+            setIsOverlap(true);
+          } else {
+            setSignup({ ...signup, email: email });
+            navigate('/account/signup/password');
+          }
+        });
       }
     } catch (e) {
       console.log(e);
