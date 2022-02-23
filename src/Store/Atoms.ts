@@ -53,7 +53,7 @@ export const nextEpisodeAtom = atom<boolean>({
 });
 
 export const nftAtom = atom<INftUser>({
-  key: 'nextEpisode',
+  key: 'nft',
   default: {
     accessToken: '',
     name: '',
@@ -64,5 +64,11 @@ export const nftAtom = atom<INftUser>({
     genre2: '',
     genre3: '',
   },
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const inventoryTriggerAtom = atom<boolean>({
+  key: 'inventoryTrigger',
+  default: false,
   effects_UNSTABLE: [persistAtom],
 });

@@ -290,3 +290,49 @@ export const postUseItemCookie = async (accessToken: string, novelId: string, ne
   });
   return result.data;
 };
+
+////////////
+// 내 아이템 보기
+export const getMyItemInfo = async (accessToken: string) => {
+  const result = await axios({
+    method: 'get',
+    url: url + '/api/item/info',
+    headers: {
+      'x-access-token': accessToken,
+    },
+  });
+  return result.data.content;
+};
+// 아이템 판매 등록
+export const sellItems = async (accessToken: string, tokenId: string, price: string) => {
+  console.log('Token', accessToken);
+  console.log('tokenId', tokenId);
+  console.log('price', price);
+  const result = await axios({
+    method: 'post',
+    url: url + '/api/nft/items/sell',
+    headers: {
+      'x-access-token': accessToken,
+    },
+    data: {
+      tokenId: tokenId,
+      price: price,
+    },
+  });
+  return result.data;
+};
+// 아이템 판매 등록 취소
+export const sellItemsCancel = async (accessToken: string, tokenId: string) => {
+  console.log('Token', accessToken);
+  const result = await axios({
+    method: 'post',
+    url: url + '/api/nft/items/sell/cancel',
+    headers: {
+      'x-access-token': accessToken,
+    },
+    data: {
+      tokenId: tokenId,
+    },
+  });
+  return result.data;
+};

@@ -1,27 +1,57 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Btn_Modal_Primary } from '../../../Components/ButtonModal';
 import Icon_x from '../../../Assets/Images/Icon_x.png';
 import { useNavigate } from 'react-router';
+import { getMyItemInfo, sellItems } from '../../../Api';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import { userInfoAtom, inventoryTriggerAtom } from '../../../Store/Atoms';
 
-const ModalSelling = ({ closeModal }: { closeModal: () => void }) => {
+interface props {
+  closeModal: any;
+  item: any;
+}
+
+const ModalSelling = ({ closeModal, item }: props) => {
   const navigate = useNavigate();
+  const userInfo = useRecoilValue(userInfoAtom);
+  const [inventoryTrigger, setInventoryTrigger] = useRecoilState(inventoryTriggerAtom);
+  const [price, setPrice] = useState('0');
+
+  const onChangeKlay = (e: any) => {
+    setPrice(e.target.value);
+  };
 
   return (
     <ModalContainer>
       <ModalBox>
         <img src={Icon_x} alt="close button" className="close_btn" onClick={closeModal} />
-        <h4>[따뜻함] 팔기</h4>
-        <span className="durability">3/10회 남음</span>
+        <h4>[{item.name}] 팔기</h4>
+        <span className="durability">
+          {item.durability}/{item.maxDurability}회 남음
+        </span>
         <div className="image"></div>
         <div className="input_container">
-          <input type="number" placeholder="판매가격을 입력해주세요." className="selling_price" />
+          <input
+            type="number"
+            placeholder="판매가격을 입력해주세요."
+            className="selling_price"
+            onChange={onChangeKlay}
+          />
           <span className="klay">KLAY</span>
         </div>
         <Btn_Modal_Primary
           label="거래소에 올리기"
           onClick={() => {
-            navigate('/inventory/completeselling');
+            sellItems(userInfo.accessToken, item.id, price).then((res) => {
+              if (res.result == 'ok') {
+                navigate('/inventory/completeselling');
+                setInventoryTrigger((prev) => !prev);
+              } else {
+                console.log('판매등록 실패');
+                navigate('/inventory');
+              }
+            });
           }}
         />
       </ModalBox>
@@ -72,8 +102,12 @@ const ModalBox = styled.div`
       color: ${({ theme }) => theme.variable.colors.black_color};
       width: 100%;
       padding: 5px;
+      // text-align: center;
       ${({ theme }) => theme.mixin.textStyle.R_16}
     }
+    // .selling_price::-webkit-scrollbar {
+    //   display: none;
+    // }
     .klay {
       position: absolute;
       top: 50%;

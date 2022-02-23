@@ -3,28 +3,49 @@ import styled from 'styled-components';
 import { Btn_Modal_Black, Btn_Modal_White } from '../../../Components/ButtonModal';
 import Icon_x from '../../../Assets/Images/Icon_x.png';
 import { useNavigate } from 'react-router';
+import { sellItems, sellItemsCancel } from '../../../Api';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import { userInfoAtom, inventoryTriggerAtom } from '../../../Store/Atoms';
 
-const ModalCancleSelling = ({ closeModal }: { closeModal: () => void }) => {
+interface props {
+  closeModal: any;
+  item: any;
+}
+
+const ModalCancleSelling = ({ closeModal, item }: props) => {
   const navigate = useNavigate();
+  const userInfo = useRecoilValue(userInfoAtom);
+  const [inventoryTrigger, setInventoryTrigger] = useRecoilState(inventoryTriggerAtom);
 
   return (
     <ModalContainer>
       <ModalBox>
         <img src={Icon_x} alt="close button" className="close_btn" onClick={closeModal} />
-        <h3>해당 [따뜻함]을 판매 취소할까요?</h3>
+        <h3>해당 [{item.name}]을 판매 취소할까요?</h3>
         <div className="item_card">
           <div className="image"></div>
           <div className="content">
-            <h4 className="title">따뜻함</h4>
-            <span className="dutability">4/10회 남음</span>
-            <span className="price">2,000KLAY</span>
+            <h4 className="title">{item.name}</h4>
+            <span className="dutability">
+              {item.durability}/{item.maxDurability}회 남음
+            </span>
+            <span className="price">{item.price} KLAY</span>
           </div>
         </div>
         <Btn_Container>
           <Btn_Modal_White
             label="예, 취소하겠습니다."
             onClick={() => {
-              navigate('/inventory/completecancle');
+              sellItemsCancel(userInfo.accessToken, item.id).then((res) => {
+                console.log('cancle?', res);
+                if (res.result == 'ok') {
+                  navigate('/inventory/completecancle');
+                  setInventoryTrigger((prev) => !prev);
+                } else {
+                  console.log('판매 등록 취소 실패');
+                  navigate('/inventory');
+                }
+              });
             }}
           />
           <Btn_Modal_Black label="아니요, 취소하지 않겠습니다." onClick={closeModal} />

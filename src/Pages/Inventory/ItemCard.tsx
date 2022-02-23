@@ -1,11 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { IItem } from '../../Store/Type/Interfaces';
 import Icon_onSale from '../../Assets/Images/Icon_onSale.png';
+import ModalCancleSelling from './Modal/ModalCancleSelling';
 
-const ItemCard = ({ name, image, durability, price, onSale }: IItem) => {
+interface ItemCardProps {
+  id: string;
+  name: string;
+  image: string;
+  durability: number;
+  maxDurability: number;
+  onSale: boolean;
+  price?: number;
+  isFreeToken: boolean;
+  setItem: any;
+}
+
+const ItemCard = ({
+  id,
+  name,
+  image,
+  durability,
+  maxDurability,
+  price,
+  onSale,
+  isFreeToken,
+  setItem,
+}: ItemCardProps) => {
   const navigate = useNavigate();
+  console.log('sale?', onSale);
 
   return (
     <>
@@ -17,11 +41,22 @@ const ItemCard = ({ name, image, durability, price, onSale }: IItem) => {
               <img src={Icon_onSale} alt="icon" /> 판매 중
             </span>
             <h4 className="title">{name}</h4>
-            <span className="dutability">{durability}/10회 남음</span>
-            <span className="price">{price}KLAY</span>
+            <span className="dutability">
+              {durability}/{maxDurability}회 남음
+            </span>
+            <span className="price">{price} KLAY</span>
             <span
               className="sell_btn"
               onClick={() => {
+                setItem({
+                  id: id,
+                  name: name,
+                  image: image,
+                  durability: durability,
+                  maxDurability: maxDurability,
+                  onSale: onSale,
+                  price: price,
+                });
                 navigate('/inventory/cancleselling');
               }}
             >
@@ -34,15 +69,32 @@ const ItemCard = ({ name, image, durability, price, onSale }: IItem) => {
           <div className="image"></div>
           <div className="contents">
             <h4 className="title">{name}</h4>
-            <span className="dutability">{durability}/10회 남음</span>
-            <span
-              className="sell_btn"
-              onClick={() => {
-                navigate('/inventory/selling');
-              }}
-            >
-              팔기
-            </span>
+            {!isFreeToken ? (
+              <>
+                <span className="dutability">
+                  {durability}/{maxDurability}회 남음
+                </span>
+                <span
+                  className="sell_btn"
+                  onClick={() => {
+                    setItem({
+                      id: id,
+                      name: name,
+                      image: image,
+                      durability: durability,
+                      maxDurability: maxDurability,
+                      onSale: onSale,
+                      price: price,
+                    });
+                    navigate('/inventory/selling');
+                  }}
+                >
+                  팔기
+                </span>
+              </>
+            ) : (
+              <span className="dutability">무제한</span>
+            )}
           </div>
         </Container>
       )}

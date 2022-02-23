@@ -2,12 +2,17 @@ import React from 'react';
 import styled from 'styled-components';
 import { Btn_Modal_Black } from '../../../Components/ButtonModal';
 
-const ModalCompleteCancle = ({ closeModal }: { closeModal: () => void }) => {
+interface props {
+  closeModal: any;
+  item: any;
+}
+
+const ModalCompleteCancle = ({ closeModal, item }: props) => {
   return (
     <ModalContainer>
       <ModalBox>
         <h4>
-          해당 [따뜻함]의 판매가 취소되어
+          해당 [{item.name}]의 판매가 취소되어
           <br />
           거래소에서 내려갔습니다.
         </h4>

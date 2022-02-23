@@ -1,68 +1,93 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { Btn_Primary_FontBlack } from '../../Components/Button';
-import { IItem } from '../../Store/Type/Interfaces';
 import ItemCard from './ItemCard';
 import ModalCancleSelling from './Modal/ModalCancleSelling';
 import ModalCompleteCancle from './Modal/ModalCompleteCancle';
 import ModalCompleteSelling from './Modal/ModalCompleteSelling';
 import ModalSelling from './Modal/ModalSelling';
-
-const item_list: IItem[] = [
-  {
-    name: '따뜻함',
-    image: 'ddd',
-    durability: 7,
-    onSale: true,
-    price: 2000,
-  },
-  {
-    name: '용기',
-    image: 'ddd',
-    durability: 5,
-    onSale: false,
-    price: 2000,
-  },
-  {
-    name: '청산가리',
-    image: 'ddd',
-    durability: 3,
-    onSale: false,
-    price: 2000,
-  },
-];
+import { getMyItemInfo, getUserAssetInfo } from '../../Api';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { inventoryTriggerAtom, userInfoAtom } from '../../Store/Atoms';
 
 const Inventory = () => {
   const navigate = useNavigate();
+  const userInfo = useRecoilValue(userInfoAtom);
+  const [inventoryTrigger, setInventoryTrigger] = useRecoilState(inventoryTriggerAtom);
+  const [list, setList] = useState([] as any);
+  const [item, setItem] = useState({
+    name: '',
+    image: '',
+    isFreeToken: false,
+    durability: 0,
+    maxDurability: 0,
+    onSale: false,
+    price: 0,
+  });
+  const [klay, setKlay] = useState(0);
+
   const closeModal = () => {
+    console.log('closeModal');
     navigate('/inventory');
   };
+
+  useEffect(() => {
+    console.log('useEffect');
+    getMyItemInfo(userInfo.accessToken).then((res) => {
+      setList(res.items);
+      console.log(res.items);
+    });
+    getUserAssetInfo(userInfo.accessToken).then((res) => {
+      setKlay(res.content.token);
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log('inventory trigger');
+    getMyItemInfo(userInfo.accessToken).then((res) => {
+      setList(res.items);
+      console.log(res.items);
+    });
+    getUserAssetInfo(userInfo.accessToken).then((res) => {
+      setKlay(res.content.token);
+    });
+  }, [inventoryTrigger]);
 
   return (
     <>
       <Container>
         <Btn_Primary_FontBlack label="인벤토리" />
-        <p className="my_klay">150,032KLAY</p>
+        <p className="my_klay">{klay} KLAY</p>
         <h3 className="list_title">내 소재</h3>
         <section className="item_list">
-          {item_list.map((item, idx) => (
+          {list.map((item: any, idx: any) => (
             <ItemCard
               key={idx}
+              id={item.id}
               name={item.name}
               durability={item.durability}
+              isFreeToken={item.isFreeToken}
+              maxDurability={item.maxDurability}
               image={item.image}
-              onSale={item.onSale}
+              onSale={item.price !== '0' ? true : false}
               price={item.price ? item.price : 0}
+              setItem={setItem}
             />
           ))}
         </section>
       </Container>
       <Routes>
-        <Route path="/selling" element={<ModalSelling closeModal={closeModal} />} />
+        <Route path="/selling" element={<ModalSelling closeModal={closeModal} item={item} />} />
         <Route path="/completeselling" element={<ModalCompleteSelling closeModal={closeModal} />} />
-        <Route path="/cancleselling" element={<ModalCancleSelling closeModal={closeModal} />} />
-        <Route path="/completecancle" element={<ModalCompleteCancle closeModal={closeModal} />} />
+        <Route
+          path="/cancleselling"
+          element={<ModalCancleSelling closeModal={closeModal} item={item} />}
+        />
+        <Route
+          path="/completecancle"
+          element={<ModalCompleteCancle closeModal={closeModal} item={item} />}
+        />
       </Routes>
     </>
   );
