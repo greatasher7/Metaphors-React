@@ -45,7 +45,7 @@ const PageContainer_styled = styled.section<{ isVisibleOption: boolean | undefin
   }
   .contentsBox {
     p {
-      line-height: 1.4;
+      line-height: 1.6;
       word-break: keep-all;
     }
   }

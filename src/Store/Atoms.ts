@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
-import { INftUser, ISignup, IUser, IUserAssetInfo } from './Type/Interfaces';
+import { IHeaderNovel, INftUser, ISignup, IUser, IUserAssetInfo } from './Type/Interfaces';
 
 const { persistAtom } = recoilPersist();
 
@@ -70,5 +70,16 @@ export const nftAtom = atom<INftUser>({
 export const inventoryTriggerAtom = atom<boolean>({
   key: 'inventoryTrigger',
   default: false,
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const isNovelAtom = atom<IHeaderNovel>({
+  key: 'isNovel',
+  default: {
+    isNovel: false,
+    title: '',
+    current: 0,
+    novelId: 0,
+  },
   effects_UNSTABLE: [persistAtom],
 });

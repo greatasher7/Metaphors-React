@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { Btn_Primary_FontBlack } from '../../Components/Button';
 import { IItem } from '../../Store/Type/Interfaces';
 import Icon_search from '../../Assets/Images/Icon_search.png';
+import Icon_cookieCharge from '../../Assets/Images/Icon_cookieCharge.png';
 import ItemCard_Market from './ItemCard_Market';
 import ModalBuying from './Modal/ModalBuying';
 import ModalCompleteBuying from './Modal/ModalCompleteBuying';
@@ -45,14 +46,35 @@ const Market = () => {
     navigate('/market');
   };
 
+  const [isChecked, setIsChecked] = useState(false);
+
+  console.log(isChecked);
+
   return (
     <>
       <Container>
         <Btn_Primary_FontBlack label="거래소" />
-        <p className="my_klay">150,032KLAY</p>
+        <p
+          className="my_klay"
+          onClick={() => {
+            navigate('/chargeklay');
+          }}
+        >
+          <span>150,032KLAY</span>
+          <img src={Icon_cookieCharge} alt="charge icon" className="charge_icon" />
+        </p>
         <div className="searchbox">
           <img src={Icon_search} alt="search" className="search_icon" />
           <input type="text" className="search" placeholder="소재 이름으로 검색하기" />
+          <div className="checkbox_box">
+            <input
+              type="checkbox"
+              onChange={() => {
+                setIsChecked((prev) => !prev);
+              }}
+            />
+            <span>내가 판매 중인 물품 제외</span>
+          </div>
         </div>
         <section className="item_list">
           {item_list.map((item, idx) => (
@@ -87,6 +109,19 @@ const Container = styled.div`
     color: #a2a4b7;
     ${({ theme }) => theme.mixin.textStyle.R_12}
     margin-top: 15px;
+    border-radius: 15px;
+    border: 1px solid #fff;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 120px;
+    .charge_icon {
+      width: 13px;
+    }
+    span {
+      padding-top: 3px;
+    }
   }
   .searchbox {
     margin-top: 30px;
@@ -104,6 +139,23 @@ const Container = styled.div`
       top: 50%;
       right: 20px;
       transform: translateY(-50%);
+    }
+    .checkbox_box {
+      position: absolute;
+      bottom: -30px;
+      right: 0;
+      display: flex;
+      align-items: center;
+      ${({ theme }) => theme.mixin.textStyle.R_12}
+      color: #c2c2c2;
+      height: 20px;
+      span {
+        padding-top: 3px;
+      }
+      input {
+        background-color: #373850;
+        border: 0;
+      }
     }
   }
   .item_list {

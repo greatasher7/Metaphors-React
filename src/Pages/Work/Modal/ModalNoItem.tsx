@@ -20,6 +20,7 @@ const ModalNoItem = ({ closeModal }: { closeModal: () => void }) => {
       if (res.result === 'ok') {
         console.log('create!!!!', res);
         navigate(`/work/viewer/${params.id}/draw`);
+      } else {
       }
     });
   };

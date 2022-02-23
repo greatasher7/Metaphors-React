@@ -3,7 +3,7 @@ import { useParams } from 'react-router';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { postNovelEpisode } from '../../Api';
-import { useCookieAtom, userInfoAtom, nextEpisodeAtom } from '../../Store/Atoms';
+import { useCookieAtom, userInfoAtom, nextEpisodeAtom, isNovelAtom } from '../../Store/Atoms';
 import { INovelEpisode } from '../../Store/Type/Interfaces';
 import Footer from './Footer';
 import SelectOption from './SelectOption';
@@ -12,11 +12,46 @@ import PageContainer from './PageContainer';
 const Viewer = () => {
   const [nowPage, setNowPage] = useState(1);
   const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
-  const [episodeData, setEpisodeData] = useState<INovelEpisode>();
+  const [episodeData, setEpisodeData] = useState<INovelEpisode>({
+    novelId: 0,
+    name: '',
+    author: '',
+    episodeId: '',
+    current: 0,
+    pages: [
+      {
+        number: 0,
+        content: '',
+        hasChoice: false,
+        context: '',
+      },
+    ],
+    choice: [
+      {
+        episodeId: '',
+        item: '',
+        context: '',
+      },
+    ],
+    items: [
+      {
+        id: '',
+        name: '',
+        imagePath: '',
+        durability: '',
+        maxDurability: '',
+        isFreeToken: false,
+        price: '',
+      },
+    ],
+  });
   const [useCookie, setUseCookie] = useRecoilState(useCookieAtom);
   const [nextEpisodeToggle, setNextEpisodeToggle] = useRecoilState(nextEpisodeAtom);
+  const [isNovel, setIsNovel] = useRecoilState(isNovelAtom);
 
   const params = useParams();
+
+  console.log('now is?', nowPage);
 
   const goNext = (num: number) => {
     setNowPage((prev) => prev + num);
@@ -26,7 +61,7 @@ const Viewer = () => {
     try {
       params.id &&
         postNovelEpisode(userInfo.accessToken, parseInt(params.id)).then((res) => {
-          console.log(res);
+          console.log('first post episode', res);
           setEpisodeData(res.content);
         });
     } catch (e) {
@@ -35,26 +70,32 @@ const Viewer = () => {
   }, []);
 
   useEffect(() => {
-    console.log('epidata', episodeData);
-  }, [episodeData]);
-
-  useEffect(() => {
-    setNowPage(1);
     try {
       params.id &&
-        postNovelEpisode(userInfo.accessToken, parseInt(params.id)).then((res) => {
-          console.log(res);
-          setEpisodeData(res.content);
-        });
+        postNovelEpisode(userInfo.accessToken, parseInt(params.id))
+          .then((res) => {
+            console.log('trigger post episode', res);
+            setEpisodeData(res.content);
+            setNowPage(1);
+          })
+          .then((res) => {
+            console.log('2step', res);
+          });
     } catch (e) {
       console.log(e);
     }
   }, [nextEpisodeToggle]);
 
   useEffect(() => {
-    console.log('now', nowPage);
-    console.log('usecookie', useCookie);
+    setIsNovel({
+      isNovel: true,
+      title: episodeData.name,
+      current: episodeData.current,
+      novelId: episodeData.novelId,
+    });
+  }, [episodeData]);
 
+  useEffect(() => {
     if (useCookie !== '') {
       if (episodeData?.choice) {
         for (let i = 0; i < episodeData?.choice.length; i++) {

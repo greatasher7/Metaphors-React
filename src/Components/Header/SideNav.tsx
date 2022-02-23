@@ -37,14 +37,18 @@ const SideNav = ({ toggleNav, clickLogout, nickname }: ISideNavProps) => {
           )}
         </div>
         <ul className="menu_list">
-          <li
-            onClick={() => {
-              navigate('/inventory');
-              toggleNav();
-            }}
-          >
-            인벤토리
-          </li>
+          {isSignin ? (
+            <li
+              onClick={() => {
+                navigate('/inventory');
+                toggleNav();
+              }}
+            >
+              인벤토리
+            </li>
+          ) : (
+            ''
+          )}
           <li
             onClick={() => {
               navigate('/market');

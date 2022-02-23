@@ -6,10 +6,11 @@ import ModalLogout from './ModalLogout';
 import Icon_menu from '../../Assets/Images/Icon_menu.png';
 import Icon_login from '../../Assets/Images/Icon_login.png';
 import Logo from '../../Assets/Images/Logo.png';
+import Icon_goPrev from '../../Assets/Images/Icon_goPrev.png';
 import Icon_cookie from '../../Assets/Images/Icon_cookie.png';
 import Icon_cookieCharge from '../../Assets/Images/Icon_cookieCharge.png';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { changeAssetToggleAtom, isSigninAtom, userInfoAtom } from '../../Store/Atoms';
+import { changeAssetToggleAtom, isSigninAtom, userInfoAtom, isNovelAtom } from '../../Store/Atoms';
 import { getUserAssetInfo } from '../../Api';
 import { IUserAssetInfo } from '../../Store/Type/Interfaces';
 
@@ -28,6 +29,8 @@ const Header = () => {
     token: 0,
   });
   const [isCookieRender, setIsCookieRender] = useState(false);
+  const [isNovel, setIsNovel] = useRecoilState(isNovelAtom);
+  const [isNovelRender, setIsNovelRender] = useState(false);
 
   const toggleNav = () => {
     setIsSideNavVisible((prev) => !prev);
@@ -64,6 +67,10 @@ const Header = () => {
     }
   }, [changeAssetToggle]);
 
+  useEffect(() => {
+    isNovel.isNovel ? setIsNovelRender(true) : setIsNovelRender(false);
+  }, [isNovel]);
+
   return (
     <>
       <Container
@@ -72,7 +79,30 @@ const Header = () => {
           location().pathname.includes('/account/complete')
         }
       >
-        <img src={Icon_menu} alt="menu icon" className="icon" onClick={toggleNav} />
+        {isNovelRender ? (
+          <div className="gobackToDetail">
+            <img
+              src={Icon_goPrev}
+              alt="prev icon"
+              className="icon_prev"
+              onClick={() => {
+                navigate(`/work/${isNovel.novelId}`);
+                setIsNovel({
+                  isNovel: false,
+                  title: '',
+                  current: 0,
+                  novelId: 0,
+                });
+              }}
+            />
+            <span className="title">
+              {isNovel.title} {isNovel.current}화
+            </span>
+          </div>
+        ) : (
+          <img src={Icon_menu} alt="menu icon" className="icon" onClick={toggleNav} />
+        )}
+
         {isSignin ? (
           <ChargeIconBox
             onClick={() => {
@@ -98,14 +128,18 @@ const Header = () => {
         ) : (
           <img src={Icon_login} alt="login icon" className="icon" onClick={onLoginClick} />
         )}
-        <img
-          src={Logo}
-          alt="home icon"
-          className="home"
-          onClick={() => {
-            navigate('/');
-          }}
-        />
+        {isNovelRender ? (
+          ''
+        ) : (
+          <img
+            src={Logo}
+            alt="home icon"
+            className="home"
+            onClick={() => {
+              navigate('/');
+            }}
+          />
+        )}
       </Container>
       {isSideNavVisible && (
         <SideNav toggleNav={toggleNav} clickLogout={openModal} nickname={userAssetInfo.nickname} />
@@ -138,6 +172,18 @@ const Container = styled.header<{ isFirstSignin: boolean }>`
     left: 60px;
     top: 50%;
     transform: translateY(-50%);
+  }
+  .gobackToDetail {
+    display: flex;
+    align-items: center;
+    .icon_prev {
+      width: 7px;
+      margin-right: 10px;
+    }
+    .title {
+      ${({ theme }) => theme.mixin.textStyle.M_13}
+      padding-top: 3px;
+    }
   }
 `;
 

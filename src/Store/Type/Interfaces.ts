@@ -165,3 +165,10 @@ export interface INftUser {
   genre2: string;
   genre3: string;
 }
+
+export interface IHeaderNovel {
+  isNovel: boolean;
+  title: string;
+  current: number;
+  novelId: number;
+}

@@ -33,4 +33,7 @@ export default createGlobalStyle`
     ul{
         list-style: none;
     }
+    p{
+        word-break: keep-all;
+    }
 `;

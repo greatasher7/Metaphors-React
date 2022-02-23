@@ -182,7 +182,7 @@ export const postNovelDetail = async (accessToken: string, id: number) => {
 };
 
 export const postNovelEpisode = async (accessToken: string, id: number) => {
-  console.log('api', accessToken, id);
+  console.log('post episode', accessToken, id);
 
   const result = await axios({
     method: 'post',
