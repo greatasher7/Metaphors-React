@@ -27,6 +27,7 @@ const Header = () => {
     cookie: 0,
     token: 0,
   });
+  const [isCookieRender, setIsCookieRender] = useState(false);
 
   const toggleNav = () => {
     setIsSideNavVisible((prev) => !prev);
@@ -49,10 +50,18 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-    getUserAssetInfo(userInfo.accessToken).then((res) => {
-      console.log('header!', res);
-      setUserAssteInfo(res.content);
-    });
+    if (isSignin) {
+      getUserAssetInfo(userInfo.accessToken).then((res) => {
+        console.log('header!', res);
+        setUserAssteInfo({
+          cookie: res.content.cookie,
+          token: res.content.token,
+          nickname: res.content.nickname,
+          email: res.content.email,
+        });
+        setIsCookieRender(true);
+      });
+    }
   }, [changeAssetToggle]);
 
   return (
@@ -77,7 +86,7 @@ const Header = () => {
                 className="cookie_icon"
                 onClick={onLoginClick}
               />
-              <span className="my_cookie">{userAssetInfo.cookie}</span>
+              {isCookieRender ? <span className="my_cookie">{userAssetInfo.cookie}</span> : ''}
             </div>
             <img
               src={Icon_cookieCharge}

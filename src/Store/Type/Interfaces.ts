@@ -154,3 +154,14 @@ export interface IUser {
   accessExpiredTime: string;
   refreshExpiredTime: string;
 }
+
+export interface INftUser {
+  accessToken: string;
+  name: string;
+  personality1: string;
+  personality2: string;
+  personality3: string;
+  genre1: string;
+  genre2: string;
+  genre3: string;
+}

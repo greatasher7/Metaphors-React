@@ -5,14 +5,15 @@ import { IBtnNft, IUserNft } from '../../Store/Type/Interfaces';
 import Arrow_R from '../../Assets/Images/Icon_arrowR.png';
 import Arrow_L from '../../Assets/Images/Icon_arrowL.png';
 import { useNavigate } from 'react-router';
-import { getUserGenre, getUserPersonality, postSigninDetail } from '../../Api';
+import { getUserGenre, getUserPersonality } from '../../Api';
 import { useRecoilState } from 'recoil';
-import { userInfoAtom } from '../../Store/Atoms';
+import { nftAtom, userInfoAtom } from '../../Store/Atoms';
 
 const CreateCharacterNft = () => {
   const [nowStep, setNowStep] = useState('name');
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
+  const [nft, setNft] = useRecoilState(nftAtom);
   const [personalityList, setPersonalityList] = useState<{ personality: string }[]>();
   const [genresList, setGenresList] = useState<{ genre: string }[]>();
   const [userNft, setUserNft] = useState<IUserNft>({
@@ -21,8 +22,6 @@ const CreateCharacterNft = () => {
     personality: [],
     genre: [],
   });
-
-  console.log(userNft);
 
   useEffect(() => {
     try {
@@ -39,21 +38,16 @@ const CreateCharacterNft = () => {
 
   useEffect(() => {
     if (userNft.isDone) {
-      console.log('user!!', userNft);
-      postSigninDetail(
-        userInfo.accessToken,
-        userNft.name,
-        userNft.personality[0],
-        userNft.personality[1],
-        userNft.personality[2],
-        userNft.genre[0],
-        userNft.genre[1],
-        userNft.genre[2]
-      ).then((res) => {
-        console.log('result nft', res);
+      setNft({
+        accessToken: userInfo.accessToken,
+        name: userNft.name,
+        personality1: userNft.personality[0],
+        personality2: userNft.personality[1],
+        personality3: userNft.personality[2],
+        genre1: userNft.genre[0],
+        genre2: userNft.genre[1],
+        genre3: userNft.genre[2],
       });
-
-      console.log('done');
       navigate('/account/complete');
     }
   }, [userNft]);

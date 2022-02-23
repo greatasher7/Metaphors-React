@@ -115,6 +115,7 @@ export const postSigninDetail = async (
   genre3: string
 ) => {
   console.log(
+    'data in api function',
     accessToken,
     nickname,
     personality1,
@@ -124,6 +125,7 @@ export const postSigninDetail = async (
     genre2,
     genre3
   );
+
   const result = await axios({
     method: 'post',
     url: url + '/api/auth/signin/detail',

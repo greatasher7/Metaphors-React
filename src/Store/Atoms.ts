@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
-import { ISignup, IUser, IUserAssetInfo } from './Type/Interfaces';
+import { INftUser, ISignup, IUser, IUserAssetInfo } from './Type/Interfaces';
 
 const { persistAtom } = recoilPersist();
 
@@ -49,5 +49,20 @@ export const useCookieAtom = atom<string>({
 export const nextEpisodeAtom = atom<boolean>({
   key: 'nextEpisode',
   default: false,
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const nftAtom = atom<INftUser>({
+  key: 'nextEpisode',
+  default: {
+    accessToken: '',
+    name: '',
+    personality1: '',
+    personality2: '',
+    personality3: '',
+    genre1: '',
+    genre2: '',
+    genre3: '',
+  },
   effects_UNSTABLE: [persistAtom],
 });

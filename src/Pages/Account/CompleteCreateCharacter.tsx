@@ -1,17 +1,48 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
+import { postSigninDetail } from '../../Api';
 import { Btn_Primary, Btn_White } from '../../Components/Button';
+import { nftAtom, changeAssetToggleAtom } from '../../Store/Atoms';
 
 const CompleteCreateCharacter = () => {
   const navigate = useNavigate();
+  const [nft, setNft] = useRecoilState(nftAtom);
+  const [changeAssetToggle, setChangeAssetToggle] = useRecoilState(changeAssetToggleAtom);
 
   const goCreateNft = () => {
     navigate('/account/character');
   };
 
-  const goHome = () => {
-    navigate('/');
+  const handleClickHome = () => {
+    postSigninDetail(
+      nft.accessToken,
+      nft.name,
+      nft.personality1,
+      nft.personality2,
+      nft.personality3,
+      nft.genre1,
+      nft.genre2,
+      nft.genre3
+    )
+      .then((res) => {
+        console.log('result nft', res);
+      })
+      .then((res) => {
+        setNft({
+          accessToken: '',
+          name: '',
+          personality1: '',
+          personality2: '',
+          personality3: '',
+          genre1: '',
+          genre2: '',
+          genre3: '',
+        });
+        navigate('/');
+        setChangeAssetToggle((prev) => !prev);
+      });
   };
 
   return (
@@ -21,7 +52,7 @@ const CompleteCreateCharacter = () => {
         <h2>내 성격들을 NFT로 받았어요!</h2>
         <p className="content">인벤토리를 확인해보세요.</p>
         <Btn_Container>
-          <Btn_Primary label="홈으로 돌아가기" onClick={goHome} />
+          <Btn_Primary label="홈으로 돌아가기" onClick={handleClickHome} />
           <Btn_White label="다시 고르기" onClick={goCreateNft} />
         </Btn_Container>
       </Container>

@@ -12,7 +12,6 @@ const Detail = () => {
   const params = useParams();
   const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
   const [nobelDetail, setNobelDetail] = useState<INovelDetail>();
-  // const [isSign, setIsSign] =
 
   useEffect(() => {
     params.id && console.log('params', userInfo.accessToken, parseInt(params.id));
