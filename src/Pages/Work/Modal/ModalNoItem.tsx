@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Icon_x from '../../../Assets/Images/Icon_x.png';
 import { useNavigate, useParams } from 'react-router';
@@ -11,31 +11,45 @@ const ModalNoItem = ({ closeModal }: { closeModal: () => void }) => {
   const navigate = useNavigate();
   const params = useParams();
   const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
+  const [tryCount, setTryCount] = useState(0);
 
   const handleCreateClick = () => {
+    setTryCount((prev) => prev + 1);
     postCreateItem(userInfo.accessToken, params.id).then((res) => {
-      console.log(res);
+      console.log('create??', res);
       if (res.result === 'ok') {
-        navigate(`/work/viewer/${params.id}/fail`);
-      } else {
+        console.log('create!!!!', res);
         navigate(`/work/viewer/${params.id}/draw`);
       }
     });
   };
 
+  const handleUseClick = () => {
+    navigate(`/work/viewer/${params.id}/using`);
+  };
+
   return (
     <ModalContainer>
       <ModalBox>
-        <h3>
-          원하는 행동을 하기 위해서는
-          <br />[{params.id}]가 필요해요
-        </h3>
+        <img src={Icon_x} alt="close button" className="close_btn" onClick={closeModal} />
+        {tryCount === 0 ? (
+          <h3>
+            원하는 행동을 하기 위해서는
+            <br />[{params.id}]가 필요해요
+          </h3>
+        ) : (
+          <h3>
+            획득에 <span>실패</span>했어요.
+            <br />
+            다음 기회를 노려보세요!
+          </h3>
+        )}
         <Btn_Container>
           <Btn_Modal_Primary label={`[${params.id}] 확률로 획득하기`} onClick={handleCreateClick} />
           <Btn_Modal_White label={`[${params.id}] 구입하기`} onClick={() => navigate(`/market`)} />
           <Btn_Modal_Black
             label={`쿠키 1개로 [${params.id}] 1회 이용하기`}
-            onClick={() => navigate(`/work/viewer//${params.id}using`)}
+            onClick={handleUseClick}
           />
         </Btn_Container>
         <span
@@ -73,6 +87,9 @@ const ModalBox = styled.div`
     ${({ theme }) => theme.mixin.textStyle.M_15}
     text-align: center;
     line-height: 1.5;
+    span {
+      color: #ff5e5e;
+    }
   }
   .cookie {
     margin-top: 10px;

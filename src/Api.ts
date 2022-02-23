@@ -106,7 +106,6 @@ export const getUserPersonality = async () => {
 
 export const postSigninDetail = async (
   accessToken: string,
-  email: string,
   nickname: string,
   personality1: string,
   personality2: string,
@@ -115,6 +114,16 @@ export const postSigninDetail = async (
   genre2: string,
   genre3: string
 ) => {
+  console.log(
+    accessToken,
+    nickname,
+    personality1,
+    personality2,
+    personality3,
+    genre1,
+    genre2,
+    genre3
+  );
   const result = await axios({
     method: 'post',
     url: url + '/api/auth/signin/detail',
@@ -123,7 +132,6 @@ export const postSigninDetail = async (
       'Content-Type': 'application/json',
     },
     data: {
-      email: email,
       nickname: nickname,
       personality1: personality1,
       personality2: personality2,
@@ -260,6 +268,23 @@ export const postItemImage = async (accessToken: string, name: string, image: Bl
       'x-access-token': accessToken,
     },
     data: data,
+  });
+  return result.data;
+};
+
+export const postUseItemCookie = async (accessToken: string, novelId: string, next: string) => {
+  console.log('api', accessToken, novelId, next);
+
+  const result = await axios({
+    method: 'post',
+    url: `${url}/api/novel/nextEpisode/useCookie`,
+    headers: {
+      'x-access-token': accessToken,
+    },
+    data: {
+      novelId: novelId,
+      next: next,
+    },
   });
   return result.data;
 };

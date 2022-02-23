@@ -39,6 +39,7 @@ const ModalDraw = ({ closeModal }: { closeModal: () => void }) => {
     const newImage = dataURItoBlob(signCanvas.current.getTrimmedCanvas().toDataURL('image/png'));
     console.log(typeof newImage, newImage);
     setImage(newImage);
+    closeModal();
   };
 
   useEffect(() => {
@@ -46,6 +47,7 @@ const ModalDraw = ({ closeModal }: { closeModal: () => void }) => {
       image.size > 1 &&
       postItemImage(userInfo.accessToken, params.id, image).then((res) => {
         console.log(res);
+        navigate(`/work/viewer/${params.id}/noitem`);
       });
   }, [image]);
 

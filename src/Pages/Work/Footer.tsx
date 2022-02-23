@@ -4,12 +4,20 @@ import { IFooterProps } from '../../Store/Type/Interfaces';
 import Icon_goPrev from '../../Assets/Images/Icon_goPrev.png';
 import Icon_goNext from '../../Assets/Images/Icon_goNext.png';
 import Border_nextEpisode from '../../Assets/Images/Border_nextEpisode.png';
+import { useRecoilState } from 'recoil';
+import { nextEpisodeAtom } from '../../Store/Atoms';
 
 const Footer = ({ moveNext, movePrev, isLastPage, isFirstPage, haschoice }: IFooterProps) => {
+  const [nextEpisodeToggle, setNextEpisodeToggle] = useRecoilState(nextEpisodeAtom);
+
+  const handleClick = () => {
+    setNextEpisodeToggle((prev) => !prev);
+  };
+
   return (
     <FooterContainer>
       {isLastPage && (
-        <NextEpisode>
+        <NextEpisode onClick={handleClick}>
           <span>다음화 보기</span>
           <img src={Border_nextEpisode} alt="next episode" />
         </NextEpisode>

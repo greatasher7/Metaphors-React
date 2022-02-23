@@ -39,18 +39,18 @@ const CreateCharacterNft = () => {
 
   useEffect(() => {
     if (userNft.isDone) {
+      console.log('user!!', userNft);
       postSigninDetail(
         userInfo.accessToken,
-        userInfo.email,
         userNft.name,
+        userNft.personality[0],
         userNft.personality[1],
         userNft.personality[2],
-        userNft.personality[3],
+        userNft.genre[0],
         userNft.genre[1],
-        userNft.genre[2],
-        userNft.genre[3]
+        userNft.genre[2]
       ).then((res) => {
-        console.log(res);
+        console.log('result nft', res);
       });
 
       console.log('done');

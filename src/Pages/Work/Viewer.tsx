@@ -3,7 +3,7 @@ import { useParams } from 'react-router';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { postNovelEpisode } from '../../Api';
-import { userInfoAtom } from '../../Store/Atoms';
+import { useCookieAtom, userInfoAtom, nextEpisodeAtom } from '../../Store/Atoms';
 import { INovelEpisode } from '../../Store/Type/Interfaces';
 import Footer from './Footer';
 import SelectOption from './SelectOption';
@@ -11,8 +11,10 @@ import PageContainer from './PageContainer';
 
 const Viewer = () => {
   const [nowPage, setNowPage] = useState(1);
-  const [userinfo, setUserInfo] = useRecoilState(userInfoAtom);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
   const [episodeData, setEpisodeData] = useState<INovelEpisode>();
+  const [useCookie, setUseCookie] = useRecoilState(useCookieAtom);
+  const [nextEpisodeToggle, setNextEpisodeToggle] = useRecoilState(nextEpisodeAtom);
 
   const params = useParams();
 
@@ -23,7 +25,7 @@ const Viewer = () => {
   useEffect(() => {
     try {
       params.id &&
-        postNovelEpisode(userinfo.accessToken, parseInt(params.id)).then((res) => {
+        postNovelEpisode(userInfo.accessToken, parseInt(params.id)).then((res) => {
           console.log(res);
           setEpisodeData(res.content);
         });
@@ -35,6 +37,36 @@ const Viewer = () => {
   useEffect(() => {
     console.log('epidata', episodeData);
   }, [episodeData]);
+
+  useEffect(() => {
+    setNowPage(1);
+    try {
+      params.id &&
+        postNovelEpisode(userInfo.accessToken, parseInt(params.id)).then((res) => {
+          console.log(res);
+          setEpisodeData(res.content);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  }, [nextEpisodeToggle]);
+
+  useEffect(() => {
+    console.log('now', nowPage);
+    console.log('usecookie', useCookie);
+
+    if (useCookie !== '') {
+      if (episodeData?.choice) {
+        for (let i = 0; i < episodeData?.choice.length; i++) {
+          if (episodeData.choice[i].episodeId === useCookie) {
+            setNowPage((prev) => prev + i + 1);
+            setUseCookie('');
+            return;
+          }
+        }
+      }
+    }
+  }, [useCookie]);
 
   return (
     <>

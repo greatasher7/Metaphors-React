@@ -12,6 +12,7 @@ const Detail = () => {
   const params = useParams();
   const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
   const [nobelDetail, setNobelDetail] = useState<INovelDetail>();
+  // const [isSign, setIsSign] =
 
   useEffect(() => {
     params.id && console.log('params', userInfo.accessToken, parseInt(params.id));
@@ -59,7 +60,7 @@ const Detail = () => {
         <Btn_Primary_FontBlack
           label={`이어보기 [${nobelDetail?.current}화]`}
           onClick={() => {
-            navigate('/work/viewer');
+            navigate(`/work/viewer/${nobelDetail?.novelId}`);
           }}
         />
         <Btn_Gray

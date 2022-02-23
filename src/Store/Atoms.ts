@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
-import { ISignup, IUser } from './Type/Interfaces';
+import { ISignup, IUser, IUserAssetInfo } from './Type/Interfaces';
 
 const { persistAtom } = recoilPersist();
 
@@ -30,6 +30,24 @@ export const userInfoAtom = atom<IUser>({
 
 export const isSigninAtom = atom({
   key: 'isSignin',
+  default: false,
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const changeAssetToggleAtom = atom<boolean>({
+  key: 'userAssetInfo',
+  default: false,
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const useCookieAtom = atom<string>({
+  key: 'useCookie',
+  default: '',
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const nextEpisodeAtom = atom<boolean>({
+  key: 'nextEpisode',
   default: false,
   effects_UNSTABLE: [persistAtom],
 });

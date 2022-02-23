@@ -6,7 +6,6 @@ import { postItem, postUseItem } from '../../Api';
 import { useRecoilState } from 'recoil';
 import { userInfoAtom } from '../../Store/Atoms';
 import ModalDraw from './Modal/ModalDraw';
-import ModalFailGetting from './Modal/ModalFailGetting';
 import ModalNoItem from './Modal/ModalNoItem';
 import ModalUseItem from './Modal/ModalUseItem';
 
@@ -15,11 +14,9 @@ const SelectOption = ({ novelId, goNext }: { novelId: number; goNext: (num: numb
   const [choice, setChoice] = useState<INovelChoice[]>();
   const [items, setItems] = useState<INovelItem[]>();
   const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
-  const params = useParams();
 
   useEffect(() => {
     postItem(userInfo.accessToken, novelId).then((res) => {
-      console.log('item', res);
       setChoice(res.content.choice);
       setItems(res.content.items);
     });
@@ -34,7 +31,6 @@ const SelectOption = ({ novelId, goNext }: { novelId: number; goNext: (num: numb
     if (isOwn) {
       // 아이템 가지고 있으면, 사용 api, 다음 페이지로 넘어가기
       postUseItem(userInfo.accessToken, novelId, next, item).then((res) => {
-        console.log('use item!', res);
         goNext(idx + 1);
       });
     } else {
@@ -71,9 +67,11 @@ const SelectOption = ({ novelId, goNext }: { novelId: number; goNext: (num: numb
       </SelectContainer>
       <Routes>
         <Route path="/noitem" element={<ModalNoItem closeModal={closeModal} />} />
-        <Route path="/fail" element={<ModalFailGetting closeModal={closeModal} />} />
         <Route path="/draw" element={<ModalDraw closeModal={closeModal} />} />
-        <Route path="/using" element={<ModalUseItem closeModal={closeModal} />} />
+        <Route
+          path="/using"
+          element={<ModalUseItem closeModal={closeModal} choiceList={choice} novelId={novelId} />}
+        />
       </Routes>
     </>
   );

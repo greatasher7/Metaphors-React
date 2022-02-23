@@ -9,7 +9,7 @@ import Logo from '../../Assets/Images/Logo.png';
 import Icon_cookie from '../../Assets/Images/Icon_cookie.png';
 import Icon_cookieCharge from '../../Assets/Images/Icon_cookieCharge.png';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { isSigninAtom, userInfoAtom } from '../../Store/Atoms';
+import { changeAssetToggleAtom, isSigninAtom, userInfoAtom } from '../../Store/Atoms';
 import { getUserAssetInfo } from '../../Api';
 import { IUserAssetInfo } from '../../Store/Type/Interfaces';
 
@@ -20,6 +20,7 @@ const Header = () => {
   const [isLogoutModalRender, setIsLogoutModalRender] = useState(false);
   const isSignin = useRecoilValue(isSigninAtom);
   const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
+  const [changeAssetToggle, setChangeAssetToggle] = useRecoilState(changeAssetToggleAtom);
   const [userAssetInfo, setUserAssteInfo] = useState<IUserAssetInfo>({
     email: '',
     nickname: '',
@@ -44,11 +45,15 @@ const Header = () => {
   };
 
   useEffect(() => {
+    setChangeAssetToggle((prev) => !prev);
+  }, []);
+
+  useEffect(() => {
     getUserAssetInfo(userInfo.accessToken).then((res) => {
-      console.log('user', res);
+      console.log('header!', res);
       setUserAssteInfo(res.content);
     });
-  }, []);
+  }, [changeAssetToggle]);
 
   return (
     <>

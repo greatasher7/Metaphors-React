@@ -6,7 +6,7 @@ import ModalWrong from './Modal/ModalWrong';
 import { InputEmail, InputPassword } from './Inputs';
 import { postSignin } from '../../Api';
 import { useRecoilState } from 'recoil';
-import { isSigninAtom, userInfoAtom } from '../../Store/Atoms';
+import { isSigninAtom, userInfoAtom, changeAssetToggleAtom } from '../../Store/Atoms';
 
 const Signin = () => {
   const [isWrongModalRender, setIsWrongModalRender] = useState(false);
@@ -14,6 +14,7 @@ const Signin = () => {
   const [password, setPassword] = useState('');
   const [isSignin, setIsSignin] = useRecoilState(isSigninAtom);
   const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
+  const [changeAssetToggle, setChangeAssetToggle] = useRecoilState(changeAssetToggleAtom);
 
   const navigate = useNavigate();
 
@@ -31,6 +32,7 @@ const Signin = () => {
         if (res.result === 'ok') {
           setIsSignin(true);
           setUserInfo({ ...res.content });
+          setChangeAssetToggle((prev) => !prev);
           // 3. 닉네임 비어있을 시, 성격 만들기. 아니면 홈으로 이동
           if (res.content.nickname === '') {
             navigate('/account/firstsignin');
