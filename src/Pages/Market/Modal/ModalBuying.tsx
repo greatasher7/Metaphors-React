@@ -1,36 +1,70 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Btn_Modal_Primary, Btn_Modal_Inactive } from '../../../Components/ButtonModal';
 import Icon_x from '../../../Assets/Images/Icon_x.png';
 import { useNavigate } from 'react-router';
+import { useRecoilValue } from 'recoil';
+import { userInfoAtom } from '../../../Store/Atoms';
+import { purchaseItem } from '../../../Api';
 
-const ModalBuying = ({ closeModal }: { closeModal: () => void }) => {
+interface props {
+  closeModal: any;
+  item: any;
+  klay: number;
+}
+
+const ModalBuying = ({ closeModal, item, klay }: props) => {
   const navigate = useNavigate();
-  const [hasKlay, setHasKlay] = useState(false);
+  const userInfo = useRecoilValue(userInfoAtom);
+
+  useEffect(() => {
+    console.log('item');
+    console.log(item);
+  }, []);
 
   return (
     <ModalContainer>
-      <ModalBox hasKlay={hasKlay}>
+      <ModalBox hasKlay={klay >= item.price}>
         <img src={Icon_x} alt="close button" className="close_btn" onClick={closeModal} />
-        <h3>해당 [청산가리]를 지금 구매할까요?</h3>
+        <h3>해당 [{item.name}]를 지금 구매할까요?</h3>
         <div className="item_card">
-          <div className="image"></div>
+          <div className="image">
+            <img
+              src={item.imageURI}
+              style={{
+                width: '100%',
+                height: '100%',
+              }}
+            />
+          </div>
           <div className="content">
-            <h4 className="title">청산가리</h4>
-            <span className="dutability">4/10회 남음</span>
-            <span className="price">2,000KLAY</span>
+            <h4 className="title">{item.name}</h4>
+            <span className="dutability">
+              {item.durability}/{item.maxDurability}회 남음
+            </span>
+            <span className="price">{item.price} KLAY</span>
           </div>
         </div>
-        {hasKlay ? (
+        {klay >= item.price && userInfo.nickname != item.ownerNickname && (
           <Btn_Modal_Primary
             label="구입하기"
             onClick={() => {
-              navigate('/market/completebuying');
+              purchaseItem(userInfo.accessToken, item.id).then((res) => {
+                console.log(res);
+                navigate('/market/completebuying');
+              });
             }}
           />
-        ) : (
+        )}
+        {klay < item.price && userInfo.nickname != item.ownerNickname && (
           <>
             <p className="warning">*KLAY 잔액이 부족합니다. KLAY를 충전해주세요.</p>
+            <Btn_Modal_Inactive label="구입하기" />
+          </>
+        )}
+        {userInfo.nickname == item.ownerNickname && (
+          <>
+            <p className="warning">*현재 유저의 아이템입니다.</p>
             <Btn_Modal_Inactive label="구입하기" />
           </>
         )}

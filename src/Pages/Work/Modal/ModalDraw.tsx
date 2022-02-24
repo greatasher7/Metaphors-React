@@ -1,12 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Icon_x from '../../../Assets/Images/Icon_x.png';
 import { useNavigate, useParams } from 'react-router';
 import { Btn_Modal_Primary } from '../../../Components/ButtonModal';
 import SignatureCanvas from 'react-signature-canvas';
 import { postItemImage } from '../../../Api';
 import { useRecoilState } from 'recoil';
-import { userInfoAtom } from '../../../Store/Atoms';
+import { optionTriggerAtom, userInfoAtom } from '../../../Store/Atoms';
 
 // base64 to blob
 const dataURItoBlob = (dataURI: string) => {
@@ -29,6 +28,7 @@ const ModalDraw = ({ closeModal }: { closeModal: () => void }) => {
   const signCanvas = useRef() as React.MutableRefObject<any>;
   const params = useParams();
   const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
+  const [optionTrigger, setOptionTrigger] = useRecoilState(optionTriggerAtom);
   const [image, setImage] = useState(new Blob());
 
   const clear = () => {
@@ -39,6 +39,7 @@ const ModalDraw = ({ closeModal }: { closeModal: () => void }) => {
     const newImage = dataURItoBlob(signCanvas.current.getTrimmedCanvas().toDataURL('image/png'));
     console.log(typeof newImage, newImage);
     setImage(newImage);
+    setOptionTrigger((prev) => !prev);
     closeModal();
   };
 

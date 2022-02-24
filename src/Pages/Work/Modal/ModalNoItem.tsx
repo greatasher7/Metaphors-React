@@ -1,26 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Icon_x from '../../../Assets/Images/Icon_x.png';
 import { useNavigate, useParams } from 'react-router';
 import { IBtn } from '../../../Store/Type/Interfaces';
-import { postCreateItem } from '../../../Api';
+import { getUserAssetInfo, postCreateItem } from '../../../Api';
 import { useRecoilState } from 'recoil';
-import { userInfoAtom } from '../../../Store/Atoms';
+import { userInfoAtom, isNovelAtom } from '../../../Store/Atoms';
+import Loading from '../../../Components/Loading';
 
 const ModalNoItem = ({ closeModal }: { closeModal: () => void }) => {
   const navigate = useNavigate();
   const params = useParams();
   const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
+  const [isNovel, setIsNovel] = useRecoilState(isNovelAtom);
   const [tryCount, setTryCount] = useState(0);
+  const [nowToken, setNowToken] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCreateClick = () => {
-    setTryCount((prev) => prev + 1);
+    setIsLoading(true);
     postCreateItem(userInfo.accessToken, params.id).then((res) => {
       console.log('create??', res);
+      setIsLoading(false);
       if (res.result === 'ok') {
         console.log('create!!!!', res);
         navigate(`/work/viewer/${params.id}/draw`);
       } else {
+        setTryCount((prev) => prev + 1);
       }
     });
   };
@@ -29,40 +35,74 @@ const ModalNoItem = ({ closeModal }: { closeModal: () => void }) => {
     navigate(`/work/viewer/${params.id}/using`);
   };
 
+  useEffect(() => {
+    try {
+      getUserAssetInfo(userInfo.accessToken).then((res) => {
+        setNowToken(res.content.token);
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
+
   return (
-    <ModalContainer>
-      <ModalBox>
-        <img src={Icon_x} alt="close button" className="close_btn" onClick={closeModal} />
-        {tryCount === 0 ? (
-          <h3>
-            원하는 행동을 하기 위해서는
-            <br />[{params.id}]가 필요해요
-          </h3>
-        ) : (
-          <h3>
-            획득에 <span>실패</span>했어요.
-            <br />
-            다음 기회를 노려보세요!
-          </h3>
-        )}
-        <Btn_Container>
-          <Btn_Modal_Primary label={`[${params.id}] 확률로 획득하기`} onClick={handleCreateClick} />
-          <Btn_Modal_White label={`[${params.id}] 구입하기`} onClick={() => navigate(`/market`)} />
-          <Btn_Modal_Black
-            label={`쿠키 1개로 [${params.id}] 1회 이용하기`}
-            onClick={handleUseClick}
-          />
-        </Btn_Container>
-        <span
-          className="cookie"
-          onClick={() => {
-            navigate('/charge');
-          }}
-        >
-          쿠키 충전하기
-        </span>
-      </ModalBox>
-    </ModalContainer>
+    <>
+      <ModalContainer>
+        <ModalBox>
+          <img src={Icon_x} alt="close button" className="close_btn" onClick={closeModal} />
+          {tryCount === 0 ? (
+            <h3>
+              원하는 행동을 하기 위해서는
+              <br />[{params.id}]가 필요해요
+            </h3>
+          ) : (
+            <h3>
+              획득에 <span>실패</span>했어요.
+              <br />
+              다음 기회를 노려보세요!
+            </h3>
+          )}
+          <Btn_Container>
+            <Btn_Modal_Primary
+              label={`[${params.id}] 확률로 획득하기`}
+              onClick={handleCreateClick}
+              nowToken={nowToken}
+            />
+            <Btn_Modal_White
+              label={`[${params.id}] 구입하기`}
+              onClick={() => {
+                navigate(`/market`);
+                setIsNovel({
+                  isNovel: false,
+                  title: '',
+                  current: 0,
+                  novelId: 0,
+                });
+              }}
+            />
+            <Btn_Modal_Black
+              label={`쿠키 1개로 [${params.id}] 1회 이용하기`}
+              onClick={handleUseClick}
+            />
+          </Btn_Container>
+          <span
+            className="cookie"
+            onClick={() => {
+              navigate('/charge');
+              setIsNovel({
+                isNovel: false,
+                title: '',
+                current: 0,
+                novelId: 0,
+              });
+            }}
+          >
+            쿠키 충전하기
+          </span>
+        </ModalBox>
+      </ModalContainer>
+      {isLoading && <Loading />}
+    </>
   );
 };
 
@@ -105,9 +145,27 @@ const Btn_Container = styled.div`
   grid-row-gap: 10px;
 `;
 
-const Btn_Modal_Primary = ({ onClick, label }: IBtn) => {
+const Btn_Modal_Primary = ({ onClick, label, nowToken }: IBtn) => {
+  const [isNoKlay, setIsNoKlay] = useState(true);
+
+  console.log('render btn');
+
+  useEffect(() => {
+    if (nowToken) {
+      setIsNoKlay(nowToken < 1 ? true : false);
+    }
+  }, [nowToken]);
+
+  console.log('isnoklay?', isNoKlay, nowToken);
   return (
-    <Primary onClick={onClick}>
+    <Primary
+      onClick={() => {
+        if (!isNoKlay) {
+          onClick && onClick();
+        }
+      }}
+      isNoKlay={isNoKlay}
+    >
       <span>{label}</span>
       <span className="black">-1KALY</span>
     </Primary>
@@ -137,9 +195,10 @@ const Common = styled.button`
   }
 `;
 
-const Primary = styled(Common)`
+const Primary = styled(Common)<{ isNoKlay: boolean }>`
   background-color: ${({ theme }) => theme.variable.colors.highlight_color};
   color: ${({ theme }) => theme.variable.colors.A_FFF};
+  opacity: ${(props) => (props.isNoKlay ? '0.5' : '1')};
   .black {
     color: ${({ theme }) => theme.variable.colors.black_color};
     margin-left: 6px;

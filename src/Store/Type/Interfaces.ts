@@ -1,16 +1,9 @@
-export interface IItem {
-  name: string;
-  image: string;
-  durability: number;
-  onSale: boolean;
-  price?: number;
-}
-
 // interface /////////////////////////////
 
 export interface IBtn {
   onClick?: () => void;
   label: string;
+  nowToken?: number;
 }
 
 export interface IModalSelling {}
@@ -20,6 +13,7 @@ export interface IFooterProps {
   movePrev: () => void;
   isLastPage: boolean | undefined;
   isFirstPage: boolean | undefined;
+  isEndingPage: boolean | undefined;
   haschoice: boolean | undefined;
 }
 
@@ -136,6 +130,17 @@ export interface IPage {
   isVisibleOption: boolean | undefined;
   isLastPage: boolean | undefined;
   isFirstPage: boolean | undefined;
+}
+
+// Item
+export interface IItemMarket {
+  id: string;
+  name: string;
+  ownerNickname: string;
+  imageURI: string;
+  maxDurability: string;
+  durability: string;
+  price: string;
 }
 
 // Atoms

@@ -1,21 +1,61 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { IItem } from '../../Store/Type/Interfaces';
 
-const ItemCard_Market = ({ name, image, durability, price }: IItem) => {
+interface ItemCardProps {
+  id: string;
+  name: string;
+  imageURI: string;
+  durability: string;
+  maxDurability: string;
+  onSale: boolean;
+  price?: string;
+  ownerNickname: string;
+  setItem: any;
+}
+
+const ItemCard_Market = ({
+  id,
+  name,
+  imageURI,
+  durability,
+  maxDurability,
+  price,
+  onSale,
+  ownerNickname,
+  setItem,
+}: ItemCardProps) => {
   const navigate = useNavigate();
   return (
     <Container>
-      <div className="image"></div>
+      <div className="image">
+        <img
+          src={imageURI}
+          style={{
+            width: '100%',
+            height: '100%',
+          }}
+        />
+      </div>
       <div className="content">
         <h4 className="title">{name}</h4>
-        <span className="dutability">{durability}/10회 남음</span>
-        <span className="price">{price}KLAY</span>
+        <span className="dutability">
+          {durability}/{maxDurability}회 남음
+        </span>
+        <span className="price">{price} KLAY</span>
       </div>
       <div
         className="buy_btn"
         onClick={() => {
+          setItem({
+            id: id,
+            name: name,
+            imageURI: imageURI,
+            durability: durability,
+            maxDurability: maxDurability,
+            price: price,
+            ownerNickname: ownerNickname,
+          });
           navigate('/market/buying');
         }}
       >

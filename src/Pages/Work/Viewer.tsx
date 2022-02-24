@@ -8,6 +8,7 @@ import { INovelEpisode } from '../../Store/Type/Interfaces';
 import Footer from './Footer';
 import SelectOption from './SelectOption';
 import PageContainer from './PageContainer';
+import Loading from '../../Components/Loading';
 
 const Viewer = () => {
   const [nowPage, setNowPage] = useState(1);
@@ -21,7 +22,7 @@ const Viewer = () => {
     pages: [
       {
         number: 0,
-        content: '',
+        content: 'empty',
         hasChoice: false,
         context: '',
       },
@@ -48,10 +49,9 @@ const Viewer = () => {
   const [useCookie, setUseCookie] = useRecoilState(useCookieAtom);
   const [nextEpisodeToggle, setNextEpisodeToggle] = useRecoilState(nextEpisodeAtom);
   const [isNovel, setIsNovel] = useRecoilState(isNovelAtom);
-
+  const [isLoading, setIsLoading] = useState(true);
+  const [isEndingPage, setIsEndingpage] = useState(false);
   const params = useParams();
-
-  console.log('now is?', nowPage);
 
   const goNext = (num: number) => {
     setNowPage((prev) => prev + num);
@@ -61,32 +61,20 @@ const Viewer = () => {
     try {
       params.id &&
         postNovelEpisode(userInfo.accessToken, parseInt(params.id)).then((res) => {
-          console.log('first post episode', res);
+          console.log('trigger post episode', res);
           setEpisodeData(res.content);
+          setNowPage(1);
         });
     } catch (e) {
       console.log(e);
+    } finally {
+      setIsLoading(false);
     }
-  }, []);
-
-  useEffect(() => {
-    try {
-      params.id &&
-        postNovelEpisode(userInfo.accessToken, parseInt(params.id))
-          .then((res) => {
-            console.log('trigger post episode', res);
-            setEpisodeData(res.content);
-            setNowPage(1);
-          })
-          .then((res) => {
-            console.log('2step', res);
-          });
-    } catch (e) {
-      console.log(e);
-    }
+    return;
   }, [nextEpisodeToggle]);
 
   useEffect(() => {
+    console.log('episode', episodeData);
     setIsNovel({
       isNovel: true,
       title: episodeData.name,
@@ -109,34 +97,47 @@ const Viewer = () => {
     }
   }, [useCookie]);
 
+  useEffect(() => {
+    setIsEndingpage(episodeData.choice.length === 0 && nowPage === episodeData.pages.length);
+  }, [nowPage]);
+
+  console.log('length', episodeData.choice.length);
+
   return (
     <>
-      <Container>
-        <PageContainer
-          title={episodeData?.name}
-          author={episodeData?.author}
-          contents={episodeData?.pages[nowPage - 1].content}
-          isVisibleOption={episodeData?.pages[nowPage - 1].hasChoice}
-          isLastPage={episodeData?.pages[nowPage - 1].context !== ''}
-          isFirstPage={nowPage === 1}
-        />
-      </Container>
-      {episodeData?.pages[nowPage - 1].hasChoice && (
-        <SelectOption novelId={episodeData.novelId} goNext={goNext} />
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <Container>
+            <PageContainer
+              title={episodeData?.name}
+              author={episodeData?.author}
+              contents={episodeData?.pages[nowPage - 1].content}
+              isVisibleOption={episodeData?.pages[nowPage - 1].hasChoice}
+              isLastPage={episodeData?.pages[nowPage - 1].context !== ''}
+              isFirstPage={nowPage === 1}
+            />
+          </Container>
+          {episodeData?.pages[nowPage - 1].hasChoice && (
+            <SelectOption novelId={episodeData.novelId} goNext={goNext} />
+          )}
+          <Footer
+            movePrev={() => {
+              if (nowPage === 1) return;
+              setNowPage((current) => current - 1);
+            }}
+            moveNext={() => {
+              if (episodeData?.pages[nowPage - 1].context !== '') return;
+              setNowPage((current) => current + 1);
+            }}
+            isLastPage={episodeData?.pages[nowPage - 1].context !== ''}
+            isFirstPage={nowPage === 1}
+            isEndingPage={isEndingPage}
+            haschoice={episodeData?.pages[nowPage - 1].hasChoice}
+          />
+        </>
       )}
-      <Footer
-        movePrev={() => {
-          if (nowPage === 1) return;
-          setNowPage((current) => current - 1);
-        }}
-        moveNext={() => {
-          if (episodeData?.pages[nowPage - 1].context !== '') return;
-          setNowPage((current) => current + 1);
-        }}
-        isLastPage={episodeData?.pages[nowPage - 1].context !== ''}
-        isFirstPage={nowPage === 1}
-        haschoice={episodeData?.pages[nowPage - 1].hasChoice}
-      />
     </>
   );
 };

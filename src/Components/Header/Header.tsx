@@ -107,6 +107,12 @@ const Header = () => {
           <ChargeIconBox
             onClick={() => {
               navigate('/charge');
+              setIsNovel({
+                isNovel: false,
+                title: '',
+                current: 0,
+                novelId: 0,
+              });
             }}
           >
             <div className="flex_left">

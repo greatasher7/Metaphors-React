@@ -3,9 +3,13 @@ import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { ICookieOptionProps } from '../../Store/Type/Interfaces';
 import Icon_cookie from '../../Assets/Images/Icon_cookie.png';
+import { useRecoilValue } from 'recoil';
+import { userInfoAtom } from '../../Store/Atoms';
+import { purchaseCookie } from '../../Api';
 
 const CookieOption = ({ isActive, count, price, setFocus }: ICookieOptionProps) => {
   const navigate = useNavigate();
+  const userInfo = useRecoilValue(userInfoAtom);
 
   return (
     <CookieOption_Style
@@ -23,7 +27,9 @@ const CookieOption = ({ isActive, count, price, setFocus }: ICookieOptionProps) 
         <div
           className="pay_box"
           onClick={() => {
-            navigate('/charge/complete');
+            purchaseCookie(userInfo.accessToken, count.toString()).then((res) => {
+              navigate('/charge/complete');
+            });
           }}
         >
           <h5>현금으로 결제하기</h5>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Btn_Modal_Black, Btn_Modal_White } from '../../../Components/ButtonModal';
 import Icon_x from '../../../Assets/Images/Icon_x.png';
@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router';
 import { sellItems, sellItemsCancel } from '../../../Api';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { userInfoAtom, inventoryTriggerAtom } from '../../../Store/Atoms';
+import Loading from '../../../Components/Loading';
 
 interface props {
   closeModal: any;
@@ -16,42 +17,48 @@ const ModalCancleSelling = ({ closeModal, item }: props) => {
   const navigate = useNavigate();
   const userInfo = useRecoilValue(userInfoAtom);
   const [inventoryTrigger, setInventoryTrigger] = useRecoilState(inventoryTriggerAtom);
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <ModalContainer>
-      <ModalBox>
-        <img src={Icon_x} alt="close button" className="close_btn" onClick={closeModal} />
-        <h3>해당 [{item.name}]을 판매 취소할까요?</h3>
-        <div className="item_card">
-          <div className="image"></div>
-          <div className="content">
-            <h4 className="title">{item.name}</h4>
-            <span className="dutability">
-              {item.durability}/{item.maxDurability}회 남음
-            </span>
-            <span className="price">{item.price} KLAY</span>
+    <>
+      <ModalContainer>
+        <ModalBox>
+          <img src={Icon_x} alt="close button" className="close_btn" onClick={closeModal} />
+          <h3>해당 [{item.name}]을 판매 취소할까요?</h3>
+          <div className="item_card">
+            <div className="image"></div>
+            <div className="content">
+              <h4 className="title">{item.name}</h4>
+              <span className="dutability">
+                {item.durability}/{item.maxDurability}회 남음
+              </span>
+              <span className="price">{item.price} KLAY</span>
+            </div>
           </div>
-        </div>
-        <Btn_Container>
-          <Btn_Modal_White
-            label="예, 취소하겠습니다."
-            onClick={() => {
-              sellItemsCancel(userInfo.accessToken, item.id).then((res) => {
-                console.log('cancle?', res);
-                if (res.result == 'ok') {
-                  navigate('/inventory/completecancle');
-                  setInventoryTrigger((prev) => !prev);
-                } else {
-                  console.log('판매 등록 취소 실패');
-                  navigate('/inventory');
-                }
-              });
-            }}
-          />
-          <Btn_Modal_Black label="아니요, 취소하지 않겠습니다." onClick={closeModal} />
-        </Btn_Container>
-      </ModalBox>
-    </ModalContainer>
+          <Btn_Container>
+            <Btn_Modal_White
+              label="예, 취소하겠습니다."
+              onClick={() => {
+                setIsLoading(true);
+                sellItemsCancel(userInfo.accessToken, item.id).then((res) => {
+                  setIsLoading(false);
+                  console.log('cancle?', res);
+                  if (res.result == 'ok') {
+                    navigate('/inventory/completecancle');
+                    setInventoryTrigger((prev) => !prev);
+                  } else {
+                    console.log('판매 등록 취소 실패');
+                    navigate('/inventory');
+                  }
+                });
+              }}
+            />
+            <Btn_Modal_Black label="아니요, 취소하지 않겠습니다." onClick={closeModal} />
+          </Btn_Container>
+        </ModalBox>
+      </ModalContainer>
+      {isLoading && <Loading />}
+    </>
   );
 };
 

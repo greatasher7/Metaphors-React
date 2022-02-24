@@ -19,10 +19,14 @@ const Home = () => {
   useEffect(() => {
     try {
       getNovelList().then((res) => {
-        setNovelList(res.content.total);
+        if (res.content) {
+          setNovelList(res.content.total);
+        }
       });
       getNovelListUser(userInfo.accessToken).then((res) => {
-        setNovelListUser(res.content.total);
+        if (res.content) {
+          setNovelListUser(res.content.total);
+        }
       });
     } catch (e) {
       console.log(e);

@@ -1,16 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { Btn_Primary_FontBlack } from '../../Components/Button';
 import ModalCompleteCharge from './Modal/ModalCompleteCharge';
 import KlayOption from './KlayOption';
+import { useRecoilValue } from 'recoil';
+import { userInfoAtom } from '../../Store/Atoms';
+import { getUserAssetInfo } from '../../Api';
 
 const ChargeKlay = () => {
   const [klayFocus, setKlayFocus] = useState(0);
   const navigate = useNavigate();
+  const userInfo = useRecoilValue(userInfoAtom);
+  const [user, setUser] = useState({
+    email: '',
+    nickname: '',
+    cookie: 0,
+    token: 0,
+  });
+
   const closeModal = () => {
     navigate('/chargeklay');
   };
+
+  useEffect(() => {
+    getUserAssetInfo(userInfo.accessToken).then((res) => {
+      console.log(res.content);
+      setUser(res.content);
+    });
+  }, []);
 
   const setFocus = (value: number) => {
     setKlayFocus(value);
@@ -21,7 +39,7 @@ const ChargeKlay = () => {
       <Container>
         <Btn_Primary_FontBlack label="KLAY 충전하기" />
         <p className="my_klay">
-          <span>150,032</span>KLAY
+          <span>{user.token}</span> KLAY
         </p>
         <Klay_Container>
           <KlayOption setFocus={setFocus} isActive={klayFocus === 1} count={1} />

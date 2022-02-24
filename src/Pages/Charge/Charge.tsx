@@ -1,16 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { Btn_Primary_FontBlack } from '../../Components/Button';
 import ModalCompleteCharge from './Modal/ModalCompleteCharge';
 import CookieOption from './CookieOption';
+import { getMyItemInfo, getUserAssetInfo } from '../../Api';
+import { useRecoilValue } from 'recoil';
+import { userInfoAtom } from '../../Store/Atoms';
 
 const Charge = () => {
   const [cookieFocus, setCookieFocus] = useState(0);
   const navigate = useNavigate();
+  const userInfo = useRecoilValue(userInfoAtom);
+  const [user, setUser] = useState({
+    email: '',
+    nickname: '',
+    cookie: 0,
+    token: 0,
+  });
+
   const closeModal = () => {
     navigate('/charge');
   };
+
+  useEffect(() => {
+    getUserAssetInfo(userInfo.accessToken).then((res) => {
+      setUser(res.content);
+    });
+  }, []);
 
   const setFocus = (value: number) => {
     setCookieFocus(value);
@@ -20,9 +37,9 @@ const Charge = () => {
     <>
       <Container>
         <Btn_Primary_FontBlack label="쿠키 충전하기" />
-        <p className="my_klay">150,032KLAY</p>
+        <p className="my_klay">{user.token} KLAY</p>
         <p className="cookie">
-          사용 가능한 쿠키 <span className="my_cookie">0</span>
+          사용 가능한 쿠키 <span className="my_cookie">{user.cookie}</span>
         </p>
         <Cookie_Container>
           <CookieOption setFocus={setFocus} isActive={cookieFocus === 10} count={10} price={1000} />

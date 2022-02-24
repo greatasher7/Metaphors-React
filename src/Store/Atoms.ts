@@ -73,6 +73,12 @@ export const inventoryTriggerAtom = atom<boolean>({
   effects_UNSTABLE: [persistAtom],
 });
 
+export const optionTriggerAtom = atom<boolean>({
+  key: 'optionTrigger',
+  default: false,
+  effects_UNSTABLE: [persistAtom],
+});
+
 export const isNovelAtom = atom<IHeaderNovel>({
   key: 'isNovel',
   default: {

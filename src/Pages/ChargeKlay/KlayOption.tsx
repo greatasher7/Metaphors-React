@@ -3,9 +3,13 @@ import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { IKlayOptionProps } from '../../Store/Type/Interfaces';
 import Icon_klay from '../../Assets/Images/Icon_klay.png';
+import { useRecoilValue } from 'recoil';
+import { userInfoAtom } from '../../Store/Atoms';
+import { purchaseCookie, purchaseToken } from '../../Api';
 
 const KlayOption = ({ isActive, count, setFocus }: IKlayOptionProps) => {
   const navigate = useNavigate();
+  const userInfo = useRecoilValue(userInfoAtom);
 
   return (
     <KlayOption_Style
@@ -22,7 +26,9 @@ const KlayOption = ({ isActive, count, setFocus }: IKlayOptionProps) => {
         <div
           className="pay_box"
           onClick={() => {
-            navigate('/chargeklay/complete');
+            purchaseToken(userInfo.accessToken, count.toString()).then((res) => {
+              navigate('/chargeklay/complete');
+            });
           }}
         >
           <h5>충전하기</h5>

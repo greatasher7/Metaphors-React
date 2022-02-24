@@ -182,7 +182,7 @@ export const postNovelDetail = async (accessToken: string, id: number) => {
 };
 
 export const postNovelEpisode = async (accessToken: string, id: number) => {
-  console.log('post episode', accessToken, id);
+  console.log('postNovelEpisode', accessToken, id);
 
   const result = await axios({
     method: 'post',
@@ -196,8 +196,6 @@ export const postNovelEpisode = async (accessToken: string, id: number) => {
 };
 
 export const postRestartNovel = async (accessToken: string, id: number) => {
-  console.log('api', accessToken, id);
-
   const result = await axios({
     method: 'post',
     url: `${url}/api/novel/new`,
@@ -210,8 +208,6 @@ export const postRestartNovel = async (accessToken: string, id: number) => {
 };
 
 export const postItem = async (accessToken: string, id: number) => {
-  console.log('api', accessToken, id);
-
   const result = await axios({
     method: 'post',
     url: `${url}/api/novel/item`,
@@ -229,8 +225,6 @@ export const postUseItem = async (
   next: string | undefined,
   name: string | undefined
 ) => {
-  console.log('api', accessToken, id);
-
   const result = await axios({
     method: 'post',
     url: `${url}/api/novel/nextEpisode/useItem`,
@@ -242,9 +236,22 @@ export const postUseItem = async (
   return result.data;
 };
 
-export const postCreateItem = async (accessToken: string, name: undefined | string) => {
-  console.log('api', accessToken, name);
+export const postUseItemCookie = async (accessToken: string, novelId: string, next: string) => {
+  const result = await axios({
+    method: 'post',
+    url: `${url}/api/novel/nextEpisode/useCookie`,
+    headers: {
+      'x-access-token': accessToken,
+    },
+    data: {
+      novelId: novelId,
+      next: next,
+    },
+  });
+  return result.data;
+};
 
+export const postCreateItem = async (accessToken: string, name: undefined | string) => {
   const result = await axios({
     method: 'post',
     url: `${url}/api/item/create`,
@@ -257,8 +264,6 @@ export const postCreateItem = async (accessToken: string, name: undefined | stri
 };
 
 export const postItemImage = async (accessToken: string, name: string, image: Blob) => {
-  console.log('api', accessToken, name, image);
-
   const data = new FormData();
   data.append('files', image);
   data.append('name', name);
@@ -270,23 +275,6 @@ export const postItemImage = async (accessToken: string, name: string, image: Bl
       'x-access-token': accessToken,
     },
     data: data,
-  });
-  return result.data;
-};
-
-export const postUseItemCookie = async (accessToken: string, novelId: string, next: string) => {
-  console.log('api', accessToken, novelId, next);
-
-  const result = await axios({
-    method: 'post',
-    url: `${url}/api/novel/nextEpisode/useCookie`,
-    headers: {
-      'x-access-token': accessToken,
-    },
-    data: {
-      novelId: novelId,
-      next: next,
-    },
   });
   return result.data;
 };
@@ -303,6 +291,7 @@ export const getMyItemInfo = async (accessToken: string) => {
   });
   return result.data.content;
 };
+
 // 아이템 판매 등록
 export const sellItems = async (accessToken: string, tokenId: string, price: string) => {
   console.log('Token', accessToken);
@@ -332,6 +321,95 @@ export const sellItemsCancel = async (accessToken: string, tokenId: string) => {
     },
     data: {
       tokenId: tokenId,
+    },
+  });
+  return result.data;
+};
+
+// 인벤토리거래소
+// 판매 중인 아이템 보기(회원,비회원 둘다)
+export const getNftForSaleItems = async () => {
+  const result = await axios({
+    method: 'get',
+    url: url + '/api/nft/forSaleItems',
+    headers: {
+      // 'x-access-token': accessToken,
+    },
+  });
+  return result.data;
+};
+// 내가 판매 중인 아이템 보기
+export const getUserNftForSaleItems = async (accessToken: string) => {
+  console.log('Token', accessToken);
+  const result = await axios({
+    method: 'get',
+    url: url + '/api/nft/forSaleItems/user',
+    headers: {
+      'x-access-token': accessToken,
+    },
+  });
+  return result.data;
+};
+// 아이템 구매하기
+export const purchaseItem = async (accessToken: string, tokenId: string) => {
+  console.log('Token', accessToken);
+  const result = await axios({
+    method: 'post',
+    url: url + '/api/nft/items/purchase',
+    headers: {
+      'x-access-token': accessToken,
+    },
+    data: {
+      tokenId: tokenId,
+    },
+  });
+  return result.data;
+};
+// 쿠키 충전 요청
+export const purchaseCookie = async (accessToken: string, cookie: string) => {
+  console.log('Token', accessToken);
+  const result = await axios({
+    method: 'post',
+    url: url + '/api/purchase/cookie',
+    headers: {
+      'x-access-token': accessToken,
+    },
+    data: {
+      cookie: cookie,
+    },
+  });
+  return result.data;
+};
+// 토큰 충전 요청
+export const purchaseToken = async (accessToken: string, token: string) => {
+  console.log('Token', accessToken);
+  const result = await axios({
+    method: 'post',
+    url: url + '/api/purchase/token',
+    headers: {
+      'x-access-token': accessToken,
+    },
+    data: {
+      token: token,
+    },
+  });
+  return result.data;
+};
+// 이름으로 판매 중인 아이템 검색(회원,비회원 둘다)
+export const searchNftForSaleItems = async (
+  accessToken: string,
+  name: string,
+  exceptOwnerItem: boolean
+) => {
+  const result = await axios({
+    method: 'post',
+    url: url + '/api/nft/search/saleItems',
+    headers: {
+      'x-access-token': accessToken,
+    },
+    data: {
+      name: name,
+      exceptOwnerItem: exceptOwnerItem,
     },
   });
   return result.data;

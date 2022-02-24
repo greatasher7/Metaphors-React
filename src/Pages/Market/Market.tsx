@@ -1,54 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { Btn_Primary_FontBlack } from '../../Components/Button';
-import { IItem } from '../../Store/Type/Interfaces';
+import { IItemMarket } from '../../Store/Type/Interfaces';
 import Icon_search from '../../Assets/Images/Icon_search.png';
 import Icon_cookieCharge from '../../Assets/Images/Icon_cookieCharge.png';
 import ItemCard_Market from './ItemCard_Market';
 import ModalBuying from './Modal/ModalBuying';
 import ModalCompleteBuying from './Modal/ModalCompleteBuying';
-
-const item_list: IItem[] = [
-  {
-    name: '따뜻함',
-    image: 'ddd',
-    durability: 7,
-    onSale: true,
-    price: 2000,
-  },
-  {
-    name: '용기',
-    image: 'ddd',
-    durability: 5,
-    onSale: false,
-    price: 5000,
-  },
-  {
-    name: '청산가리',
-    image: 'ddd',
-    durability: 3,
-    onSale: false,
-    price: 1000,
-  },
-  {
-    name: '독버섯',
-    image: 'ddd',
-    durability: 3,
-    onSale: false,
-    price: 1235000,
-  },
-];
+import { getNftForSaleItems, getUserAssetInfo, searchNftForSaleItems } from '../../Api';
+import { useRecoilValue } from 'recoil';
+import { userInfoAtom } from '../../Store/Atoms';
 
 const Market = () => {
   const navigate = useNavigate();
+  const userInfo = useRecoilValue(userInfoAtom);
+
   const closeModal = () => {
     navigate('/market');
   };
 
   const [isChecked, setIsChecked] = useState(false);
+  const [name, setName] = useState('');
+  const [list, setList] = useState<IItemMarket[]>([
+    {
+      id: '',
+      name: '',
+      ownerNickname: '',
+      imageURI: '',
+      maxDurability: '',
+      durability: '',
+      price: '',
+    },
+  ]);
+  const [item, setItem] = useState<IItemMarket>({
+    id: '',
+    name: '',
+    ownerNickname: '',
+    imageURI: '',
+    maxDurability: '',
+    durability: '',
+    price: '',
+  });
+  const [klay, setKlay] = useState(0);
 
-  console.log(isChecked);
+  useEffect(() => {
+    getNftForSaleItems().then((res) => {
+      setList(res.content);
+    });
+    getUserAssetInfo(userInfo.accessToken).then((res) => {
+      setKlay(res.content.token);
+    });
+  }, []);
+
+  useEffect(() => {
+    searchNftForSaleItems(userInfo.accessToken, name, isChecked).then((res) => {
+      setList(res.content);
+    });
+  }, [isChecked]);
+
+  console.log('list', list);
 
   return (
     <>
@@ -60,12 +71,28 @@ const Market = () => {
             navigate('/chargeklay');
           }}
         >
-          <span>150,032KLAY</span>
+          <span>{klay} KLAY</span>
           <img src={Icon_cookieCharge} alt="charge icon" className="charge_icon" />
         </p>
         <div className="searchbox">
-          <img src={Icon_search} alt="search" className="search_icon" />
-          <input type="text" className="search" placeholder="소재 이름으로 검색하기" />
+          <img
+            src={Icon_search}
+            alt="search"
+            className="search_icon"
+            onClick={() => {
+              searchNftForSaleItems(userInfo.accessToken, name, isChecked).then((res) => {
+                setList(res.content);
+              });
+            }}
+          />
+          <input
+            type="text"
+            className="search"
+            placeholder="소재 이름으로 검색하기"
+            onChange={(e: any) => {
+              setName(e.target.value);
+            }}
+          />
           <div className="checkbox_box">
             <input
               type="checkbox"
@@ -77,20 +104,27 @@ const Market = () => {
           </div>
         </div>
         <section className="item_list">
-          {item_list.map((item, idx) => (
+          {list.map((cont, idx) => (
             <ItemCard_Market
               key={idx}
-              name={item.name}
-              image={item.image}
-              durability={item.durability}
-              onSale={item.onSale}
-              price={item.price ? item.price : 0}
+              id={cont.id}
+              name={cont.name}
+              durability={cont.durability}
+              maxDurability={cont.maxDurability}
+              imageURI={cont.imageURI}
+              onSale={cont.price !== '0' ? true : false}
+              price={cont.price ? cont.price : '0'}
+              ownerNickname={cont.ownerNickname}
+              setItem={setItem}
             />
           ))}
         </section>
       </Container>
       <Routes>
-        <Route path="/buying" element={<ModalBuying closeModal={closeModal} />} />
+        <Route
+          path="/buying"
+          element={<ModalBuying closeModal={closeModal} item={item} klay={klay} />}
+        />
         <Route path="/completebuying" element={<ModalCompleteBuying closeModal={closeModal} />} />
       </Routes>
     </>

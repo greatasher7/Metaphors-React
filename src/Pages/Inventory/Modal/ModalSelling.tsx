@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router';
 import { getMyItemInfo, sellItems } from '../../../Api';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { userInfoAtom, inventoryTriggerAtom } from '../../../Store/Atoms';
+import Loading from '../../../Components/Loading';
 
 interface props {
   closeModal: any;
@@ -17,45 +18,51 @@ const ModalSelling = ({ closeModal, item }: props) => {
   const userInfo = useRecoilValue(userInfoAtom);
   const [inventoryTrigger, setInventoryTrigger] = useRecoilState(inventoryTriggerAtom);
   const [price, setPrice] = useState('0');
+  const [isLoading, setIsLoading] = useState(false);
 
   const onChangeKlay = (e: any) => {
     setPrice(e.target.value);
   };
 
   return (
-    <ModalContainer>
-      <ModalBox>
-        <img src={Icon_x} alt="close button" className="close_btn" onClick={closeModal} />
-        <h4>[{item.name}] 팔기</h4>
-        <span className="durability">
-          {item.durability}/{item.maxDurability}회 남음
-        </span>
-        <div className="image"></div>
-        <div className="input_container">
-          <input
-            type="number"
-            placeholder="판매가격을 입력해주세요."
-            className="selling_price"
-            onChange={onChangeKlay}
+    <>
+      <ModalContainer>
+        <ModalBox>
+          <img src={Icon_x} alt="close button" className="close_btn" onClick={closeModal} />
+          <h4>[{item.name}] 팔기</h4>
+          <span className="durability">
+            {item.durability}/{item.maxDurability}회 남음
+          </span>
+          <div className="image"></div>
+          <div className="input_container">
+            <input
+              type="number"
+              placeholder="판매가격을 입력해주세요."
+              className="selling_price"
+              onChange={onChangeKlay}
+            />
+            <span className="klay">KLAY</span>
+          </div>
+          <Btn_Modal_Primary
+            label="거래소에 올리기"
+            onClick={() => {
+              setIsLoading(true);
+              sellItems(userInfo.accessToken, item.id, price).then((res) => {
+                setIsLoading(false);
+                if (res.result == 'ok') {
+                  navigate('/inventory/completeselling');
+                  setInventoryTrigger((prev) => !prev);
+                } else {
+                  console.log('판매등록 실패');
+                  navigate('/inventory');
+                }
+              });
+            }}
           />
-          <span className="klay">KLAY</span>
-        </div>
-        <Btn_Modal_Primary
-          label="거래소에 올리기"
-          onClick={() => {
-            sellItems(userInfo.accessToken, item.id, price).then((res) => {
-              if (res.result == 'ok') {
-                navigate('/inventory/completeselling');
-                setInventoryTrigger((prev) => !prev);
-              } else {
-                console.log('판매등록 실패');
-                navigate('/inventory');
-              }
-            });
-          }}
-        />
-      </ModalBox>
-    </ModalContainer>
+        </ModalBox>
+      </ModalContainer>
+      {isLoading && <Loading />}
+    </>
   );
 };
 

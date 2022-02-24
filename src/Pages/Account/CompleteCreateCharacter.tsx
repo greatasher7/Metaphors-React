@@ -1,21 +1,24 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { postSigninDetail } from '../../Api';
 import { Btn_Primary, Btn_White } from '../../Components/Button';
+import Loading from '../../Components/Loading';
 import { nftAtom, changeAssetToggleAtom } from '../../Store/Atoms';
 
 const CompleteCreateCharacter = () => {
   const navigate = useNavigate();
   const [nft, setNft] = useRecoilState(nftAtom);
   const [changeAssetToggle, setChangeAssetToggle] = useRecoilState(changeAssetToggleAtom);
+  const [isLoading, setIsLoading] = useState(false);
 
   const goCreateNft = () => {
     navigate('/account/character');
   };
 
   const handleClickHome = () => {
+    setIsLoading(true);
     postSigninDetail(
       nft.accessToken,
       nft.name,
@@ -40,6 +43,7 @@ const CompleteCreateCharacter = () => {
           genre2: '',
           genre3: '',
         });
+        setIsLoading(false);
         navigate('/');
         setChangeAssetToggle((prev) => !prev);
       });
@@ -47,15 +51,21 @@ const CompleteCreateCharacter = () => {
 
   return (
     <>
-      <Background></Background>
-      <Container>
-        <h2>내 성격들을 NFT로 받았어요!</h2>
-        <p className="content">인벤토리를 확인해보세요.</p>
-        <Btn_Container>
-          <Btn_Primary label="홈으로 돌아가기" onClick={handleClickHome} />
-          <Btn_White label="다시 고르기" onClick={goCreateNft} />
-        </Btn_Container>
-      </Container>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <Background></Background>
+          <Container>
+            <h2>내 성격들을 NFT로 받았어요!</h2>
+            <p className="content">인벤토리를 확인해보세요.</p>
+            <Btn_Container>
+              <Btn_Primary label="홈으로 돌아가기" onClick={handleClickHome} />
+              <Btn_White label="다시 고르기" onClick={goCreateNft} />
+            </Btn_Container>
+          </Container>
+        </>
+      )}
     </>
   );
 };
