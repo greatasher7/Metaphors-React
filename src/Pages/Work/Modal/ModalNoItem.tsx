@@ -85,7 +85,7 @@ const ModalNoItem = ({ closeModal }: { closeModal: () => void }) => {
               onClick={handleUseClick}
             />
           </Btn_Container>
-          <span
+          {/* <span
             className="cookie"
             onClick={() => {
               navigate('/charge');
@@ -98,7 +98,7 @@ const ModalNoItem = ({ closeModal }: { closeModal: () => void }) => {
             }}
           >
             쿠키 충전하기
-          </span>
+          </span> */}
         </ModalBox>
       </ModalContainer>
       {isLoading && <Loading />}

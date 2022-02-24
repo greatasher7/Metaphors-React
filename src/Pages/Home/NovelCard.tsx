@@ -27,7 +27,10 @@ const NovelCard = ({ id, name, author, imagePath, nftItems, genre }: INovel) => 
       }}
     >
       <div className="image">
-        <img src={image} alt="novel image" />
+        <img
+          src={'https://ipfs.infura.io/ipfs/QmPPRA66hiLH6ihkyuVkixHBbuDNTPF9sfGrBZBgBNepsZ'}
+          alt="novel image"
+        />
       </div>
       <div className="contents">
         <h4 className="title">{name}</h4>
@@ -51,18 +54,17 @@ export default NovelCard;
 
 const Container = styled.article`
   display: grid;
-  grid-template-columns: 50px auto;
+  grid-template-columns: 49px auto;
   grid-column-gap: 18px;
   height: 70px;
   ${({ theme }) => theme.mixin.textStyle.R_11}
   .image {
     width: 100%;
-    height: 65px;
-    background-color: #ffffff;
-    border-radius: 4px;
+    height: 66px;
     img {
       display: block;
       width: 100%;
+      border-radius: 4px;
     }
   }
   .contents {
