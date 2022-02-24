@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { IItemMarketCardProps } from '../../Store/Type/Interfaces';
 import { getImage } from '../../Api';
+import { useRecoilValue } from 'recoil';
+import { userInfoAtom } from '../../Store/Atoms';
 
 const ItemCard_Market = ({
   id,
@@ -15,6 +17,7 @@ const ItemCard_Market = ({
   setItem,
 }: IItemMarketCardProps) => {
   const navigate = useNavigate();
+  const userInfo = useRecoilValue(userInfoAtom);
   const [image, setImage] = useState('');
 
   useEffect(() => {
@@ -44,23 +47,25 @@ const ItemCard_Market = ({
         </span>
         <span className="price">{price} KLAY</span>
       </div>
-      <div
-        className="buy_btn"
-        onClick={() => {
-          setItem({
-            id: id,
-            name: name,
-            imageURI: imageURI,
-            durability: durability,
-            maxDurability: maxDurability,
-            price: price,
-            ownerNickname: ownerNickname,
-          });
-          navigate('/market/buying');
-        }}
-      >
-        구입
-      </div>
+      {userInfo.accessToken != '' && (
+        <div
+          className="buy_btn"
+          onClick={() => {
+            setItem({
+              id: id,
+              name: name,
+              imageURI: imageURI,
+              durability: durability,
+              maxDurability: maxDurability,
+              price: price,
+              ownerNickname: ownerNickname,
+            });
+            navigate('/market/buying');
+          }}
+        >
+          구입
+        </div>
+      )}
     </Container>
   );
 };

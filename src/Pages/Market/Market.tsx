@@ -23,17 +23,7 @@ const Market = () => {
 
   const [isChecked, setIsChecked] = useState(false);
   const [name, setName] = useState('');
-  const [list, setList] = useState<IItemMarket[]>([
-    {
-      id: '',
-      name: '',
-      ownerNickname: '',
-      imageURI: '',
-      maxDurability: '',
-      durability: '',
-      price: '',
-    },
-  ]);
+  const [list, setList] = useState<IItemMarket[]>();
   const [item, setItem] = useState<IItemMarket>({
     id: '',
     name: '',
@@ -47,79 +37,82 @@ const Market = () => {
 
   useEffect(() => {
     getNftForSaleItems().then((res) => {
-      console.log(res);
       setList(res.content);
     });
     getUserAssetInfo(userInfo.accessToken).then((res) => {
-      console.log(res);
       setKlay(res.content.token);
     });
   }, [marketTrigger]);
 
   useEffect(() => {
-    searchNftForSaleItems(userInfo.accessToken, name, isChecked).then((res) => {
-      setList(res.content);
-    });
+    if (userInfo.accessToken != '') {
+      searchNftForSaleItems(userInfo.accessToken, name, isChecked).then((res) => {
+        setList(res.content);
+      });
+    }
   }, [isChecked]);
-
-  console.log('list', list);
 
   return (
     <>
       <Container>
         <Btn_Primary_FontBlack label="거래소" />
-        <p
-          className="my_klay"
-          onClick={() => {
-            navigate('/chargeklay');
-          }}
-        >
-          <span>{klay} KLAY</span>
-          <img src={Icon_cookieCharge} alt="charge icon" className="charge_icon" />
-        </p>
-        <div className="searchbox">
-          <img
-            src={Icon_search}
-            alt="search"
-            className="search_icon"
-            onClick={() => {
-              searchNftForSaleItems(userInfo.accessToken, name, isChecked).then((res) => {
-                setList(res.content);
-              });
-            }}
-          />
-          <input
-            type="text"
-            className="search"
-            placeholder="소재 이름으로 검색하기"
-            onChange={(e: any) => {
-              setName(e.target.value);
-            }}
-          />
-          <div className="checkbox_box">
-            <input
-              type="checkbox"
-              onChange={() => {
-                setIsChecked((prev) => !prev);
+        {userInfo.accessToken != '' && (
+          <>
+            <p
+              className="my_klay"
+              onClick={() => {
+                navigate('/chargeklay');
               }}
-            />
-            <span>내가 판매 중인 물품 제외</span>
-          </div>
-        </div>
+            >
+              <span>{klay} KLAY</span>
+              <img src={Icon_cookieCharge} alt="charge icon" className="charge_icon" />
+            </p>
+            <div className="searchbox">
+              <img
+                src={Icon_search}
+                alt="search"
+                className="search_icon"
+                onClick={() => {
+                  searchNftForSaleItems(userInfo.accessToken, name, isChecked).then((res) => {
+                    setList(res.content);
+                  });
+                }}
+              />
+              <input
+                type="text"
+                className="search"
+                placeholder="소재 이름으로 검색하기"
+                onChange={(e: any) => {
+                  setName(e.target.value);
+                }}
+              />
+              <div className="checkbox_box">
+                <input
+                  type="checkbox"
+                  onChange={() => {
+                    setIsChecked((prev) => !prev);
+                  }}
+                />
+                <span>내가 판매 중인 물품 제외</span>
+              </div>
+            </div>
+          </>
+        )}
         <section className="item_list">
-          {list.map((cont, idx) => (
-            <ItemCard_Market
-              key={idx}
-              id={cont.id}
-              name={cont.name}
-              durability={cont.durability}
-              maxDurability={cont.maxDurability}
-              imageURI={cont.imageURI}
-              price={cont.price ? cont.price : '0'}
-              ownerNickname={cont.ownerNickname}
-              setItem={setItem}
-            />
-          ))}
+          {list &&
+            list.map((cont, idx) => (
+              <ItemCard_Market
+                key={idx}
+                id={cont.id}
+                name={cont.name}
+                durability={cont.durability}
+                maxDurability={cont.maxDurability}
+                imageURI={cont.imageURI}
+                price={cont.price ? cont.price : '0'}
+                ownerNickname={cont.ownerNickname}
+                setItem={setItem}
+              />
+            ))}
         </section>
       </Container>
       <Routes>
