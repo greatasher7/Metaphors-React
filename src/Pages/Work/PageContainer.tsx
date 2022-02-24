@@ -3,6 +3,11 @@ import styled from 'styled-components';
 import { IPage } from '../../Store/Type/Interfaces';
 
 const PageContainer = ({ title, author, contents, isVisibleOption, isFirstPage }: IPage) => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth',
+  });
+
   return (
     <PageContainer_styled isVisibleOption={isVisibleOption}>
       {isFirstPage ? (

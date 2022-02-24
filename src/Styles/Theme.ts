@@ -30,6 +30,11 @@ const mixin = {
       font-size: 20px;
       letter-spacing: -0.02em;
     `,
+    B_20: css`
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+    `,
     B_17: css`
       font-weight: 700;
       font-size: 17px;

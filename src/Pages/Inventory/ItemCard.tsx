@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { IItem } from '../../Store/Type/Interfaces';
 import Icon_onSale from '../../Assets/Images/Icon_onSale.png';
 import ModalCancleSelling from './Modal/ModalCancleSelling';
+import { getImage } from '../../Api';
 
 interface ItemCardProps {
   id: string;
   name: string;
-  image: string;
+  imageURI: string;
   durability: number;
   maxDurability: number;
   onSale: boolean;
@@ -20,7 +20,7 @@ interface ItemCardProps {
 const ItemCard = ({
   id,
   name,
-  image,
+  imageURI,
   durability,
   maxDurability,
   price,
@@ -29,13 +29,25 @@ const ItemCard = ({
   setItem,
 }: ItemCardProps) => {
   const navigate = useNavigate();
-  console.log('sale?', onSale);
+  const [image, setImage] = useState('');
+
+  useEffect(() => {
+    if (isFreeToken) {
+      setImage(imageURI);
+    } else {
+      getImage(imageURI).then((res) => {
+        setImage(res);
+      });
+    }
+  }, [id]);
 
   return (
     <>
       {onSale ? (
         <Container_onSale>
-          <div className="image"></div>
+          <div className="image">
+            <img src={image} style={{ width: '100%', height: '100%' }} />
+          </div>
           <div className="contents">
             <span className="onSale_mark">
               <img src={Icon_onSale} alt="icon" /> 판매 중
@@ -66,7 +78,9 @@ const ItemCard = ({
         </Container_onSale>
       ) : (
         <Container>
-          <div className="image"></div>
+          <div className="image">
+            <img src={image} style={{ width: '100%', height: '100%' }} />
+          </div>
           <div className="contents">
             <h4 className="title">{name}</h4>
             {!isFreeToken ? (

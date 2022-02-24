@@ -9,6 +9,7 @@ import ModalDraw from './Modal/ModalDraw';
 import ModalNoItem from './Modal/ModalNoItem';
 import ModalUseItem from './Modal/ModalUseItem';
 import Loading from '../../Components/Loading';
+import ModalFailCreate from './Modal/ModalFailCreate';
 
 const SelectOption = ({ novelId, goNext }: { novelId: number; goNext: (num: number) => void }) => {
   const navigate = useNavigate();
@@ -79,6 +80,7 @@ const SelectOption = ({ novelId, goNext }: { novelId: number; goNext: (num: numb
       <Routes>
         <Route path="/noitem" element={<ModalNoItem closeModal={closeModal} />} />
         <Route path="/draw" element={<ModalDraw closeModal={closeModal} />} />
+        <Route path="/fail" element={<ModalFailCreate closeModal={closeModal} />} />
         <Route
           path="/using"
           element={<ModalUseItem closeModal={closeModal} choiceList={choice} novelId={novelId} />}

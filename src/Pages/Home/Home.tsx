@@ -39,7 +39,7 @@ const Home = () => {
       <Container>
         {isSignin ? (
           <List_Container>
-            <h4 className="subtitle">노블사랑님이 좋아할 만한 추천 월드</h4>
+            <h4 className="subtitle">{userInfo.nickname}님이 좋아할 만한 추천 월드</h4>
             <div className="list">
               {novelListUser &&
                 novelListUser.map((novel, idx) => (
@@ -101,7 +101,6 @@ const Container = styled.div`
 `;
 
 const Intro_Container = styled.section`
-  ${({ theme }) => theme.mixin.paddingSide_depth2}
   margin-top: 30px;
   .contentBox {
     height: 77px;

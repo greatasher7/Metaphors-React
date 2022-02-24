@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { IItemMarketCardProps } from '../../Store/Type/Interfaces';
+import { getImage } from '../../Api';
 
 const ItemCard_Market = ({
   id,
@@ -14,11 +15,22 @@ const ItemCard_Market = ({
   setItem,
 }: IItemMarketCardProps) => {
   const navigate = useNavigate();
+  const [image, setImage] = useState('');
+
+  useEffect(() => {
+    console.log('id changed', imageURI);
+    getImage(imageURI)
+      .then((res) => {
+        setImage(res);
+      })
+      .catch(() => setImage(''));
+  }, [id]);
+
   return (
     <Container>
       <div className="image">
         <img
-          src={imageURI}
+          src={image}
           style={{
             width: '100%',
             height: '100%',

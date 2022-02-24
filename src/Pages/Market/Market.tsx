@@ -47,9 +47,11 @@ const Market = () => {
 
   useEffect(() => {
     getNftForSaleItems().then((res) => {
+      console.log(res);
       setList(res.content);
     });
     getUserAssetInfo(userInfo.accessToken).then((res) => {
+      console.log(res);
       setKlay(res.content.token);
     });
   }, [marketTrigger]);

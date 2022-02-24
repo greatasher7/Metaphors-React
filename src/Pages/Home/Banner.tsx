@@ -12,10 +12,13 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 // import Swiper core and required modules
 import SwiperCore, { Pagination, Autoplay } from 'swiper';
+import { useNavigate } from 'react-router';
 // install Swiper modules
 SwiperCore.use([Pagination]);
 
 const Banner = () => {
+  const navigate = useNavigate();
+
   return (
     <Banner_Container>
       <Swiper
@@ -31,13 +34,27 @@ const Banner = () => {
         modules={[Autoplay, Pagination]}
       >
         <SwiperSlide>
-          <img src={Banner_1} alt="banner" className="banner_img" />
+          <img
+            src={Banner_1}
+            alt="banner"
+            className="banner_img"
+            onClick={() => {
+              navigate('/banner1');
+            }}
+          />
         </SwiperSlide>
         <SwiperSlide>
           <img src={Banner_2} alt="banner" className="banner_img" />
         </SwiperSlide>
         <SwiperSlide>
-          <img src={Banner_3} alt="banner" className="banner_img" />
+          <img
+            src={Banner_3}
+            alt="banner"
+            className="banner_img"
+            onClick={() => {
+              navigate('/banner3');
+            }}
+          />
         </SwiperSlide>
         <SwiperSlide>
           <img src={Banner_4} alt="banner" className="banner_img" />

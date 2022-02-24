@@ -7,6 +7,8 @@ import Inventory from './Inventory/Inventory';
 import Market from './Market/Market';
 import Charge from './Charge/Charge';
 import ChargeKlay from './ChargeKlay/ChargeKlay';
+import Banner1 from './Banner/Banner1';
+import Banner3 from './Banner/Banner3';
 
 const RoutesComponent = () => {
   return (
@@ -18,6 +20,8 @@ const RoutesComponent = () => {
       <Route path="/market/*" element={<Market />} />
       <Route path="/charge/*" element={<Charge />} />
       <Route path="/chargeklay/*" element={<ChargeKlay />} />
+      <Route path="/banner1" element={<Banner1 />} />
+      <Route path="/banner3" element={<Banner3 />} />
     </Routes>
   );
 };

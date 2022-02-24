@@ -15,6 +15,7 @@ const ModalNoItem = ({ closeModal }: { closeModal: () => void }) => {
   const [isNovel, setIsNovel] = useRecoilState(isNovelAtom);
   const [tryCount, setTryCount] = useState(0);
   const [nowToken, setNowToken] = useState(0);
+  const [nowCookie, setNowCookie] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleCreateClick = () => {
@@ -25,6 +26,8 @@ const ModalNoItem = ({ closeModal }: { closeModal: () => void }) => {
       if (res.result === 'ok') {
         console.log('create!!!!', res);
         navigate(`/work/viewer/${params.id}/draw`);
+      } else if (res.result === 'fail') {
+        navigate(`/work/viewer/${params.id}/fail`);
       } else {
         setTryCount((prev) => prev + 1);
       }
@@ -39,6 +42,7 @@ const ModalNoItem = ({ closeModal }: { closeModal: () => void }) => {
     try {
       getUserAssetInfo(userInfo.accessToken).then((res) => {
         setNowToken(res.content.token);
+        setNowCookie(res.content.cookie);
       });
     } catch (e) {
       console.log(e);
@@ -83,22 +87,9 @@ const ModalNoItem = ({ closeModal }: { closeModal: () => void }) => {
             <Btn_Modal_Black
               label={`쿠키 1개로 [${params.id}] 1회 이용하기`}
               onClick={handleUseClick}
+              nowToken={nowCookie}
             />
           </Btn_Container>
-          {/* <span
-            className="cookie"
-            onClick={() => {
-              navigate('/charge');
-              setIsNovel({
-                isNovel: false,
-                title: '',
-                current: 0,
-                novelId: 0,
-              });
-            }}
-          >
-            쿠키 충전하기
-          </span> */}
         </ModalBox>
       </ModalContainer>
       {isLoading && <Loading />}
@@ -148,15 +139,12 @@ const Btn_Container = styled.div`
 const Btn_Modal_Primary = ({ onClick, label, nowToken }: IBtn) => {
   const [isNoKlay, setIsNoKlay] = useState(true);
 
-  console.log('render btn');
-
   useEffect(() => {
     if (nowToken) {
       setIsNoKlay(nowToken < 1 ? true : false);
     }
   }, [nowToken]);
 
-  console.log('isnoklay?', isNoKlay, nowToken);
   return (
     <Primary
       onClick={() => {
@@ -181,8 +169,27 @@ const Btn_Modal_White = ({ onClick, label }: IBtn) => {
   );
 };
 
-const Btn_Modal_Black = ({ onClick, label }: IBtn) => {
-  return <Black onClick={onClick}>{label}</Black>;
+const Btn_Modal_Black = ({ onClick, label, nowToken }: IBtn) => {
+  const [isNoCookie, setIsNoCookie] = useState(true);
+
+  useEffect(() => {
+    if (nowToken) {
+      setIsNoCookie(nowToken < 1 ? true : false);
+    }
+  }, [nowToken]);
+
+  return (
+    <Black
+      onClick={() => {
+        if (!isNoCookie) {
+          onClick && onClick();
+        }
+      }}
+      isNoCookie={isNoCookie}
+    >
+      {label}
+    </Black>
+  );
 };
 
 const Common = styled.button`
@@ -213,7 +220,8 @@ const White = styled(Common)`
     margin-top: 3px;
   }
 `;
-const Black = styled(Common)`
+const Black = styled(Common)<{ isNoCookie: boolean }>`
   background-color: ${({ theme }) => theme.variable.colors.black_color};
   color: ${({ theme }) => theme.variable.colors.A_FFF};
+  opacity: ${(props) => (props.isNoCookie ? '0.3' : '1')};
 `;

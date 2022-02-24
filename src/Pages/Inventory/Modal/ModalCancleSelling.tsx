@@ -26,7 +26,9 @@ const ModalCancleSelling = ({ closeModal, item }: props) => {
           <img src={Icon_x} alt="close button" className="close_btn" onClick={closeModal} />
           <h3>해당 [{item.name}]을 판매 취소할까요?</h3>
           <div className="item_card">
-            <div className="image"></div>
+            <div className="image">
+              <img src={item.image} style={{ width: '100%', height: '100%' }} />
+            </div>
             <div className="content">
               <h4 className="title">{item.name}</h4>
               <span className="dutability">

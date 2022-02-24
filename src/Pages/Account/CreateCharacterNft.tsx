@@ -193,7 +193,7 @@ const CreateCharacterNft = () => {
 
   return (
     <Container>
-      <Btn_Gradient label="NET 생성 중" />
+      <Btn_Gradient label="NFT 생성 중" />
       {nowStep === 'name' ? (
         <NameBox />
       ) : nowStep === 'personality' ? (

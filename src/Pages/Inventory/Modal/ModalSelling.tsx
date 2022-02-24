@@ -33,7 +33,9 @@ const ModalSelling = ({ closeModal, item }: props) => {
           <span className="durability">
             {item.durability}/{item.maxDurability}회 남음
           </span>
-          <div className="image"></div>
+          <div className="image">
+            <img src={item.image} style={{ width: '100%', height: '100%' }} />
+          </div>
           <div className="input_container">
             <input
               type="number"

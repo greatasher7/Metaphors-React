@@ -35,8 +35,8 @@ const Inventory = () => {
   useEffect(() => {
     console.log('useEffect');
     getMyItemInfo(userInfo.accessToken).then((res) => {
-      setList(res.items);
       console.log(res.items);
+      setList(res.items);
     });
     getUserAssetInfo(userInfo.accessToken).then((res) => {
       setKlay(res.content.token);
@@ -69,7 +69,7 @@ const Inventory = () => {
               durability={item.durability}
               isFreeToken={item.isFreeToken}
               maxDurability={item.maxDurability}
-              image={item.image}
+              imageURI={item.imageURI}
               onSale={item.price !== '0' ? true : false}
               price={item.price ? item.price : 0}
               setItem={setItem}

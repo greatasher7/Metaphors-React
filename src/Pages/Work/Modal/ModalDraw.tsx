@@ -3,9 +3,11 @@ import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router';
 import { Btn_Modal_Primary } from '../../../Components/ButtonModal';
 import SignatureCanvas from 'react-signature-canvas';
-import { postItemImage } from '../../../Api';
+import { getImage, postItemImage } from '../../../Api';
 import { useRecoilState } from 'recoil';
 import { optionTriggerAtom, userInfoAtom } from '../../../Store/Atoms';
+import { create } from 'ipfs-http-client';
+import * as Buffer from 'buffer';
 
 // base64 to blob
 const dataURItoBlob = (dataURI: string) => {
@@ -36,21 +38,31 @@ const ModalDraw = ({ closeModal }: { closeModal: () => void }) => {
   };
 
   const handleClick = () => {
-    const newImage = dataURItoBlob(signCanvas.current.getTrimmedCanvas().toDataURL('image/png'));
-    console.log(typeof newImage, newImage);
-    setImage(newImage);
-    setOptionTrigger((prev) => !prev);
-    closeModal();
-  };
+    const client = create({ host: 'ipfs.infura.io', port: 5001, protocol: 'http' });
 
-  useEffect(() => {
-    params.id &&
-      image.size > 1 &&
-      postItemImage(userInfo.accessToken, params.id, image).then((res) => {
-        console.log(res);
-        navigate(`/work/viewer/${params.id}/noitem`);
+    const dataURL = signCanvas.current.getTrimmedCanvas().toDataURL('image/png');
+
+    console.log('handleClick');
+    client
+      .add(dataURL)
+      .then((response) => {
+        const ipfsURL = 'https://ipfs.infura.io/ipfs/' + response.path;
+        console.log('ipfsURL', ipfsURL);
+        console.log('params.id', params.id);
+        params.id &&
+          postItemImage(userInfo.accessToken, ipfsURL, params.id)
+            .then((res) => {
+              console.log('postItemImage complete', res);
+              closeModal();
+              navigate(`/work/viewer/${params.id}/noitem`);
+            })
+            .catch((e) => console.log(e));
+      })
+      .catch((err) => {
+        console.log('이미지 생성 실패');
+        console.error(err);
       });
-  }, [image]);
+  };
 
   return (
     <ModalContainer>

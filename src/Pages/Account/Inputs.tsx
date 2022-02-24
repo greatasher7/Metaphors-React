@@ -66,7 +66,6 @@ export const InputPassword = ({ setState }: IInput) => {
         value={value}
         onChange={handleChange}
       />
-      <p className="password_guide">*8~16자의 영문, 숫자를 사용한 비밀번호를 입력해주세요.</p>
       {isWrong && <p className="alert">잘못된 비밀번호 형식입니다.</p>}
     </InputBox>
   );
@@ -98,11 +97,6 @@ export const InputPasswordAgain = ({ setState, isExternalWrong }: IInput) => {
 
 const InputBox = styled.div`
   position: relative;
-  .password_guide {
-    ${({ theme }) => theme.mixin.textStyle.R_11}
-    margin-top: 10px;
-    padding-left: 5px;
-  }
   .alert {
     ${({ theme }) => theme.mixin.textStyle.R_11}
     color: #ff5e5e;

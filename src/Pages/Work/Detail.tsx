@@ -18,6 +18,7 @@ const Detail = ({ novelDetail, setNovelDetail }: IDetailProps) => {
       params.id &&
         userInfo.accessToken &&
         postNovelDetail(userInfo.accessToken, parseInt(params.id)).then((res) => {
+          console.log(res);
           setNovelDetail(res.content);
         });
     } catch (e) {
@@ -28,7 +29,9 @@ const Detail = ({ novelDetail, setNovelDetail }: IDetailProps) => {
   const restartNovel = () => {
     params.id &&
       userInfo.accessToken &&
-      postRestartNovel(userInfo.accessToken, parseInt(params.id)).then((res) => {});
+      postRestartNovel(userInfo.accessToken, parseInt(params.id)).then((res) => {
+        navigate(`/work/viewer/${novelDetail?.novelId}`);
+      });
   };
 
   return (
@@ -53,7 +56,11 @@ const Detail = ({ novelDetail, setNovelDetail }: IDetailProps) => {
       </Info>
       <Btn_Container>
         <Btn_Primary_FontBlack
-          label={`이어보기 [${novelDetail?.current}화]`}
+          label={
+            novelDetail.current > 1
+              ? `이어보기 [${novelDetail.current}화]`
+              : `지금 시작하기 [${novelDetail.current}화]`
+          }
           onClick={() => {
             navigate(`/work/viewer/${novelDetail?.novelId}`);
           }}
@@ -62,7 +69,6 @@ const Detail = ({ novelDetail, setNovelDetail }: IDetailProps) => {
           label="다시 시작하기"
           onClick={() => {
             restartNovel();
-            navigate(`/work/viewer/${novelDetail?.novelId}`);
           }}
         />
       </Btn_Container>

@@ -3,19 +3,6 @@ import axios from 'axios';
 const url = `http://169.56.87.186:3000`;
 
 // Common ////////////////////////////////////////////////////////////
-export const getImage = async (path: string) => {
-  const result = await axios({
-    method: 'get',
-    url: `${url}/api/image`,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: {
-      path: path,
-    },
-  });
-  return result.data;
-};
 
 export const getUserAssetInfo = async (accessToken: string) => {
   const result = await axios({
@@ -263,18 +250,25 @@ export const postCreateItem = async (accessToken: string, name: undefined | stri
   return result.data;
 };
 
-export const postItemImage = async (accessToken: string, name: string, image: Blob) => {
-  const data = new FormData();
-  data.append('files', image);
-  data.append('name', name);
-
+export const postItemImage = async (accessToken: string, path: string, name: string) => {
   const result = await axios({
     method: 'post',
     url: `${url}/api/item/img/create`,
     headers: {
       'x-access-token': accessToken,
     },
-    data: data,
+    data: {
+      files: path,
+      name: name,
+    },
+  });
+  return result.data;
+};
+
+export const getImage = async (path: string) => {
+  const result = await axios({
+    method: 'get',
+    url: `${path}`,
   });
   return result.data;
 };

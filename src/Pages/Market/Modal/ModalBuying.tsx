@@ -5,7 +5,7 @@ import Icon_x from '../../../Assets/Images/Icon_x.png';
 import { useNavigate } from 'react-router';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { userInfoAtom, marketTriggerAtom } from '../../../Store/Atoms';
-import { purchaseItem } from '../../../Api';
+import { purchaseItem, getImage } from '../../../Api';
 import { IItemMarket } from '../../../Store/Type/Interfaces';
 import Loading from '../../../Components/Loading';
 
@@ -20,10 +20,14 @@ const ModalBuying = ({ closeModal, item, klay }: props) => {
   const userInfo = useRecoilValue(userInfoAtom);
   const [marketTrigger, setMarketTrigger] = useRecoilState(marketTriggerAtom);
   const [isLoading, setIsLoading] = useState(false);
+  const [image, setImage] = useState('');
 
   useEffect(() => {
     console.log('item');
     console.log(item);
+    getImage(item.imageURI).then((res) => {
+      setImage(res);
+    });
   }, []);
 
   return (
@@ -35,7 +39,7 @@ const ModalBuying = ({ closeModal, item, klay }: props) => {
           <div className="item_card">
             <div className="image">
               <img
-                src={item.imageURI}
+                src={image}
                 style={{
                   width: '100%',
                   height: '100%',
@@ -56,10 +60,14 @@ const ModalBuying = ({ closeModal, item, klay }: props) => {
               onClick={() => {
                 setIsLoading(true);
                 purchaseItem(userInfo.accessToken, item.id).then((res) => {
-                  console.log(res);
                   setIsLoading(false);
-                  setMarketTrigger((prev) => !prev);
-                  navigate('/market/completebuying');
+                  console.log(res);
+                  if (res.result === 'ok') {
+                    setMarketTrigger((prev) => !prev);
+                    navigate('/market/completebuying');
+                  } else {
+                    alert('구매에 실패하였습니다');
+                  }
                 });
               }}
             />

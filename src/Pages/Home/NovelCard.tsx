@@ -27,10 +27,7 @@ const NovelCard = ({ id, name, author, imagePath, nftItems, genre }: INovel) => 
       }}
     >
       <div className="image">
-        <img
-          src={'https://ipfs.infura.io/ipfs/QmPPRA66hiLH6ihkyuVkixHBbuDNTPF9sfGrBZBgBNepsZ'}
-          alt="novel image"
-        />
+        <img src={imagePath} alt="novel image" />
       </div>
       <div className="contents">
         <h4 className="title">{name}</h4>
