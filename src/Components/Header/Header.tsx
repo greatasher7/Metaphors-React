@@ -62,7 +62,6 @@ const Header = () => {
   useEffect(() => {
     if (isSignin) {
       getUserAssetInfo(userInfo.accessToken).then((res) => {
-        console.log('header!', res);
         setUserAssteInfo({
           cookie: res.content.cookie,
           token: res.content.token,
@@ -77,7 +76,6 @@ const Header = () => {
   useEffect(() => {
     if (isSignin) {
       getUserAssetInfo(userInfo.accessToken).then((res) => {
-        console.log('header!', res);
         setUserAssteInfo({
           cookie: res.content.cookie,
           token: res.content.token,

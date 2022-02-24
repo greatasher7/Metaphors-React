@@ -4,13 +4,13 @@ import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { postNovelEpisode } from '../../Api';
 import { useCookieAtom, userInfoAtom, nextEpisodeAtom, isNovelAtom } from '../../Store/Atoms';
-import { INovelEpisode } from '../../Store/Type/Interfaces';
+import { INovelDetail, INovelEpisode } from '../../Store/Type/Interfaces';
 import Footer from './Footer';
 import SelectOption from './SelectOption';
 import PageContainer from './PageContainer';
 import Loading from '../../Components/Loading';
 
-const Viewer = () => {
+const Viewer = ({ novelDetail }: { novelDetail: INovelDetail }) => {
   const [nowPage, setNowPage] = useState(1);
   const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
   const [episodeData, setEpisodeData] = useState<INovelEpisode>({
@@ -22,7 +22,7 @@ const Viewer = () => {
     pages: [
       {
         number: 0,
-        content: 'empty',
+        content: '',
         hasChoice: false,
         context: '',
       },
@@ -61,9 +61,11 @@ const Viewer = () => {
     try {
       params.id &&
         postNovelEpisode(userInfo.accessToken, parseInt(params.id)).then((res) => {
-          console.log('trigger post episode', res);
-          setEpisodeData(res.content);
-          setNowPage(1);
+          if (res.content) {
+            console.log('trigger post episode', res);
+            setEpisodeData(res.content);
+            setNowPage(1);
+          }
         });
     } catch (e) {
       console.log(e);
@@ -101,8 +103,6 @@ const Viewer = () => {
     setIsEndingpage(episodeData.choice.length === 0 && nowPage === episodeData.pages.length);
   }, [nowPage]);
 
-  console.log('length', episodeData.choice.length);
-
   return (
     <>
       {isLoading ? (
@@ -133,8 +133,9 @@ const Viewer = () => {
             }}
             isLastPage={episodeData?.pages[nowPage - 1].context !== ''}
             isFirstPage={nowPage === 1}
-            isEndingPage={isEndingPage}
+            isEndingPage={episodeData?.pages[nowPage - 1].content.includes('-끝-')}
             haschoice={episodeData?.pages[nowPage - 1].hasChoice}
+            novelDetail={novelDetail}
           />
         </>
       )}

@@ -15,6 +15,7 @@ const Footer = ({
   isFirstPage,
   haschoice,
   isEndingPage,
+  novelDetail,
 }: IFooterProps) => {
   const [nextEpisodeToggle, setNextEpisodeToggle] = useRecoilState(nextEpisodeAtom);
   const [isNovel, setIsNovel] = useRecoilState(isNovelAtom);
@@ -23,10 +24,8 @@ const Footer = ({
 
   const handleClick = () => {
     setNextEpisodeToggle((prev) => !prev);
+    window.location.replace(`/work/viewer/${params.id}`);
   };
-
-  console.log('end??', isEndingPage);
-  console.log('last??', isLastPage);
 
   return (
     <FooterContainer>

@@ -5,13 +5,12 @@ import styled from 'styled-components';
 import { postNovelDetail, postRestartNovel } from '../../Api';
 import { Btn_Primary_FontBlack, Btn_Gray } from '../../Components/Button';
 import { userInfoAtom } from '../../Store/Atoms';
-import { INovelDetail } from '../../Store/Type/Interfaces';
+import { IDetailProps, INovelDetail } from '../../Store/Type/Interfaces';
 
-const Detail = () => {
+const Detail = ({ novelDetail, setNovelDetail }: IDetailProps) => {
   const navigate = useNavigate();
   const params = useParams();
   const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
-  const [nobelDetail, setNobelDetail] = useState<INovelDetail>();
 
   useEffect(() => {
     params.id && console.log('params', userInfo.accessToken, parseInt(params.id));
@@ -19,8 +18,7 @@ const Detail = () => {
       params.id &&
         userInfo.accessToken &&
         postNovelDetail(userInfo.accessToken, parseInt(params.id)).then((res) => {
-          console.log('aa', res);
-          setNobelDetail(res.content);
+          setNovelDetail(res.content);
         });
     } catch (e) {
       console.log(e);
@@ -30,9 +28,7 @@ const Detail = () => {
   const restartNovel = () => {
     params.id &&
       userInfo.accessToken &&
-      postRestartNovel(userInfo.accessToken, parseInt(params.id)).then((res) => {
-        console.log('restart', res);
-      });
+      postRestartNovel(userInfo.accessToken, parseInt(params.id)).then((res) => {});
   };
 
   return (
@@ -40,12 +36,12 @@ const Detail = () => {
       <Info>
         <div className="image"></div>
         <div className="info">
-          <h4 className="title">{nobelDetail?.name}</h4>
-          <span className="author">{nobelDetail?.author}</span>
+          <h4 className="title">{novelDetail?.name}</h4>
+          <span className="author">{novelDetail?.author}</span>
           <div className="inlineBox">
-            <span className="date">{nobelDetail?.issueDate.slice(0, 10)}</span>
+            <span className="date">{novelDetail?.issueDate.slice(0, 10)}</span>
             <ul className="items">
-              {nobelDetail?.nftItems.split('/').map((item, idx) => {
+              {novelDetail?.nftItems.split('/').map((item, idx) => {
                 if (idx < 2) {
                   return <li key={idx}>{item}</li>;
                 }
@@ -53,20 +49,20 @@ const Detail = () => {
             </ul>
           </div>
         </div>
-        <div className="desc">{nobelDetail?.description}</div>
+        <div className="desc">{novelDetail?.description}</div>
       </Info>
       <Btn_Container>
         <Btn_Primary_FontBlack
-          label={`이어보기 [${nobelDetail?.current}화]`}
+          label={`이어보기 [${novelDetail?.current}화]`}
           onClick={() => {
-            navigate(`/work/viewer/${nobelDetail?.novelId}`);
+            navigate(`/work/viewer/${novelDetail?.novelId}`);
           }}
         />
         <Btn_Gray
           label="다시 시작하기"
           onClick={() => {
             restartNovel();
-            navigate(`/work/viewer/${nobelDetail?.novelId}`);
+            navigate(`/work/viewer/${novelDetail?.novelId}`);
           }}
         />
       </Btn_Container>

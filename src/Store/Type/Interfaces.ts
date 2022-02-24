@@ -1,5 +1,4 @@
 // interface /////////////////////////////
-
 export interface IBtn {
   onClick?: () => void;
   label: string;
@@ -15,12 +14,18 @@ export interface IFooterProps {
   isFirstPage: boolean | undefined;
   isEndingPage: boolean | undefined;
   haschoice: boolean | undefined;
+  novelDetail: any;
 }
 
 export interface ISideNavProps {
   toggleNav: () => void;
   clickLogout: () => void;
   nickname: string;
+}
+
+export interface IDetailProps {
+  novelDetail: INovelDetail;
+  setNovelDetail: any;
 }
 
 export interface ICookieOptionProps {
@@ -42,7 +47,6 @@ export interface IInput {
 }
 
 // Account
-
 export interface IAccountBtn {
   label: string;
   onClick: () => void;
@@ -78,7 +82,7 @@ export interface INovel {
 }
 
 export interface INovelDetail {
-  novelId: number;
+  novelId: number | undefined;
   name: string;
   author: string;
   imagePath: string;
