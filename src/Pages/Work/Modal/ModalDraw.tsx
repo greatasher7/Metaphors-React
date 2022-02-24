@@ -7,7 +7,7 @@ import { getImage, postItemImage } from '../../../Api';
 import { useRecoilState } from 'recoil';
 import { optionTriggerAtom, userInfoAtom } from '../../../Store/Atoms';
 import { create } from 'ipfs-http-client';
-import * as Buffer from 'buffer';
+// import * as Buffer from 'buffer';
 
 // base64 to blob
 const dataURItoBlob = (dataURI: string) => {
@@ -32,6 +32,7 @@ const ModalDraw = ({ closeModal }: { closeModal: () => void }) => {
   const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
   const [optionTrigger, setOptionTrigger] = useRecoilState(optionTriggerAtom);
   const [image, setImage] = useState(new Blob());
+  const [isEmpty, setIsEmpty] = useState(false);
 
   const clear = () => {
     signCanvas.current.clear();
@@ -41,8 +42,16 @@ const ModalDraw = ({ closeModal }: { closeModal: () => void }) => {
     const client = create({ host: 'ipfs.infura.io', port: 5001, protocol: 'http' });
 
     const dataURL = signCanvas.current.getTrimmedCanvas().toDataURL('image/png');
+    const blobInfo = dataURItoBlob(dataURL);
+    const blobSize = dataURItoBlob(dataURL).size;
+
+    console.log('info', blobInfo);
+    console.log('size', blobSize);
 
     console.log('handleClick');
+
+    setIsEmpty(true);
+
     client
       .add(dataURL)
       .then((response) => {
@@ -54,6 +63,7 @@ const ModalDraw = ({ closeModal }: { closeModal: () => void }) => {
             .then((res) => {
               console.log('postItemImage complete', res);
               closeModal();
+              setOptionTrigger((prev) => !prev);
               navigate(`/work/viewer/${params.id}/noitem`);
             })
             .catch((e) => console.log(e));
@@ -81,6 +91,8 @@ const ModalDraw = ({ closeModal }: { closeModal: () => void }) => {
           </span>
         </Canvas_Container>
         <p className="warning">*부적절한 그림은 운영사 임의로 거래가 금지될 수 있습니다.</p>
+        {isEmpty && <p className="empty">*그림을 그려주세요</p>}
+
         <Btn_Modal_Primary label="완료" onClick={handleClick} />
       </ModalBox>
     </ModalContainer>
@@ -116,9 +128,14 @@ const ModalBox = styled.div`
   }
   .warning {
     ${({ theme }) => theme.mixin.textStyle.M_11}
-    text-align: left;
     margin-top: 6px;
-    margin-bottom: 60px;
+    margin-bottom: 15px;
+  }
+  .empty {
+    text-align: left;
+    ${({ theme }) => theme.mixin.textStyle.M_13}
+    color: #ff5e5e;
+    margin-bottom: 40px;
   }
 `;
 

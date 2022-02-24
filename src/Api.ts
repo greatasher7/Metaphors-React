@@ -251,6 +251,8 @@ export const postCreateItem = async (accessToken: string, name: undefined | stri
 };
 
 export const postItemImage = async (accessToken: string, path: string, name: string) => {
+  console.log('인자', name, path, accessToken);
+
   const result = await axios({
     method: 'post',
     url: `${url}/api/item/img/create`,

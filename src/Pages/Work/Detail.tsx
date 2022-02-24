@@ -37,7 +37,9 @@ const Detail = ({ novelDetail, setNovelDetail }: IDetailProps) => {
   return (
     <Container>
       <Info>
-        <div className="image"></div>
+        <div className="image">
+          <img src={novelDetail.imagePath} alt="image" />
+        </div>
         <div className="info">
           <h4 className="title">{novelDetail?.name}</h4>
           <span className="author">{novelDetail?.author}</span>
@@ -93,9 +95,12 @@ const Info = styled.div`
 
   .image {
     width: 100%;
-    height: 92px;
-    background-color: #ffffff;
-    border-radius: 4px;
+    height: 97px;
+    img {
+      display: block;
+      width: 100%;
+      border-radius: 4px;
+    }
   }
   .info {
     display: flex;

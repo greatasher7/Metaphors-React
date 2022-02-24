@@ -11,15 +11,6 @@ const NovelCard = ({ id, name, author, imagePath, nftItems, genre }: INovel) => 
   const [image, setImage] = useState('');
   const [isSign, setIsSign] = useRecoilState(isSigninAtom);
 
-  // 반환받은 imagePath 로 추가 요청 필요!!
-
-  // useEffect(() => {
-  //   getImage(imagePath).then((res) => {
-  //     console.log(res);
-  //     setImage(res.image);
-  //   });
-  // }, []);
-
   return (
     <Container
       onClick={() => {
