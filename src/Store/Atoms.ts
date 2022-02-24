@@ -73,8 +73,26 @@ export const inventoryTriggerAtom = atom<boolean>({
   effects_UNSTABLE: [persistAtom],
 });
 
+export const marketTriggerAtom = atom<boolean>({
+  key: 'marketTrigger',
+  default: false,
+  effects_UNSTABLE: [persistAtom],
+});
+
 export const optionTriggerAtom = atom<boolean>({
   key: 'optionTrigger',
+  default: false,
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const cookieTriggerAtom = atom<boolean>({
+  key: 'cookieTrigger',
+  default: false,
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const klayTriggerAtom = atom<boolean>({
+  key: 'klayTrigger',
   default: false,
   effects_UNSTABLE: [persistAtom],
 });

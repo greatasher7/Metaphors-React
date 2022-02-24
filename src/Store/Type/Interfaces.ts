@@ -143,6 +143,10 @@ export interface IItemMarket {
   price: string;
 }
 
+export interface IItemMarketCardProps extends IItemMarket {
+  setItem: any;
+}
+
 // Atoms
 export interface ISignup {
   email: string;

@@ -4,14 +4,16 @@ import styled from 'styled-components';
 import { Btn_Primary_FontBlack } from '../../Components/Button';
 import ModalCompleteCharge from './Modal/ModalCompleteCharge';
 import KlayOption from './KlayOption';
-import { useRecoilValue } from 'recoil';
-import { userInfoAtom } from '../../Store/Atoms';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import { userInfoAtom, klayTriggerAtom } from '../../Store/Atoms';
 import { getUserAssetInfo } from '../../Api';
 
 const ChargeKlay = () => {
   const [klayFocus, setKlayFocus] = useState(0);
   const navigate = useNavigate();
   const userInfo = useRecoilValue(userInfoAtom);
+  const [klayTrigger, setKlayTrigger] = useRecoilState(klayTriggerAtom);
+
   const [user, setUser] = useState({
     email: '',
     nickname: '',
@@ -28,7 +30,7 @@ const ChargeKlay = () => {
       console.log(res.content);
       setUser(res.content);
     });
-  }, []);
+  }, [klayTrigger]);
 
   const setFocus = (value: number) => {
     setKlayFocus(value);
@@ -47,6 +49,7 @@ const ChargeKlay = () => {
           <KlayOption setFocus={setFocus} isActive={klayFocus === 3} count={3} />
         </Klay_Container>
       </Container>
+
       <Routes>
         <Route path="/complete" element={<ModalCompleteCharge closeModal={closeModal} />} />
       </Routes>

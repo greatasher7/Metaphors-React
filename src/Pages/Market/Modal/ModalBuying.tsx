@@ -3,19 +3,23 @@ import styled from 'styled-components';
 import { Btn_Modal_Primary, Btn_Modal_Inactive } from '../../../Components/ButtonModal';
 import Icon_x from '../../../Assets/Images/Icon_x.png';
 import { useNavigate } from 'react-router';
-import { useRecoilValue } from 'recoil';
-import { userInfoAtom } from '../../../Store/Atoms';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import { userInfoAtom, marketTriggerAtom } from '../../../Store/Atoms';
 import { purchaseItem } from '../../../Api';
+import { IItemMarket } from '../../../Store/Type/Interfaces';
+import Loading from '../../../Components/Loading';
 
 interface props {
   closeModal: any;
-  item: any;
+  item: IItemMarket;
   klay: number;
 }
 
 const ModalBuying = ({ closeModal, item, klay }: props) => {
   const navigate = useNavigate();
   const userInfo = useRecoilValue(userInfoAtom);
+  const [marketTrigger, setMarketTrigger] = useRecoilState(marketTriggerAtom);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     console.log('item');
@@ -23,53 +27,59 @@ const ModalBuying = ({ closeModal, item, klay }: props) => {
   }, []);
 
   return (
-    <ModalContainer>
-      <ModalBox hasKlay={klay >= item.price}>
-        <img src={Icon_x} alt="close button" className="close_btn" onClick={closeModal} />
-        <h3>해당 [{item.name}]를 지금 구매할까요?</h3>
-        <div className="item_card">
-          <div className="image">
-            <img
-              src={item.imageURI}
-              style={{
-                width: '100%',
-                height: '100%',
+    <>
+      <ModalContainer>
+        <ModalBox hasKlay={klay >= parseInt(item.price)}>
+          <img src={Icon_x} alt="close button" className="close_btn" onClick={closeModal} />
+          <h3>해당 [{item.name}]를 지금 구매할까요?</h3>
+          <div className="item_card">
+            <div className="image">
+              <img
+                src={item.imageURI}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                }}
+              />
+            </div>
+            <div className="content">
+              <h4 className="title">{item.name}</h4>
+              <span className="dutability">
+                {item.durability}/{item.maxDurability}회 남음
+              </span>
+              <span className="price">{item.price} KLAY</span>
+            </div>
+          </div>
+          {klay >= parseInt(item.price) && userInfo.nickname != item.ownerNickname && (
+            <Btn_Modal_Primary
+              label="구입하기"
+              onClick={() => {
+                setIsLoading(true);
+                purchaseItem(userInfo.accessToken, item.id).then((res) => {
+                  console.log(res);
+                  setIsLoading(false);
+                  setMarketTrigger((prev) => !prev);
+                  navigate('/market/completebuying');
+                });
               }}
             />
-          </div>
-          <div className="content">
-            <h4 className="title">{item.name}</h4>
-            <span className="dutability">
-              {item.durability}/{item.maxDurability}회 남음
-            </span>
-            <span className="price">{item.price} KLAY</span>
-          </div>
-        </div>
-        {klay >= item.price && userInfo.nickname != item.ownerNickname && (
-          <Btn_Modal_Primary
-            label="구입하기"
-            onClick={() => {
-              purchaseItem(userInfo.accessToken, item.id).then((res) => {
-                console.log(res);
-                navigate('/market/completebuying');
-              });
-            }}
-          />
-        )}
-        {klay < item.price && userInfo.nickname != item.ownerNickname && (
-          <>
-            <p className="warning">*KLAY 잔액이 부족합니다. KLAY를 충전해주세요.</p>
-            <Btn_Modal_Inactive label="구입하기" />
-          </>
-        )}
-        {userInfo.nickname == item.ownerNickname && (
-          <>
-            <p className="warning">*현재 유저의 아이템입니다.</p>
-            <Btn_Modal_Inactive label="구입하기" />
-          </>
-        )}
-      </ModalBox>
-    </ModalContainer>
+          )}
+          {klay < parseInt(item.price) && userInfo.nickname != item.ownerNickname && (
+            <>
+              <p className="warning">*KLAY 잔액이 부족합니다. KLAY를 충전해주세요.</p>
+              <Btn_Modal_Inactive label="구입하기" />
+            </>
+          )}
+          {userInfo.nickname == item.ownerNickname && (
+            <>
+              <p className="warning">*현재 유저의 아이템입니다.</p>
+              <Btn_Modal_Inactive label="구입하기" />
+            </>
+          )}
+        </ModalBox>
+      </ModalContainer>
+      {isLoading && <Loading />}
+    </>
   );
 };
 

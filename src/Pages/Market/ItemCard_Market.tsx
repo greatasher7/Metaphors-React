@@ -1,18 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
-
-interface ItemCardProps {
-  id: string;
-  name: string;
-  imageURI: string;
-  durability: string;
-  maxDurability: string;
-  onSale: boolean;
-  price?: string;
-  ownerNickname: string;
-  setItem: any;
-}
+import { IItemMarketCardProps } from '../../Store/Type/Interfaces';
 
 const ItemCard_Market = ({
   id,
@@ -21,10 +10,9 @@ const ItemCard_Market = ({
   durability,
   maxDurability,
   price,
-  onSale,
   ownerNickname,
   setItem,
-}: ItemCardProps) => {
+}: IItemMarketCardProps) => {
   const navigate = useNavigate();
   return (
     <Container>

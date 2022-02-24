@@ -1,40 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { IKlayOptionProps } from '../../Store/Type/Interfaces';
 import Icon_klay from '../../Assets/Images/Icon_klay.png';
-import { useRecoilValue } from 'recoil';
-import { userInfoAtom } from '../../Store/Atoms';
-import { purchaseCookie, purchaseToken } from '../../Api';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import { userInfoAtom, klayTriggerAtom } from '../../Store/Atoms';
+import { purchaseToken } from '../../Api';
+import Loading from '../../Components/Loading';
 
 const KlayOption = ({ isActive, count, setFocus }: IKlayOptionProps) => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const userInfo = useRecoilValue(userInfoAtom);
+  const [klayTrigger, setKlayTrigger] = useRecoilState(klayTriggerAtom);
 
   return (
-    <KlayOption_Style
-      isActive={isActive}
-      onClick={() => {
-        setFocus(count);
-      }}
-    >
-      <div className="left">
-        <img src={Icon_klay} alt="klay icon" />
-        <span>{count} KLAY</span>
-      </div>
-      {isActive && (
-        <div
-          className="pay_box"
-          onClick={() => {
-            purchaseToken(userInfo.accessToken, count.toString()).then((res) => {
-              navigate('/chargeklay/complete');
-            });
-          }}
-        >
-          <h5>충전하기</h5>
+    <>
+      <KlayOption_Style
+        isActive={isActive}
+        onClick={() => {
+          setFocus(count);
+        }}
+      >
+        <div className="left">
+          <img src={Icon_klay} alt="klay icon" />
+          <span>{count} KLAY</span>
         </div>
-      )}
-    </KlayOption_Style>
+        {isActive && (
+          <div
+            className="pay_box"
+            onClick={() => {
+              setIsLoading(true);
+              purchaseToken(userInfo.accessToken, count.toString()).then((res) => {
+                setKlayTrigger((prev) => !prev);
+                setIsLoading(false);
+                navigate('/chargeklay/complete');
+              });
+            }}
+          >
+            <h5>충전하기</h5>
+          </div>
+        )}
+      </KlayOption_Style>
+      {isLoading && <Loading />}
+    </>
   );
 };
 

@@ -4,14 +4,15 @@ import styled from 'styled-components';
 import { Btn_Primary_FontBlack } from '../../Components/Button';
 import ModalCompleteCharge from './Modal/ModalCompleteCharge';
 import CookieOption from './CookieOption';
-import { getMyItemInfo, getUserAssetInfo } from '../../Api';
-import { useRecoilValue } from 'recoil';
-import { userInfoAtom } from '../../Store/Atoms';
+import { getUserAssetInfo } from '../../Api';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { cookieTriggerAtom, userInfoAtom } from '../../Store/Atoms';
 
 const Charge = () => {
   const [cookieFocus, setCookieFocus] = useState(0);
   const navigate = useNavigate();
   const userInfo = useRecoilValue(userInfoAtom);
+  const [cookieTrigger, setCookieTrigger] = useRecoilState(cookieTriggerAtom);
   const [user, setUser] = useState({
     email: '',
     nickname: '',
@@ -27,7 +28,7 @@ const Charge = () => {
     getUserAssetInfo(userInfo.accessToken).then((res) => {
       setUser(res.content);
     });
-  }, []);
+  }, [cookieTrigger]);
 
   const setFocus = (value: number) => {
     setCookieFocus(value);

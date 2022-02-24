@@ -10,7 +10,13 @@ import Icon_goPrev from '../../Assets/Images/Icon_goPrev.png';
 import Icon_cookie from '../../Assets/Images/Icon_cookie.png';
 import Icon_cookieCharge from '../../Assets/Images/Icon_cookieCharge.png';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { changeAssetToggleAtom, isSigninAtom, userInfoAtom, isNovelAtom } from '../../Store/Atoms';
+import {
+  changeAssetToggleAtom,
+  isSigninAtom,
+  userInfoAtom,
+  isNovelAtom,
+  cookieTriggerAtom,
+} from '../../Store/Atoms';
 import { getUserAssetInfo } from '../../Api';
 import { IUserAssetInfo } from '../../Store/Type/Interfaces';
 
@@ -31,6 +37,7 @@ const Header = () => {
   const [isCookieRender, setIsCookieRender] = useState(false);
   const [isNovel, setIsNovel] = useRecoilState(isNovelAtom);
   const [isNovelRender, setIsNovelRender] = useState(false);
+  const [cookieTrigger, setCookieTrigger] = useRecoilState(cookieTriggerAtom);
 
   const toggleNav = () => {
     setIsSideNavVisible((prev) => !prev);
@@ -66,6 +73,21 @@ const Header = () => {
       });
     }
   }, [changeAssetToggle]);
+
+  useEffect(() => {
+    if (isSignin) {
+      getUserAssetInfo(userInfo.accessToken).then((res) => {
+        console.log('header!', res);
+        setUserAssteInfo({
+          cookie: res.content.cookie,
+          token: res.content.token,
+          nickname: res.content.nickname,
+          email: res.content.email,
+        });
+        setIsCookieRender(true);
+      });
+    }
+  }, [cookieTrigger]);
 
   useEffect(() => {
     isNovel.isNovel ? setIsNovelRender(true) : setIsNovelRender(false);

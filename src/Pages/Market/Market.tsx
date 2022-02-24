@@ -9,12 +9,13 @@ import ItemCard_Market from './ItemCard_Market';
 import ModalBuying from './Modal/ModalBuying';
 import ModalCompleteBuying from './Modal/ModalCompleteBuying';
 import { getNftForSaleItems, getUserAssetInfo, searchNftForSaleItems } from '../../Api';
-import { useRecoilValue } from 'recoil';
-import { userInfoAtom } from '../../Store/Atoms';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { marketTriggerAtom, userInfoAtom } from '../../Store/Atoms';
 
 const Market = () => {
   const navigate = useNavigate();
   const userInfo = useRecoilValue(userInfoAtom);
+  const [marketTrigger, setMarketTrigger] = useRecoilState(marketTriggerAtom);
 
   const closeModal = () => {
     navigate('/market');
@@ -51,7 +52,7 @@ const Market = () => {
     getUserAssetInfo(userInfo.accessToken).then((res) => {
       setKlay(res.content.token);
     });
-  }, []);
+  }, [marketTrigger]);
 
   useEffect(() => {
     searchNftForSaleItems(userInfo.accessToken, name, isChecked).then((res) => {
@@ -112,7 +113,6 @@ const Market = () => {
               durability={cont.durability}
               maxDurability={cont.maxDurability}
               imageURI={cont.imageURI}
-              onSale={cont.price !== '0' ? true : false}
               price={cont.price ? cont.price : '0'}
               ownerNickname={cont.ownerNickname}
               setItem={setItem}
