@@ -1,6 +1,6 @@
 ### 1) Clone
 
-> git clone https://github.com/greatasher7/Text_adventure_FE.git
+> git clone https://github.com/greatasher7/Metaphors-FE-Hackathon.git
 
 ### 2) Install
 
