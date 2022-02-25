@@ -2,7 +2,7 @@
 
 ## 1. Title : Metaphores
 
-## 2. Team : pof
+## 2. Team : PoF
 
 ## 3. How to run
 
