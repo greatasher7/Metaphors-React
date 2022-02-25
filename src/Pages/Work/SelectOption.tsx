@@ -102,26 +102,32 @@ const SelectContainer = styled.ul`
   background-color: rgba(21, 25, 39, 0.8);
   backdrop-filter: blur(5px);
   border-radius: 30px 30px 0 0;
-  padding: 22px 44px;
+  padding: 22px 33px;
 `;
 
 const List = styled.li<{ isOwn: boolean; isSale: boolean }>`
   height: 54px;
-  display: flex;
+  display: grid;
   align-items: center;
-  column-gap: 20px;
+  grid-column-gap: 20px;
+  grid-template-columns: 110px auto;
   width: 100%;
   border-bottom: 1px solid ${({ theme }) => theme.variable.colors.btngray_color};
   opacity: ${(props) => (props.isOwn && !props.isSale ? '1' : '0.5')};
+  span {
+    word-break: keep-all;
+    line-height: 1.3;
+  }
   .item {
-    ${({ theme }) => theme.mixin.textStyle.R_17}
+    ${({ theme }) => theme.mixin.textStyle.R_15}
     ${({ theme }) => theme.mixin.flexCenter}
-      padding: 4px 16px;
-    padding-top: 6px;
+    padding-top: 5px;
+    padding-bottom: 3px;
     background-color: ${({ theme }) => theme.variable.colors.highlight_color};
     border-radius: 15px;
   }
   .act {
-    ${({ theme }) => theme.mixin.textStyle.R_15}
+    ${({ theme }) => theme.mixin.textStyle.R_14}
+    padding-top: 3px;
   }
 `;

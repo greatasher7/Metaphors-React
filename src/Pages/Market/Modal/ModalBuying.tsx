@@ -33,7 +33,7 @@ const ModalBuying = ({ closeModal, item, klay }: props) => {
       <ModalContainer>
         <ModalBox hasKlay={klay >= parseInt(item.price)}>
           <img src={Icon_x} alt="close button" className="close_btn" onClick={closeModal} />
-          <h3>해당 [{item.name}]를 지금 구매할까요?</h3>
+          <h3>[{item.name}]를 구입할까요?</h3>
           <div className="item_card">
             <div className="image">
               <img src={image} alt="image" />
@@ -113,7 +113,7 @@ const ModalBox = styled.div<{ hasKlay: boolean }>`
     grid-template-columns: 77px auto;
     grid-column-gap: 14px;
     height: 100px;
-    width: 183px;
+    width: 90%;
     padding: 12px 11px;
     ${({ theme }) => theme.mixin.textStyle.R_12}
     background-color: #2c2e48;

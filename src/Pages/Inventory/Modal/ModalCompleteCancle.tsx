@@ -12,7 +12,7 @@ const ModalCompleteCancle = ({ closeModal, item }: props) => {
     <ModalContainer>
       <ModalBox>
         <h4>
-          해당 [{item.name}]의 판매가 취소되어
+          [{item.name}]의 판매가 취소되어
           <br />
           거래소에서 내려갔습니다.
         </h4>
