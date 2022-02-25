@@ -6,14 +6,10 @@
 
 ## 3. How to run
 
-### 1) Clone
-
-> git clone https://github.com/greatasher7/Metaphors-React.git
-
-### 2) Install
+### 1) Install
 
 > npm install
 
-### 3) Run dev-server
+### 2) Run dev-server
 
 > npm start
