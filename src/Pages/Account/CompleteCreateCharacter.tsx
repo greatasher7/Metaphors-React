@@ -5,11 +5,12 @@ import styled from 'styled-components';
 import { postSigninDetail } from '../../Api';
 import { Btn_Primary, Btn_White } from '../../Components/Button';
 import Loading from '../../Components/Loading';
-import { nftAtom, changeAssetToggleAtom } from '../../Store/Atoms';
+import { nftAtom, changeAssetToggleAtom, userInfoAtom } from '../../Store/Atoms';
 
 const CompleteCreateCharacter = () => {
   const navigate = useNavigate();
   const [nft, setNft] = useRecoilState(nftAtom);
+  const [userInfo, setUserinfo] = useRecoilState(userInfoAtom);
   const [changeAssetToggle, setChangeAssetToggle] = useRecoilState(changeAssetToggleAtom);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -30,6 +31,10 @@ const CompleteCreateCharacter = () => {
       nft.genre3
     )
       .then((res) => {
+        setUserinfo({
+          ...userInfo,
+          nickname: nft.name,
+        });
         console.log('result nft', res);
       })
       .then((res) => {

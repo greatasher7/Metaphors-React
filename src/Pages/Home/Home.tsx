@@ -13,6 +13,7 @@ const Home = () => {
   const navigate = useNavigate();
   const isSignin = useRecoilValue(isSigninAtom);
   const userInfo = useRecoilValue(userInfoAtom);
+  const [hasNft, setHasNft] = useState(userInfo.nickname !== '');
   const [novelList, setNovelList] = useState<INovel[]>();
   const [novelListUser, setNovelListUser] = useState<INovel[]>();
 
@@ -33,13 +34,35 @@ const Home = () => {
     }
   }, []);
 
+  console.log('info', userInfo);
+  console.log('is', isSignin);
+  console.log('has', hasNft);
+
   return (
     <>
       <Banner />
       <Container>
-        {isSignin ? (
+        {!hasNft && (
+          <Intro_Container>
+            <div
+              className="contentBox"
+              onClick={() => {
+                isSignin ? navigate('/account/character') : navigate('/account/signup');
+              }}
+            >
+              <div>
+                <span className="title">나를 닮은 캐릭터로 시작해보세요</span>
+                <span className="contents">내 성격 NFT 생성하기</span>
+              </div>
+              <img src={Icon_arrowRight} alt="arrow right icon" className="iconArrow" />
+            </div>
+          </Intro_Container>
+        )}
+        {isSignin && (
           <List_Container>
-            <h4 className="subtitle">{userInfo.nickname}님이 좋아할 만한 추천 월드</h4>
+            <h4 className="subtitle">
+              {hasNft ? `${userInfo.nickname}님이 좋아할 만한` : ''} 추천 월드
+            </h4>
             <div className="list">
               {novelListUser &&
                 novelListUser.map((novel, idx) => (
@@ -55,22 +78,8 @@ const Home = () => {
                 ))}
             </div>
           </List_Container>
-        ) : (
-          <Intro_Container>
-            <div
-              className="contentBox"
-              onClick={() => {
-                navigate('/account/signup');
-              }}
-            >
-              <div>
-                <span className="title">나를 닮은 캐릭터로 시작해보세요</span>
-                <span className="contents">내 성격 NFT 생성하기</span>
-              </div>
-              <img src={Icon_arrowRight} alt="arrow right icon" className="iconArrow" />
-            </div>
-          </Intro_Container>
         )}
+
         <List_Container>
           <h4 className="subtitle">월드 전체 보기</h4>
           <div className="list">

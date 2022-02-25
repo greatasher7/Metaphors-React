@@ -143,7 +143,7 @@ const Info = styled.div`
   }
   .desc {
     grid-column: 1/3;
-    ${({ theme }) => theme.mixin.textStyle.R_10}
+    ${({ theme }) => theme.mixin.textStyle.R_11}
     line-height: 1.5;
   }
 `;

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { IInput } from '../../Store/Type/Interfaces';
 
@@ -44,6 +45,7 @@ export const InputEmail = ({ setState, isExternalWrong }: IInput) => {
 export const InputPassword = ({ setState }: IInput) => {
   const [value, setValue] = useState('');
   const [isWrong, setIsWrong] = useState(false);
+  const { pathname } = useLocation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
@@ -66,6 +68,9 @@ export const InputPassword = ({ setState }: IInput) => {
         value={value}
         onChange={handleChange}
       />
+      {pathname.includes('/signup') && (
+        <p className="password_guide">*8~16자의 영문, 숫자를 사용한 비밀번호를 입력해주세요.</p>
+      )}
       {isWrong && <p className="alert">잘못된 비밀번호 형식입니다.</p>}
     </InputBox>
   );
@@ -103,6 +108,11 @@ const InputBox = styled.div`
     position: absolute;
     bottom: -20px;
     left: 0;
+  }
+  .password_guide {
+    ${({ theme }) => theme.mixin.textStyle.R_11}
+    margin-top: 10px;
+    padding-left: 5px;
   }
 `;
 
