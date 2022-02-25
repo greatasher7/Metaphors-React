@@ -32,7 +32,10 @@ const ModalDraw = ({ closeModal }: { closeModal: () => void }) => {
           setOptionTrigger((prev) => !prev);
           closeModal();
         })
-        .catch((e) => console.log('이미지 생성 실패', e));
+        .catch((e) => {
+          console.log('이미지 생성 실패', e);
+          navigate(`/work/viewer/${params.id}/noitem`);
+        });
   };
 
   return (
