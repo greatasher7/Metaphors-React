@@ -1,6 +1,14 @@
+# Hackathon Project - Frontend (ReactJS)
+
+## 1. Title : Metaphores
+
+## 2. Team : pof
+
+## 3. How to run
+
 ### 1) Clone
 
-> git clone https://github.com/greatasher7/Metaphors-FE-Hackathon.git
+> git clone https://github.com/greatasher7/Metaphors-React.git
 
 ### 2) Install
 
