@@ -107,8 +107,6 @@ const CreateCharacterNft = () => {
       }
     };
 
-    console.log(valueList);
-
     return (
       <>
         <h3 className="title">
@@ -154,8 +152,6 @@ const CreateCharacterNft = () => {
         setValueList([...valueList, label]);
       }
     };
-
-    console.log(valueList);
 
     return (
       <>

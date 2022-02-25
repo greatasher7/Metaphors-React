@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Btn_Modal_Black, Btn_Modal_White } from '../../../Components/ButtonModal';
 import Icon_x from '../../../Assets/Images/Icon_x.png';
 import { useNavigate } from 'react-router';
-import { sellItems, sellItemsCancel } from '../../../Api';
+import { sellItemsCancel } from '../../../Api';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { userInfoAtom, inventoryTriggerAtom } from '../../../Store/Atoms';
 import Loading from '../../../Components/Loading';
@@ -27,7 +27,7 @@ const ModalCancleSelling = ({ closeModal, item }: props) => {
           <h3>해당 [{item.name}]을 판매 취소할까요?</h3>
           <div className="item_card">
             <div className="image">
-              <img src={item.image} style={{ width: '100%', height: '100%' }} />
+              <img src={item.image} alt="image" />
             </div>
             <div className="content">
               <h4 className="title">{item.name}</h4>
@@ -44,12 +44,10 @@ const ModalCancleSelling = ({ closeModal, item }: props) => {
                 setIsLoading(true);
                 sellItemsCancel(userInfo.accessToken, item.id).then((res) => {
                   setIsLoading(false);
-                  console.log('cancle?', res);
                   if (res.result == 'ok') {
                     navigate('/inventory/completecancle');
                     setInventoryTrigger((prev) => !prev);
                   } else {
-                    console.log('판매 등록 취소 실패');
                     navigate('/inventory');
                   }
                 });
@@ -101,8 +99,12 @@ const ModalBox = styled.div`
     .image {
       width: 77px;
       height: 77px;
-      background-color: ${({ theme }) => theme.variable.colors.A_FFF};
-      border-radius: 5px;
+      img {
+        border-radius: 5px;
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
     }
     .content {
       display: flex;

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import Icon_onSale from '../../Assets/Images/Icon_onSale.png';
-import ModalCancleSelling from './Modal/ModalCancleSelling';
 import { getImage } from '../../Api';
 
 interface ItemCardProps {
@@ -130,8 +129,11 @@ const Container_onSale = styled.article`
   .image {
     width: 100%;
     height: 77px;
-    background-color: #ffffff;
-    border-radius: 5px;
+    img {
+      display: block;
+      width: 100%;
+      border-radius: 5px;
+    }
   }
   .contents {
     display: flex;

@@ -21,10 +21,8 @@ const ModalNoItem = ({ closeModal }: { closeModal: () => void }) => {
   const handleCreateClick = () => {
     setIsLoading(true);
     postCreateItem(userInfo.accessToken, params.id).then((res) => {
-      console.log('create??', res);
       setIsLoading(false);
       if (res.result === 'ok') {
-        console.log('create!!!!', res);
         navigate(`/work/viewer/${params.id}/draw`);
       } else if (res.result === 'fail') {
         navigate(`/work/viewer/${params.id}/fail`);

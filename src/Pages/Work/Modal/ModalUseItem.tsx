@@ -21,8 +21,6 @@ const ModalUseItem = ({
   const [useCookie, setUseCookie] = useRecoilState(useCookieAtom);
   const params = useParams();
 
-  choiceList && console.log(choiceList);
-
   const getNext = (list: INovelChoice[], value: string) => {
     for (let i = 0; i < list.length; i++) {
       if (list[i].item === value) {

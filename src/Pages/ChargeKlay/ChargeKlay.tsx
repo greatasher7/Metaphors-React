@@ -27,7 +27,6 @@ const ChargeKlay = () => {
 
   useEffect(() => {
     getUserAssetInfo(userInfo.accessToken).then((res) => {
-      console.log(res.content);
       setUser(res.content);
     });
   }, [klayTrigger]);

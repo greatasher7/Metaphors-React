@@ -8,8 +8,6 @@ import GlobalFont from './Styles/GlobalFont';
 import Header from './Components/Header/Header';
 
 function App(): JSX.Element {
-  console.log(process.env.TEST_NAME);
-
   return (
     <>
       <ThemeProvider theme={theme}>

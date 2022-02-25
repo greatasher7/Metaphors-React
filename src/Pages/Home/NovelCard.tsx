@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { getImage } from '../../Api';
 import { INovel } from '../../Store/Type/Interfaces';
 import { isSigninAtom } from '../../Store/Atoms';
 
 const NovelCard = ({ id, name, author, imagePath, nftItems, genre }: INovel) => {
   const navigate = useNavigate();
-  const [image, setImage] = useState('');
   const [isSign, setIsSign] = useRecoilState(isSigninAtom);
 
   return (

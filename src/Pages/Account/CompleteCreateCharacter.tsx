@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
@@ -35,7 +35,6 @@ const CompleteCreateCharacter = () => {
           ...userInfo,
           nickname: nft.name,
         });
-        console.log('result nft', res);
       })
       .then((res) => {
         setNft({

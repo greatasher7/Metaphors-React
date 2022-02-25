@@ -23,8 +23,6 @@ const ModalBuying = ({ closeModal, item, klay }: props) => {
   const [image, setImage] = useState('');
 
   useEffect(() => {
-    console.log('item');
-    console.log(item);
     getImage(item.imageURI).then((res) => {
       setImage(res);
     });
@@ -38,13 +36,7 @@ const ModalBuying = ({ closeModal, item, klay }: props) => {
           <h3>해당 [{item.name}]를 지금 구매할까요?</h3>
           <div className="item_card">
             <div className="image">
-              <img
-                src={image}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                }}
-              />
+              <img src={image} alt="image" />
             </div>
             <div className="content">
               <h4 className="title">{item.name}</h4>
@@ -61,7 +53,6 @@ const ModalBuying = ({ closeModal, item, klay }: props) => {
                 setIsLoading(true);
                 purchaseItem(userInfo.accessToken, item.id).then((res) => {
                   setIsLoading(false);
-                  console.log(res);
                   if (res.result === 'ok') {
                     setMarketTrigger((prev) => !prev);
                     navigate('/market/completebuying');
@@ -132,8 +123,12 @@ const ModalBox = styled.div<{ hasKlay: boolean }>`
     .image {
       width: 77px;
       height: 77px;
-      background-color: ${({ theme }) => theme.variable.colors.A_FFF};
-      border-radius: 5px;
+      img {
+        border-radius: 5px;
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
     }
     .content {
       display: flex;

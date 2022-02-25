@@ -2,7 +2,6 @@ import React from 'react';
 import { useNavigate } from 'react-router';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { postLogout } from '../../Api';
 import { isSigninAtom, userInfoAtom } from '../../Store/Atoms';
 import { Btn_Modal_Black, Btn_Modal_White } from '../ButtonModal';
 
@@ -25,24 +24,6 @@ const ModalLogout = ({ closeModal }: { closeModal: () => void }) => {
     setIsSignin(false);
     closeModal();
     navigate('/');
-    // postLogout(userInfo.accessToken).then((res) => {
-    //   console.log(res);
-    // if (res.result === 'ok') {
-    //   setUserInfo({
-    //     id: '',
-    //     email: '',
-    //     nickname: '',
-    //     roles: '',
-    //     accessToken: '',
-    //     refreshToken: '',
-    //     accessExpiredTime: '',
-    //     refreshExpiredTime: '',
-    //   });
-    //   setIsSignin(false);
-    //   closeModal();
-    //   navigate('/');
-    // }
-    // });
   };
 
   return (

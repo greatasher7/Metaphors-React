@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Routes, useNavigate, useParams } from 'react-router';
+import { Route, Routes, useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { INovelChoice, INovelItem } from '../../Store/Type/Interfaces';
 import { postItem, postUseItem } from '../../Api';

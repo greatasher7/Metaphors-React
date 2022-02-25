@@ -21,7 +21,6 @@ const ItemCard_Market = ({
   const [image, setImage] = useState('');
 
   useEffect(() => {
-    console.log('id changed', imageURI);
     getImage(imageURI)
       .then((res) => {
         setImage(res);
@@ -85,8 +84,11 @@ const Container = styled.article`
   .image {
     width: 77px;
     height: 77px;
-    background-color: ${({ theme }) => theme.variable.colors.A_FFF};
-    border-radius: 5px;
+    img {
+      display: block;
+      width: 100%;
+      border-radius: 5px;
+    }
   }
   .content {
     display: flex;

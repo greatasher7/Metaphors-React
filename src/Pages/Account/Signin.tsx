@@ -27,7 +27,6 @@ const Signin = () => {
     try {
       // 1. 로그인 post 요청
       postSignin(email, password).then((res) => {
-        console.log(res);
         // 2. 로그인 성공 시, isSign -> true, userInfo 업데이트
         if (res.result === 'ok') {
           setIsSignin(true);

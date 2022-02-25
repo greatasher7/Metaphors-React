@@ -5,8 +5,6 @@ export interface IBtn {
   nowToken?: number;
 }
 
-export interface IModalSelling {}
-
 export interface IFooterProps {
   moveNext: () => void;
   movePrev: () => void;

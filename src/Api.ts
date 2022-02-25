@@ -101,18 +101,6 @@ export const postSigninDetail = async (
   genre2: string,
   genre3: string
 ) => {
-  console.log(
-    'data in api function',
-    accessToken,
-    nickname,
-    personality1,
-    personality2,
-    personality3,
-    genre1,
-    genre2,
-    genre3
-  );
-
   const result = await axios({
     method: 'post',
     url: url + '/api/auth/signin/detail',
@@ -169,8 +157,6 @@ export const postNovelDetail = async (accessToken: string, id: number) => {
 };
 
 export const postNovelEpisode = async (accessToken: string, id: number) => {
-  console.log('postNovelEpisode', accessToken, id);
-
   const result = await axios({
     method: 'post',
     url: `${url}/api/novel/page`,
@@ -251,8 +237,6 @@ export const postCreateItem = async (accessToken: string, name: undefined | stri
 };
 
 export const postItemImage = async (accessToken: string, path: string, name: string) => {
-  console.log('인자', name, path, accessToken);
-
   const result = await axios({
     method: 'post',
     url: `${url}/api/item/img/create`,
@@ -290,9 +274,6 @@ export const getMyItemInfo = async (accessToken: string) => {
 
 // 아이템 판매 등록
 export const sellItems = async (accessToken: string, tokenId: string, price: string) => {
-  console.log('Token', accessToken);
-  console.log('tokenId', tokenId);
-  console.log('price', price);
   const result = await axios({
     method: 'post',
     url: url + '/api/nft/items/sell',
@@ -308,7 +289,6 @@ export const sellItems = async (accessToken: string, tokenId: string, price: str
 };
 // 아이템 판매 등록 취소
 export const sellItemsCancel = async (accessToken: string, tokenId: string) => {
-  console.log('Token', accessToken);
   const result = await axios({
     method: 'post',
     url: url + '/api/nft/items/sell/cancel',
@@ -336,7 +316,6 @@ export const getNftForSaleItems = async () => {
 };
 // 내가 판매 중인 아이템 보기
 export const getUserNftForSaleItems = async (accessToken: string) => {
-  console.log('Token', accessToken);
   const result = await axios({
     method: 'get',
     url: url + '/api/nft/forSaleItems/user',
@@ -348,7 +327,6 @@ export const getUserNftForSaleItems = async (accessToken: string) => {
 };
 // 아이템 구매하기
 export const purchaseItem = async (accessToken: string, tokenId: string) => {
-  console.log('Token', accessToken);
   const result = await axios({
     method: 'post',
     url: url + '/api/nft/items/purchase',
@@ -363,7 +341,6 @@ export const purchaseItem = async (accessToken: string, tokenId: string) => {
 };
 // 쿠키 충전 요청
 export const purchaseCookie = async (accessToken: string, cookie: string) => {
-  console.log('Token', accessToken);
   const result = await axios({
     method: 'post',
     url: url + '/api/purchase/cookie',
@@ -378,7 +355,6 @@ export const purchaseCookie = async (accessToken: string, cookie: string) => {
 };
 // 토큰 충전 요청
 export const purchaseToken = async (accessToken: string, token: string) => {
-  console.log('Token', accessToken);
   const result = await axios({
     method: 'post',
     url: url + '/api/purchase/token',

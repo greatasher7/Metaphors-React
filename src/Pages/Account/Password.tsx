@@ -30,14 +30,11 @@ const Password = () => {
   };
 
   useEffect(() => {
-    console.log(signup);
     if (signup.password.length > 0 && signup.email.length > 0) {
-      console.log('useEffect');
       try {
         // 2. 회원가입 post
         postSignup(signup.email, signup.password).then((res) => {
           if (res) {
-            console.log(res);
             // 3. 회원가입 모달 띄우기
             setIsCompleteModalRender(true);
             setCreatedEmail(res.content.email);

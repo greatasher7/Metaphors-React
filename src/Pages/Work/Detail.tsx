@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { postNovelDetail, postRestartNovel } from '../../Api';
 import { Btn_Primary_FontBlack, Btn_Gray } from '../../Components/Button';
 import { userInfoAtom } from '../../Store/Atoms';
-import { IDetailProps, INovelDetail } from '../../Store/Type/Interfaces';
+import { IDetailProps } from '../../Store/Type/Interfaces';
 
 const Detail = ({ novelDetail, setNovelDetail }: IDetailProps) => {
   const navigate = useNavigate();
@@ -13,12 +13,10 @@ const Detail = ({ novelDetail, setNovelDetail }: IDetailProps) => {
   const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
 
   useEffect(() => {
-    params.id && console.log('params', userInfo.accessToken, parseInt(params.id));
     try {
       params.id &&
         userInfo.accessToken &&
         postNovelDetail(userInfo.accessToken, parseInt(params.id)).then((res) => {
-          console.log(res);
           setNovelDetail(res.content);
         });
     } catch (e) {

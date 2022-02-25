@@ -8,7 +8,6 @@ const FirstSignIn = () => {
 
   const goCreateNft = () => {
     navigate('/account/character');
-    console.log('cli');
   };
 
   return (

@@ -28,8 +28,6 @@ const Email = () => {
     try {
       if (email.length > 1) {
         postEmailOverlap(email).then((res) => {
-          // 중복 검사 결과 중복이면 isOverlap -> true, 아니면 recoil email 업데이트 하고 비밀번호 임력으로 이동
-          console.log('result', res);
           if (res.result !== 'ok') {
             setIsOverlap(true);
           } else {

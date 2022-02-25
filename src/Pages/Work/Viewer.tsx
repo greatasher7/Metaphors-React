@@ -62,7 +62,6 @@ const Viewer = ({ novelDetail }: { novelDetail: INovelDetail }) => {
       params.id &&
         postNovelEpisode(userInfo.accessToken, parseInt(params.id)).then((res) => {
           if (res.content) {
-            console.log('trigger post episode', res);
             setEpisodeData(res.content);
             setNowPage(1);
           }
@@ -76,7 +75,6 @@ const Viewer = ({ novelDetail }: { novelDetail: INovelDetail }) => {
   }, [nextEpisodeToggle]);
 
   useEffect(() => {
-    console.log('episode', episodeData);
     setIsNovel({
       isNovel: true,
       title: episodeData.name,

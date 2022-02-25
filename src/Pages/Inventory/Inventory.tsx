@@ -28,14 +28,11 @@ const Inventory = () => {
   const [klay, setKlay] = useState(0);
 
   const closeModal = () => {
-    console.log('closeModal');
     navigate('/inventory');
   };
 
   useEffect(() => {
-    console.log('useEffect');
     getMyItemInfo(userInfo.accessToken).then((res) => {
-      console.log(res.items);
       setList(res.items);
     });
     getUserAssetInfo(userInfo.accessToken).then((res) => {
@@ -44,10 +41,8 @@ const Inventory = () => {
   }, []);
 
   useEffect(() => {
-    console.log('inventory trigger');
     getMyItemInfo(userInfo.accessToken).then((res) => {
       setList(res.items);
-      console.log(res.items);
     });
     getUserAssetInfo(userInfo.accessToken).then((res) => {
       setKlay(res.content.token);

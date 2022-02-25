@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Btn_Modal_Primary } from '../../../Components/ButtonModal';
 import Icon_x from '../../../Assets/Images/Icon_x.png';
 import { useNavigate } from 'react-router';
-import { getMyItemInfo, sellItems } from '../../../Api';
+import { sellItems } from '../../../Api';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { userInfoAtom, inventoryTriggerAtom } from '../../../Store/Atoms';
 import Loading from '../../../Components/Loading';
@@ -34,7 +34,7 @@ const ModalSelling = ({ closeModal, item }: props) => {
             {item.durability}/{item.maxDurability}회 남음
           </span>
           <div className="image">
-            <img src={item.image} style={{ width: '100%', height: '100%' }} />
+            <img src={item.image} alt="image" />
           </div>
           <div className="input_container">
             <input
@@ -55,7 +55,6 @@ const ModalSelling = ({ closeModal, item }: props) => {
                   navigate('/inventory/completeselling');
                   setInventoryTrigger((prev) => !prev);
                 } else {
-                  console.log('판매등록 실패');
                   navigate('/inventory');
                 }
               });
@@ -98,8 +97,12 @@ const ModalBox = styled.div`
     width: 103px;
     height: 103px;
     margin-top: 10px;
-    background-color: ${({ theme }) => theme.variable.colors.A_FFF};
-    border-radius: 5px;
+    img {
+      border-radius: 5px;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
   }
   .input_container {
     width: 100%;
@@ -111,12 +114,8 @@ const ModalBox = styled.div`
       color: ${({ theme }) => theme.variable.colors.black_color};
       width: 100%;
       padding: 5px;
-      // text-align: center;
       ${({ theme }) => theme.mixin.textStyle.R_16}
     }
-    // .selling_price::-webkit-scrollbar {
-    //   display: none;
-    // }
     .klay {
       position: absolute;
       top: 50%;

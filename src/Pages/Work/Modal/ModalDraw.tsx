@@ -3,27 +3,10 @@ import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router';
 import { Btn_Modal_Primary } from '../../../Components/ButtonModal';
 import SignatureCanvas from 'react-signature-canvas';
-import { getImage, postItemImage } from '../../../Api';
+import { postItemImage } from '../../../Api';
 import { useRecoilState } from 'recoil';
 import { optionTriggerAtom, userInfoAtom } from '../../../Store/Atoms';
 import Loading from '../../../Components/Loading';
-// import { create } from 'ipfs-http-client';
-
-// base64 to blob
-const dataURItoBlob = (dataURI: string) => {
-  var byteString = window.atob(dataURI.split(',')[1]);
-  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-
-  var ab = new ArrayBuffer(byteString.length);
-  var ia = new Uint8Array(ab);
-
-  for (var i = 0; i < byteString.length; i++) {
-    ia[i] = byteString.charCodeAt(i);
-  }
-  var blob = new Blob([ab], { type: mimeString });
-
-  return blob;
-};
 
 const ModalDraw = ({ closeModal }: { closeModal: () => void }) => {
   const navigate = useNavigate();
@@ -31,7 +14,6 @@ const ModalDraw = ({ closeModal }: { closeModal: () => void }) => {
   const params = useParams();
   const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
   const [optionTrigger, setOptionTrigger] = useRecoilState(optionTriggerAtom);
-  const [image, setImage] = useState(new Blob());
   const [isEmpty, setIsEmpty] = useState(false);
   const [isLoading, setLoading] = useState(false);
 
@@ -39,47 +21,46 @@ const ModalDraw = ({ closeModal }: { closeModal: () => void }) => {
     signCanvas.current.clear();
   };
 
-  console.log('render')
   const handleClick = () => {
     const dataURL = signCanvas.current.getTrimmedCanvas().toDataURL('image/png');
 
     setLoading(true);
-    postItemImage(userInfo.accessToken, dataURL, params.id)
+    params.id &&
+      postItemImage(userInfo.accessToken, dataURL, params.id)
         .then((res) => {
           setLoading(false);
-          console.log('postItemImage complete', res);
-          setOptionTrigger(prev => !prev);
+          setOptionTrigger((prev) => !prev);
           closeModal();
           navigate(`/work/viewer/${params.id}/noitem`);
         })
-        .catch((e) => console.log('이미지 생성 실패',e));
+        .catch((e) => console.log('이미지 생성 실패', e));
   };
 
   return (
-  <>
-  <ModalContainer>
-      <ModalBox>
-        <h3>[{params.id}] 획득 성공!</h3>
-        <p className="desc">나만의 [{params.id}]를 그려보세요.</p>
-        <Canvas_Container>
-          <SignatureCanvas
-            ref={signCanvas}
-            canvasProps={{ className: 'sigCanvas canvasStyle' }}
-            backgroundColor="#fff"
-            penColor="#000"
-          />
-          <span className="clear_btn" onClick={clear}>
-            지우기
-          </span>
-        </Canvas_Container>
-        <p className="warning">*부적절한 그림은 운영사 임의로 거래가 금지될 수 있습니다.</p>
-        {isEmpty && <p className="empty">*그림을 그려주세요</p>}
+    <>
+      <ModalContainer>
+        <ModalBox>
+          <h3>[{params.id}] 획득 성공!</h3>
+          <p className="desc">나만의 [{params.id}]를 그려보세요.</p>
+          <Canvas_Container>
+            <SignatureCanvas
+              ref={signCanvas}
+              canvasProps={{ className: 'sigCanvas canvasStyle' }}
+              backgroundColor="#fff"
+              penColor="#000"
+            />
+            <span className="clear_btn" onClick={clear}>
+              지우기
+            </span>
+          </Canvas_Container>
+          <p className="warning">*부적절한 그림은 운영사 임의로 거래가 금지될 수 있습니다.</p>
+          {isEmpty && <p className="empty">*그림을 그려주세요</p>}
 
-        <Btn_Modal_Primary label="완료" onClick={handleClick} />
-      </ModalBox>
-    </ModalContainer>
-    {isLoading && <Loading />}
-  </>
+          <Btn_Modal_Primary label="완료" onClick={handleClick} />
+        </ModalBox>
+      </ModalContainer>
+      {isLoading && <Loading />}
+    </>
   );
 };
 

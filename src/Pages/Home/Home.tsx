@@ -34,10 +34,6 @@ const Home = () => {
     }
   }, []);
 
-  console.log('info', userInfo);
-  console.log('is', isSignin);
-  console.log('has', hasNft);
-
   return (
     <>
       <Banner />
