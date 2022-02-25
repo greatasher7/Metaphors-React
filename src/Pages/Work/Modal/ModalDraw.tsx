@@ -6,8 +6,8 @@ import SignatureCanvas from 'react-signature-canvas';
 import { getImage, postItemImage } from '../../../Api';
 import { useRecoilState } from 'recoil';
 import { optionTriggerAtom, userInfoAtom } from '../../../Store/Atoms';
-import { create } from 'ipfs-http-client';
-// import * as Buffer from 'buffer';
+import Loading from '../../../Components/Loading';
+// import { create } from 'ipfs-http-client';
 
 // base64 to blob
 const dataURItoBlob = (dataURI: string) => {
@@ -33,49 +33,31 @@ const ModalDraw = ({ closeModal }: { closeModal: () => void }) => {
   const [optionTrigger, setOptionTrigger] = useRecoilState(optionTriggerAtom);
   const [image, setImage] = useState(new Blob());
   const [isEmpty, setIsEmpty] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
   const clear = () => {
     signCanvas.current.clear();
   };
 
+  console.log('render')
   const handleClick = () => {
-    const client = create({ host: 'ipfs.infura.io', port: 5001, protocol: 'http' });
-
     const dataURL = signCanvas.current.getTrimmedCanvas().toDataURL('image/png');
-    const blobInfo = dataURItoBlob(dataURL);
-    const blobSize = dataURItoBlob(dataURL).size;
 
-    console.log('info', blobInfo);
-    console.log('size', blobSize);
-
-    console.log('handleClick');
-
-    setIsEmpty(true);
-
-    client
-      .add(dataURL)
-      .then((response) => {
-        const ipfsURL = 'https://ipfs.infura.io/ipfs/' + response.path;
-        console.log('ipfsURL', ipfsURL);
-        console.log('params.id', params.id);
-        params.id &&
-          postItemImage(userInfo.accessToken, ipfsURL, params.id)
-            .then((res) => {
-              console.log('postItemImage complete', res);
-              closeModal();
-              setOptionTrigger((prev) => !prev);
-              navigate(`/work/viewer/${params.id}/noitem`);
-            })
-            .catch((e) => console.log(e));
-      })
-      .catch((err) => {
-        console.log('이미지 생성 실패');
-        console.error(err);
-      });
+    setLoading(true);
+    postItemImage(userInfo.accessToken, dataURL, params.id)
+        .then((res) => {
+          setLoading(false);
+          console.log('postItemImage complete', res);
+          setOptionTrigger(prev => !prev);
+          closeModal();
+          navigate(`/work/viewer/${params.id}/noitem`);
+        })
+        .catch((e) => console.log('이미지 생성 실패',e));
   };
 
   return (
-    <ModalContainer>
+  <>
+  <ModalContainer>
       <ModalBox>
         <h3>[{params.id}] 획득 성공!</h3>
         <p className="desc">나만의 [{params.id}]를 그려보세요.</p>
@@ -96,6 +78,8 @@ const ModalDraw = ({ closeModal }: { closeModal: () => void }) => {
         <Btn_Modal_Primary label="완료" onClick={handleClick} />
       </ModalBox>
     </ModalContainer>
+    {isLoading && <Loading />}
+  </>
   );
 };
 
